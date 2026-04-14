@@ -9,8 +9,8 @@ export const revalidate = 3600;
 
 const featuredContaminants = ["pfas", "lead", "nitrates", "disinfection-byproducts"];
 
-const trustStats = [
-  { value: "42,855", label: "Utilities tracked", sub: "across 5 launch states" },
+const trustStats = (totalUtilities: number) => [
+  { value: totalUtilities.toLocaleString(), label: "Utilities tracked", sub: "across 5 launch states" },
   { value: "6", label: "Contaminants mapped", sub: "with treatment guidance" },
   { value: "100%", label: "Official data sources", sub: "EPA, SDWIS, ECHO, WQP" },
 ];
@@ -44,9 +44,12 @@ const methodologyPoints = [
 ];
 
 export default async function HomePage() {
-  const dbStates = await prisma.state.findMany({
-    select: { abbreviation: true, _count: { select: { utilities: true } } },
-  });
+  const [dbStates, totalUtilities] = await Promise.all([
+    prisma.state.findMany({
+      select: { abbreviation: true, _count: { select: { utilities: true } } },
+    }),
+    prisma.utility.count(),
+  ]);
   const dbCountMap = Object.fromEntries(
     dbStates.map((s) => [s.abbreviation, s._count.utilities])
   );
@@ -135,7 +138,7 @@ export default async function HomePage() {
       <section className="bg-wur-teal text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center sm:text-left sm:divide-x divide-white/20">
-            {trustStats.map((stat, i) => (
+            {trustStats(totalUtilities).map((stat, i) => (
               <div key={i} className={i > 0 ? "sm:pl-8" : ""}>
                 <div className="font-display text-4xl text-white mb-1">{stat.value}</div>
                 <div className="text-base font-semibold text-white/90">{stat.label}</div>
