@@ -52,7 +52,7 @@ export default async function TreatmentPage({ params }: { params: Promise<{ slug
 
   const sources = [
     { label: "NSF International — Certified Drinking Water Treatment Units", url: "https://info.nsf.org/Certified/DWTU/" },
-    { label: "EPA — Home Water Treatment Systems", url: "https://www.epa.gov/ground-water-and-drinking-water/home-water-treatment-systems" },
+    { label: "EPA — Drinking Water Treatment Information", url: "https://www.epa.gov/ground-water-and-drinking-water" },
     { label: "Water Quality Association (WQA) — Treatment Technology Guides", url: "https://www.wqa.org/" },
   ];
 

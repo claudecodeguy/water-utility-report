@@ -97,10 +97,10 @@ export default function LabsPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
               { state: "California", abbr: "CA", url: "https://www.waterboards.ca.gov/drinking_water/certlic/labs/", label: "SWRCB Laboratory Accreditation" },
-              { state: "Texas", abbr: "TX", url: "https://www.tceq.texas.gov/agency/lab_accreditation.html", label: "TCEQ Laboratory Accreditation" },
-              { state: "Florida", abbr: "FL", url: "https://floridahealth.gov/environmental-health/environmental-laboratory-certification-program/", label: "FDOH ELCP" },
-              { state: "Arizona", abbr: "AZ", url: "https://www.azdeq.gov/environ/water/dw/lab.html", label: "ADEQ Drinking Water Lab Program" },
-              { state: "Ohio", abbr: "OH", url: "https://epa.ohio.gov/wps/portal/gov/epa/divisions-and-offices/drinking-and-ground-waters/laboratory-certification", label: "Ohio EPA Lab Certification" },
+              { state: "Texas", abbr: "TX", url: "https://www.tceq.texas.gov/agency/water_main.html", label: "TCEQ Water Programs" },
+              { state: "Florida", abbr: "FL", url: "https://www.floridahealth.gov/environmental-health/drinking-water/", label: "FDOH Drinking Water Program" },
+              { state: "Arizona", abbr: "AZ", url: "https://www.epa.gov/dwlabcert/contact-information-certification-programs-and-certified-laboratories-drinking-water", label: "EPA Certified Labs — Arizona" },
+              { state: "Ohio", abbr: "OH", url: "https://www.epa.gov/dwlabcert/contact-information-certification-programs-and-certified-laboratories-drinking-water", label: "EPA Certified Labs — Ohio" },
             ].map((s) => (
               <a
                 key={s.abbr}

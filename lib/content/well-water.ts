@@ -150,7 +150,7 @@ const wellWaterGuides: WellWaterGuide[] = [
       "Saltwater intrusion — South Florida's overpumped aquifers face serious saltwater intrusion; some areas near the coast have groundwater with TDS well above drinking water standards",
     ],
     epaGuidanceUrl: "https://www.epa.gov/privatewells",
-    stateLabUrl: "https://www.floridahealth.gov/environmental-health/drinking-water/private-well-program.html",
+    stateLabUrl: "https://www.floridahealth.gov/environmental-health/drinking-water/",
     faqs: [
       {
         question: "Why does my Florida well water smell like sulfur?",
@@ -258,7 +258,7 @@ const wellWaterGuides: WellWaterGuide[] = [
       "Legacy industrial contamination — the Mahoning Valley (Youngstown), the Rubber Capital (Akron), and other northeastern Ohio industrial areas have documented groundwater contamination plumes affecting some private wells",
     ],
     epaGuidanceUrl: "https://www.epa.gov/privatewells",
-    stateLabUrl: "https://www.epa.ohio.gov/divisions-and-offices/drinking-and-ground-waters/private-water-systems",
+    stateLabUrl: "https://www.epa.gov/privatewells",
     faqs: [
       {
         question: "How often should I test my Ohio well?",

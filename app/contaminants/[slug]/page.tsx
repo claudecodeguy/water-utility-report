@@ -68,7 +68,7 @@ export default async function ContaminantPage({ params }: { params: Promise<{ sl
 
   const sources = [
     { label: "EPA Drinking Water Contaminant Information", url: `https://www.epa.gov/ground-water-and-drinking-water` },
-    { label: "ATSDR ToxFAQs / Toxicological Profiles", url: "https://www.atsdr.cdc.gov/toxfaqs/index.asp" },
+    { label: "ATSDR ToxFAQs / Toxicological Profiles", url: "https://www.atsdr.cdc.gov/toxfaqs/" },
     { label: "EPA SDWIS — violation and detection data", url: "https://sdwis.epa.gov/" },
   ];
 

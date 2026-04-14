@@ -52,7 +52,7 @@ const dataSources = [
   {
     name: "State Drinking Water Program Datasets",
     category: "State-Level Data",
-    url: "https://www.epa.gov/dwstatesystem",
+    url: "https://www.epa.gov/ground-water-and-drinking-water",
     fields: ["State-specific utility details", "Service area boundaries (where available)", "State MCLs where stricter than federal"],
     cadence: "Varies by state — annual to real-time",
     format: "Varies by state (CSV, API, GIS)",
