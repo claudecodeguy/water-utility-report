@@ -3,6 +3,7 @@ import { DM_Serif_Display, DM_Sans, DM_Mono } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/nav";
 import Footer from "@/components/footer";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const dmSerifDisplay = DM_Serif_Display({
   subsets: ["latin"],
@@ -57,6 +58,7 @@ export default function RootLayout({
         <main className="flex-1">{children}</main>
         <Footer />
       </body>
+      <GoogleAnalytics gaId="G-SX34LEVQZ1" />
     </html>
   );
 }
