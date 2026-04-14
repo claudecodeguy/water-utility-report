@@ -42,12 +42,6 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
 
   const relatedPages = [
     ...(state ? [{ href: `/states/${state.slug}`, label: `${state.name} State Overview`, type: "state" as const }] : []),
-    ...cityUtilities.map((u) => ({
-      href: `/utilities/${u!.slug}`,
-      label: u!.name,
-      type: "utility" as const,
-      description: `${u!.riskLevel} risk · ${u!.populationServed.toLocaleString()} served`,
-    })),
     ...cityContaminants.map((c) => ({
       href: `/contaminants/${c!.slug}`,
       label: c!.name,
@@ -142,22 +136,19 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
               </p>
               <div className="space-y-4">
                 {cityUtilities.map((u) => u && (
-                  <Link
+                  <div
                     key={u.slug}
-                    href={`/utilities/${u.slug}`}
-                    className="group flex flex-col sm:flex-row sm:items-start gap-4 p-5 rounded-xl border border-border bg-card hover:border-wur-teal/40 hover:shadow-md transition-all"
+                    className="flex flex-col sm:flex-row sm:items-start gap-4 p-5 rounded-xl border border-border bg-card"
                   >
                     <Droplets className="w-5 h-5 text-wur-teal shrink-0 mt-0.5" />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-3 mb-2">
-                        <h3 className="font-semibold text-foreground group-hover:text-wur-teal transition-colors">
-                          {u.name}
-                        </h3>
+                        <h3 className="font-semibold text-foreground">{u.name}</h3>
                         <span className={`text-xs px-2 py-0.5 rounded-full border font-medium shrink-0 ${riskBgs[u.riskLevel]}`}>
                           {u.riskLevel}
                         </span>
                       </div>
-                      <div className="grid grid-cols-2 gap-x-6 gap-y-1 mb-3">
+                      <div className="grid grid-cols-2 gap-x-6 gap-y-1">
                         <div>
                           <span className="text-xs text-muted-foreground">System ID</span>
                           <span className="ml-2 text-xs font-mono">{u.systemId}</span>
@@ -166,29 +157,9 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
                           <span className="text-xs text-muted-foreground">Served</span>
                           <span className="ml-2 text-xs font-mono">{u.populationServed.toLocaleString()}</span>
                         </div>
-                        <div>
-                          <span className="text-xs text-muted-foreground">Violations</span>
-                          <span className={`ml-2 text-xs font-mono font-semibold ${u.violations === 0 ? "text-wur-safe" : "text-wur-danger"}`}>
-                            {u.violations}
-                          </span>
-                        </div>
-                        <div>
-                          <span className="text-xs text-muted-foreground">Source</span>
-                          <span className="ml-2 text-xs">{u.waterSource.split("(")[0].trim().split(",")[0]}</span>
-                        </div>
-                      </div>
-                      <div className="flex flex-wrap gap-1.5">
-                        {u.contaminants
-                          .filter((c) => c.detected && c.status !== "safe")
-                          .slice(0, 3)
-                          .map((c, i) => (
-                            <span key={i} className="text-[10px] px-2 py-0.5 rounded-full bg-secondary text-muted-foreground">
-                              {c.name}
-                            </span>
-                          ))}
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 ))}
               </div>
             </section>
@@ -236,14 +207,10 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
                 <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">Quick Links</p>
                 <div className="space-y-2">
                   {cityUtilities.map((u) => u && (
-                    <Link
-                      key={u.slug}
-                      href={`/utilities/${u.slug}`}
-                      className="flex items-center gap-2 py-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
-                    >
+                    <div key={u.slug} className="flex items-center gap-2 py-1.5 text-sm text-muted-foreground">
                       <Droplets className="w-3.5 h-3.5 shrink-0" />
-                      {u.shortName} — Full Report
-                    </Link>
+                      {u.shortName}
+                    </div>
                   ))}
                   {state && (
                     <Link

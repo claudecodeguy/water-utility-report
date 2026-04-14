@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, FlaskConical, Wrench, AlertTriangle, CheckCircle2 } from "lucide-react";
-import { getContaminantBySlug, treatmentMethods, utilities, contaminants, states } from "@/lib/mock-data";
+import { getContaminantBySlug, treatmentMethods, contaminants, states } from "@/lib/mock-data";
 import FaqSection from "@/components/faq-section";
 import RelatedPages from "@/components/related-pages";
 import JsonLd from "@/components/json-ld";
@@ -31,10 +31,6 @@ export default async function ContaminantPage({ params }: { params: Promise<{ sl
     contaminant.treatments.includes(t.slug)
   );
 
-  const affectedUtilities = utilities.filter((u) =>
-    u.contaminants.some((c) => c.slug === contaminant.slug && c.detected)
-  );
-
   const affectedStatesData = states.filter((s) =>
     contaminant.affectedStates.includes(s.slug)
   );
@@ -49,12 +45,6 @@ export default async function ContaminantPage({ params }: { params: Promise<{ sl
       label: t.name,
       type: "treatment" as const,
       description: `Removes: ${contaminant.shortName}`,
-    })),
-    ...affectedUtilities.slice(0, 3).map((u) => ({
-      href: `/utilities/${u.slug}`,
-      label: u.name,
-      type: "utility" as const,
-      description: `${u.riskLevel} risk · ${u.stateAbbr}`,
     })),
     ...relatedContaminants.map((c) => ({
       href: `/contaminants/${c.slug}`,

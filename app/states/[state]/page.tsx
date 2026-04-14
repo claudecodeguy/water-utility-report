@@ -36,7 +36,7 @@ export default async function StatePage({ params }: { params: Promise<{ state: s
   const dbState = await prisma.state.findUnique({ where: { abbreviation: state.abbreviation } });
   const dbUtilities = dbState
     ? await prisma.utility.findMany({
-        where: { state_id: dbState.id },
+        where: { state_id: dbState.id, publish_status: "published" },
         orderBy: { population_served: "desc" },
         take: 20,
         select: {
