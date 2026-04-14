@@ -10,6 +10,7 @@ const navLinks = [
   { href: "/states", label: "Browse by State" },
   { href: "/contaminants", label: "Contaminants" },
   { href: "/treatment", label: "Treatment" },
+  { href: "/guides", label: "Guides" },
   { href: "/well-water", label: "Well Water" },
   { href: "/labs", label: "Labs" },
   { href: "/methodology", label: "Methodology" },

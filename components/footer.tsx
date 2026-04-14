@@ -9,12 +9,12 @@ const footerLinks = {
     { href: "/labs", label: "Certified Labs" },
     { href: "/well-water", label: "Well Water Guide" },
   ],
-  Learn: [
-    { href: "/contaminants/pfas", label: "PFAS & Forever Chemicals" },
-    { href: "/contaminants/lead", label: "Lead in Tap Water" },
-    { href: "/contaminants/nitrates", label: "Nitrates" },
-    { href: "/treatment/reverse-osmosis", label: "Reverse Osmosis" },
-    { href: "/treatment/activated-carbon", label: "Carbon Filtration" },
+  Guides: [
+    { href: "/guides", label: "All Guides" },
+    { href: "/guides/best-filter-for-lead-in-tap-water", label: "Best Filter for Lead" },
+    { href: "/guides/best-filter-for-pfas-in-drinking-water", label: "Best Filter for PFAS" },
+    { href: "/guides/reverse-osmosis-vs-carbon-filter", label: "RO vs Carbon Filter" },
+    { href: "/guides/how-to-read-a-water-quality-report", label: "Read a Water Report" },
   ],
   About: [
     { href: "/methodology", label: "Our Methodology" },
