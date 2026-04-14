@@ -11,6 +11,7 @@ const navLinks = [
   { href: "/contaminants", label: "Contaminants" },
   { href: "/treatment", label: "Treatment" },
   { href: "/guides", label: "Guides" },
+  { href: "/learn", label: "Learn" },
   { href: "/well-water", label: "Well Water" },
   { href: "/labs", label: "Labs" },
   { href: "/methodology", label: "Methodology" },

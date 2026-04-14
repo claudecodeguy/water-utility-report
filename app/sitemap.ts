@@ -4,6 +4,7 @@ import contaminants from "@/lib/content/contaminants";
 import treatmentMethods from "@/lib/content/treatments";
 import wellWaterGuides from "@/lib/content/well-water";
 import guides from "@/lib/content/guides";
+import learnArticles from "@/lib/content/learn";
 import { prisma } from "@/lib/prisma";
 
 const BASE = "https://waterutilityreport.com";
@@ -24,6 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/methodology/data-sources`, lastModified: now, changeFrequency: "yearly", priority: 0.4 },
     { url: `${BASE}/methodology/legal`, lastModified: now, changeFrequency: "yearly", priority: 0.4 },
     { url: `${BASE}/guides`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE}/learn`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
     { url: `${BASE}/labs`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     { url: `${BASE}/about`, lastModified: now, changeFrequency: "yearly", priority: 0.4 },
     { url: `${BASE}/contact`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
@@ -78,6 +80,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
+  const learnPages: MetadataRoute.Sitemap = learnArticles.map((a) => ({
+    url: `${BASE}/learn/${a.slug}`,
+    lastModified: a.lastUpdated,
+    changeFrequency: "monthly",
+    priority: 0.85,
+  }));
+
   return [
     ...staticPages,
     ...statePages,
@@ -86,5 +95,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...contaminantPages,
     ...treatmentPages,
     ...guidePages,
+    ...learnPages,
   ];
 }

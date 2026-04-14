@@ -16,6 +16,13 @@ const footerLinks = {
     { href: "/guides/reverse-osmosis-vs-carbon-filter", label: "RO vs Carbon Filter" },
     { href: "/guides/how-to-read-a-water-quality-report", label: "Read a Water Report" },
   ],
+  Research: [
+    { href: "/learn", label: "All Articles" },
+    { href: "/learn/is-ai-making-your-water-worse", label: "Is AI Affecting Water?" },
+    { href: "/learn/ai-data-centers-cooling-tower-blowdown", label: "Cooling Tower Blowdown" },
+    { href: "/learn/water-positive-data-centers-local-verification", label: "Water-Positive Claims" },
+    { href: "/learn/questions-before-approving-ai-data-center-water-risk", label: "Data Center Checklist" },
+  ],
   About: [
     { href: "/methodology", label: "Our Methodology" },
     { href: "/methodology/data-sources", label: "Data Sources" },
@@ -39,9 +46,9 @@ export default function Footer() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 lg:gap-6">
           {/* Brand */}
-          <div className="col-span-2 md:col-span-1">
+          <div className="col-span-2 md:col-span-3 lg:col-span-2">
             <Link href="/" className="flex items-center gap-2 text-white mb-4">
               <Droplets className="w-5 h-5" />
               <span className="font-display text-lg">
