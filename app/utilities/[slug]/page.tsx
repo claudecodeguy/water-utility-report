@@ -75,13 +75,13 @@ export default async function UtilityPage({ params }: { params: Promise<{ slug: 
 
   const sources = [
     {
-      label: "EPA SDWIS (Safe Drinking Water Information System)",
+      label: "EPA — Water System Details (PWSID lookup)",
       note: `PWSID ${utility.pwsid}`,
-      url: `https://enviro.epa.gov/enviro/sdw_report_v3.first_table?pws_id=${utility.pwsid}`,
+      url: `https://echo.epa.gov/drinking-water/water-system-info?pwsid=${utility.pwsid}`,
     },
     {
-      label: "EPA ECHO (Enforcement and Compliance History Online)",
-      url: `https://echo.epa.gov/detailed-facility-report?fid=${utility.pwsid}`,
+      label: "EPA ECHO — Drinking Water System Details",
+      url: `https://echo.epa.gov/drinking-water/water-system-info?pwsid=${utility.pwsid}`,
     },
   ];
 
@@ -245,7 +245,7 @@ export default async function UtilityPage({ params }: { params: Promise<{ slug: 
                       Check back soon, or view the official report directly from the EPA links below.
                     </p>
                     <a
-                      href={`https://enviro.epa.gov/enviro/sdw_report_v3.first_table?pws_id=${utility.pwsid}`}
+                      href={`https://echo.epa.gov/drinking-water/water-system-info?pwsid=${utility.pwsid}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 mt-3 text-sm text-wur-teal hover:underline"
@@ -347,10 +347,10 @@ export default async function UtilityPage({ params }: { params: Promise<{ slug: 
               <div className="rounded-lg border border-border bg-card p-5">
                 <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">Data Sources</p>
                 <div className="space-y-2">
-                  <a href={`https://enviro.epa.gov/enviro/sdw_report_v3.first_table?pws_id=${utility.pwsid}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs text-wur-teal hover:underline">
-                    EPA SDWIS <ExternalLink className="w-3 h-3" />
+                  <a href={`https://echo.epa.gov/drinking-water/water-system-info?pwsid=${utility.pwsid}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs text-wur-teal hover:underline">
+                    EPA Water System Lookup <ExternalLink className="w-3 h-3" />
                   </a>
-                  <a href={`https://echo.epa.gov/detailed-facility-report?fid=${utility.pwsid}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs text-wur-teal hover:underline">
+                  <a href={`https://echo.epa.gov/drinking-water/water-system-info?pwsid=${utility.pwsid}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs text-wur-teal hover:underline">
                     EPA ECHO <ExternalLink className="w-3 h-3" />
                   </a>
                 </div>

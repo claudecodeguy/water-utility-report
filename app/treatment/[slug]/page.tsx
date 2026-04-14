@@ -51,8 +51,8 @@ export default async function TreatmentPage({ params }: { params: Promise<{ slug
   ];
 
   const sources = [
-    { label: "NSF International — Drinking Water Treatment Standards", url: "https://www.nsf.org/consumer-resources/articles/drinking-water-treatment" },
-    { label: "EPA Guide to Drinking Water Treatment Technologies", url: "https://www.epa.gov/sites/default/files/2019-07/documents/point-of-use-treatment-tech.pdf" },
+    { label: "NSF International — Certified Drinking Water Treatment Units", url: "https://info.nsf.org/Certified/DWTU/" },
+    { label: "EPA — Home Water Treatment Systems", url: "https://www.epa.gov/ground-water-and-drinking-water/home-water-treatment-systems" },
     { label: "Water Quality Association (WQA) — Treatment Technology Guides", url: "https://www.wqa.org/" },
   ];
 
