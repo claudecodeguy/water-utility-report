@@ -125,52 +125,150 @@ export default async function HomePage() {
         </div>
 
         {/* Hero illustration */}
-        <div className="absolute right-0 top-0 w-1/2 h-full pointer-events-none hidden xl:flex items-center justify-center pr-16">
-          <svg viewBox="0 0 480 520" className="w-full max-w-md opacity-80" fill="none" xmlns="http://www.w3.org/2000/svg">
-            {/* Water treatment plant schematic */}
-            {/* Main pipe horizontal */}
-            <rect x="40" y="260" width="400" height="12" rx="6" fill="#4db8b8" opacity="0.4"/>
-            {/* Vertical supply pipes */}
-            <rect x="100" y="180" width="10" height="80" rx="5" fill="#4db8b8" opacity="0.5"/>
-            <rect x="220" y="160" width="10" height="100" rx="5" fill="#4db8b8" opacity="0.5"/>
-            <rect x="340" y="190" width="10" height="70" rx="5" fill="#4db8b8" opacity="0.5"/>
-            {/* Treatment tanks */}
-            <rect x="70" y="120" width="70" height="60" rx="8" stroke="#4db8b8" strokeWidth="2" fill="#4db8b8" fillOpacity="0.08"/>
-            <rect x="190" y="100" width="70" height="60" rx="8" stroke="#4db8b8" strokeWidth="2" fill="#4db8b8" fillOpacity="0.08"/>
-            <rect x="310" y="130" width="70" height="60" rx="8" stroke="#4db8b8" strokeWidth="2" fill="#4db8b8" fillOpacity="0.08"/>
-            {/* Tank labels */}
-            <text x="105" y="154" textAnchor="middle" fill="#4db8b8" fontSize="9" fontFamily="monospace" opacity="0.7">FILTER</text>
-            <text x="225" y="134" textAnchor="middle" fill="#4db8b8" fontSize="9" fontFamily="monospace" opacity="0.7">TREAT</text>
-            <text x="345" y="164" textAnchor="middle" fill="#4db8b8" fontSize="9" fontFamily="monospace" opacity="0.7">TEST</text>
-            {/* Drop-off pipes to homes */}
-            <rect x="120" y="272" width="8" height="50" rx="4" fill="#4db8b8" opacity="0.35"/>
-            <rect x="200" y="272" width="8" height="50" rx="4" fill="#4db8b8" opacity="0.35"/>
-            <rect x="280" y="272" width="8" height="50" rx="4" fill="#4db8b8" opacity="0.35"/>
-            <rect x="360" y="272" width="8" height="50" rx="4" fill="#4db8b8" opacity="0.35"/>
-            {/* Houses */}
-            {[120, 200, 280, 360].map((x, i) => (
-              <g key={i} transform={`translate(${x - 14}, 322)`}>
-                <rect x="0" y="14" width="28" height="22" rx="2" fill="#4db8b8" fillOpacity="0.12" stroke="#4db8b8" strokeWidth="1.5" strokeOpacity="0.5"/>
-                <polygon points="14,0 28,14 0,14" fill="#4db8b8" fillOpacity="0.2" stroke="#4db8b8" strokeWidth="1.5" strokeOpacity="0.5"/>
-                <rect x="10" y="22" width="8" height="14" rx="1" fill="#4db8b8" fillOpacity="0.3"/>
-              </g>
-            ))}
-            {/* Water source at left */}
-            <ellipse cx="40" cy="266" rx="20" ry="20" fill="#4db8b8" fillOpacity="0.15" stroke="#4db8b8" strokeWidth="1.5" strokeOpacity="0.5"/>
-            <text x="40" y="270" textAnchor="middle" fill="#4db8b8" fontSize="8" fontFamily="monospace" opacity="0.7">SRC</text>
-            {/* Flow arrows */}
-            <text x="158" y="258" fill="#4db8b8" fontSize="11" opacity="0.4">›</text>
-            <text x="238" y="258" fill="#4db8b8" fontSize="11" opacity="0.4">›</text>
-            <text x="318" y="258" fill="#4db8b8" fontSize="11" opacity="0.4">›</text>
-            {/* EPA data badge */}
-            <rect x="160" y="400" width="160" height="36" rx="18" fill="#4db8b8" fillOpacity="0.1" stroke="#4db8b8" strokeWidth="1" strokeOpacity="0.3"/>
-            <text x="240" y="422" textAnchor="middle" fill="#4db8b8" fontSize="11" fontFamily="monospace" opacity="0.6">EPA SDWIS DATA</text>
-            {/* Grid dots background */}
-            {Array.from({length: 8}).map((_, row) =>
-              Array.from({length: 12}).map((_, col) => (
-                <circle key={`${row}-${col}`} cx={40 + col * 38} cy={60 + row * 52} r="1.5" fill="#4db8b8" opacity="0.08"/>
+        <div className="absolute right-0 top-0 w-[52%] h-full pointer-events-none hidden xl:flex items-center justify-center pr-8">
+          <svg viewBox="0 0 560 600" className="w-full max-w-2xl drop-shadow-2xl" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="pipeGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#4db8b8" stopOpacity="0.3"/>
+                <stop offset="50%" stopColor="#4db8b8" stopOpacity="0.9"/>
+                <stop offset="100%" stopColor="#4db8b8" stopOpacity="0.3"/>
+              </linearGradient>
+              <linearGradient id="tankGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#4db8b8" stopOpacity="0.25"/>
+                <stop offset="100%" stopColor="#4db8b8" stopOpacity="0.06"/>
+              </linearGradient>
+              <linearGradient id="waterFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#4db8b8" stopOpacity="0.5"/>
+                <stop offset="100%" stopColor="#1a8a8a" stopOpacity="0.8"/>
+              </linearGradient>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <filter id="softglow">
+                <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+                <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+
+            {/* Background grid dots */}
+            {Array.from({length: 10}).map((_, row) =>
+              Array.from({length: 14}).map((_, col) => (
+                <circle key={`${row}-${col}`} cx={28 + col * 38} cy={40 + row * 56} r="1.5" fill="#4db8b8" opacity="0.1"/>
               ))
             )}
+
+            {/* Ambient glow circles */}
+            <circle cx="280" cy="200" r="180" fill="#4db8b8" fillOpacity="0.04"/>
+            <circle cx="280" cy="200" r="120" fill="#4db8b8" fillOpacity="0.04"/>
+
+            {/* ── WATER SOURCE (left reservoir) ── */}
+            <ellipse cx="60" cy="300" rx="38" ry="38" fill="#4db8b8" fillOpacity="0.12" stroke="#4db8b8" strokeWidth="2" strokeOpacity="0.6" filter="url(#glow)"/>
+            <ellipse cx="60" cy="300" rx="25" ry="25" fill="#4db8b8" fillOpacity="0.18" stroke="#4db8b8" strokeWidth="1.5" strokeOpacity="0.8"/>
+            {/* Water ripple lines */}
+            <ellipse cx="60" cy="300" rx="14" ry="5" stroke="#4db8b8" strokeWidth="1" strokeOpacity="0.5" fill="none"/>
+            <ellipse cx="60" cy="296" rx="9" ry="3" stroke="#4db8b8" strokeWidth="1" strokeOpacity="0.4" fill="none"/>
+            <text x="60" y="347" textAnchor="middle" fill="#4db8b8" fontSize="9" fontFamily="monospace" opacity="0.7" letterSpacing="1">SOURCE</text>
+
+            {/* ── MAIN HORIZONTAL PIPE ── */}
+            <rect x="98" y="294" width="404" height="14" rx="7" fill="url(#pipeGrad)"/>
+            {/* Pipe highlight */}
+            <rect x="98" y="295" width="404" height="4" rx="2" fill="#4db8b8" fillOpacity="0.4"/>
+            {/* Flow direction arrows */}
+            {[160, 230, 300, 370, 430].map((x, i) => (
+              <path key={i} d={`M${x},298 L${x+8},301 L${x},304`} stroke="#4db8b8" strokeWidth="1.5" strokeOpacity="0.6" fill="none"/>
+            ))}
+
+            {/* ── VERTICAL CONNECTOR PIPES ── */}
+            <rect x="147" y="210" width="10" height="90" rx="5" fill="#4db8b8" fillOpacity="0.6"/>
+            <rect x="272" y="185" width="10" height="115" rx="5" fill="#4db8b8" fillOpacity="0.6"/>
+            <rect x="397" y="215" width="10" height="85" rx="5" fill="#4db8b8" fillOpacity="0.6"/>
+
+            {/* ── TREATMENT TANKS ── */}
+            {/* Tank 1 — FILTER */}
+            <rect x="100" y="120" width="106" height="90" rx="10" fill="url(#tankGrad)" stroke="#4db8b8" strokeWidth="2" strokeOpacity="0.7"/>
+            {/* Water level inside */}
+            <rect x="102" y="162" width="102" height="46" rx="0 0 8 8" fill="#4db8b8" fillOpacity="0.15"/>
+            <path d="M102,162 Q153,155 204,162" stroke="#4db8b8" strokeWidth="1.5" strokeOpacity="0.7" fill="none"/>
+            {/* Filter media dots */}
+            {[116,130,144,158,172,186].map((x) => [170,178,186].map((y,j) => (
+              <circle key={`f-${x}-${y}`} cx={x} cy={y} r="2.5" fill="#4db8b8" fillOpacity="0.35"/>
+            )))}
+            <text x="153" y="142" textAnchor="middle" fill="#4db8b8" fontSize="10" fontFamily="monospace" opacity="0.9" letterSpacing="1.5">FILTER</text>
+            {/* Corner bolts */}
+            {[[107,127],[197,127],[107,203],[197,203]].map(([bx,by],i) => (
+              <circle key={i} cx={bx} cy={by} r="3" fill="#4db8b8" fillOpacity="0.4" stroke="#4db8b8" strokeWidth="1"/>
+            ))}
+
+            {/* Tank 2 — TREAT (center, taller) */}
+            <rect x="225" y="96" width="106" height="104" rx="10" fill="url(#tankGrad)" stroke="#4db8b8" strokeWidth="2" strokeOpacity="0.85" filter="url(#glow)"/>
+            <rect x="227" y="162" width="102" height="36" rx="0 0 8 8" fill="#4db8b8" fillOpacity="0.2"/>
+            <path d="M227,162 Q278,153 329,162" stroke="#4db8b8" strokeWidth="1.5" strokeOpacity="0.8" fill="none"/>
+            {/* Bubbles */}
+            {[245,262,278,295,312].map((x,i) => (
+              <circle key={i} cx={x} cy={148 - i*6} r="3" fill="none" stroke="#4db8b8" strokeWidth="1.2" strokeOpacity="0.5"/>
+            ))}
+            <text x="278" y="120" textAnchor="middle" fill="#4db8b8" fontSize="10" fontFamily="monospace" opacity="0.95" letterSpacing="1.5">TREAT</text>
+            {[[232,103],[326,103],[232,193],[326,193]].map(([bx,by],i) => (
+              <circle key={i} cx={bx} cy={by} r="3" fill="#4db8b8" fillOpacity="0.4" stroke="#4db8b8" strokeWidth="1"/>
+            ))}
+
+            {/* Tank 3 — TEST */}
+            <rect x="350" y="126" width="106" height="90" rx="10" fill="url(#tankGrad)" stroke="#4db8b8" strokeWidth="2" strokeOpacity="0.7"/>
+            <rect x="352" y="172" width="102" height="42" rx="0 0 8 8" fill="#4db8b8" fillOpacity="0.15"/>
+            <path d="M352,172 Q403,165 454,172" stroke="#4db8b8" strokeWidth="1.5" strokeOpacity="0.7" fill="none"/>
+            {/* Test vial icon */}
+            <rect x="392" y="140" width="22" height="34" rx="4" fill="none" stroke="#4db8b8" strokeWidth="1.5" strokeOpacity="0.7"/>
+            <rect x="392" y="158" width="22" height="16" rx="0 0 4 4" fill="#4db8b8" fillOpacity="0.3"/>
+            <line x1="403" y1="134" x2="403" y2="140" stroke="#4db8b8" strokeWidth="2" strokeOpacity="0.8"/>
+            <text x="403" y="146" textAnchor="middle" fill="#4db8b8" fontSize="10" fontFamily="monospace" opacity="0.9" letterSpacing="1.5">TEST</text>
+            {[[357,133],[449,133],[357,209],[449,209]].map(([bx,by],i) => (
+              <circle key={i} cx={bx} cy={by} r="3" fill="#4db8b8" fillOpacity="0.4" stroke="#4db8b8" strokeWidth="1"/>
+            ))}
+
+            {/* ── DROP PIPES TO HOMES ── */}
+            {[152, 248, 345, 442].map((x, i) => (
+              <rect key={i} x={x} y={308} width="9" height="56" rx="4" fill="#4db8b8" fillOpacity="0.55"/>
+            ))}
+
+            {/* ── HOUSES ── */}
+            {[152, 248, 345, 442].map((x, i) => (
+              <g key={i} transform={`translate(${x - 18}, 364)`}>
+                {/* House body */}
+                <rect x="0" y="18" width="36" height="28" rx="3" fill="#4db8b8" fillOpacity="0.14" stroke="#4db8b8" strokeWidth="1.8" strokeOpacity="0.65"/>
+                {/* Roof */}
+                <polygon points="18,0 36,18 0,18" fill="#4db8b8" fillOpacity="0.25" stroke="#4db8b8" strokeWidth="1.8" strokeOpacity="0.65"/>
+                {/* Door */}
+                <rect x="13" y="30" width="10" height="16" rx="1.5" fill="#4db8b8" fillOpacity="0.4"/>
+                {/* Window */}
+                <rect x="3" y="23" width="8" height="8" rx="1" fill="#4db8b8" fillOpacity="0.2" stroke="#4db8b8" strokeWidth="1" strokeOpacity="0.5"/>
+                <rect x="25" y="23" width="8" height="8" rx="1" fill="#4db8b8" fillOpacity="0.2" stroke="#4db8b8" strokeWidth="1" strokeOpacity="0.5"/>
+              </g>
+            ))}
+
+            {/* ── GROUND LINE ── */}
+            <line x1="80" y1="413" x2="500" y2="413" stroke="#4db8b8" strokeWidth="1" strokeOpacity="0.2" strokeDasharray="4 6"/>
+
+            {/* ── EPA DATA BADGE ── */}
+            <rect x="174" y="460" width="212" height="44" rx="22" fill="#4db8b8" fillOpacity="0.12" stroke="#4db8b8" strokeWidth="1.5" strokeOpacity="0.5" filter="url(#glow)"/>
+            <circle cx="198" cy="482" r="7" fill="#4db8b8" fillOpacity="0.3" stroke="#4db8b8" strokeWidth="1"/>
+            <text x="211" y="479" fill="#4db8b8" fontSize="9" fontFamily="monospace" opacity="0.6" letterSpacing="1">OFFICIAL DATA SOURCE</text>
+            <text x="211" y="492" fill="#4db8b8" fontSize="10" fontFamily="monospace" opacity="0.85" letterSpacing="1" fontWeight="600">EPA SDWIS · ECHO · WQP</text>
+
+            {/* ── CONTAMINANT CALLOUT CHIP ── */}
+            <rect x="38" y="158" width="130" height="52" rx="10" fill="#1a2f3a" stroke="#4db8b8" strokeWidth="1.5" strokeOpacity="0.6"/>
+            <circle cx="56" cy="176" r="5" fill="#4db8b8" fillOpacity="0.4"/>
+            <circle cx="56" cy="176" r="2.5" fill="#4db8b8"/>
+            <text x="67" y="173" fill="#4db8b8" fontSize="8" fontFamily="monospace" opacity="0.6" letterSpacing="0.5">CONTAMINANTS</text>
+            <text x="56" y="188" fill="white" fontSize="9" fontFamily="monospace" opacity="0.8">PFAS · Lead · NO₃</text>
+            <text x="56" y="200" fill="#4db8b8" fontSize="8" fontFamily="monospace" opacity="0.5">6 tracked · mapped</text>
+
+            {/* ── COMPLIANCE CHIP ── */}
+            <rect x="392" y="60" width="130" height="52" rx="10" fill="#1a2f3a" stroke="#4db8b8" strokeWidth="1.5" strokeOpacity="0.6"/>
+            <path d="M411,80 l4,4 l7,-7" stroke="#4db8b8" strokeWidth="2" fill="none" strokeLinecap="round" strokeOpacity="0.9"/>
+            <text x="428" y="77" fill="#4db8b8" fontSize="8" fontFamily="monospace" opacity="0.6" letterSpacing="0.5">COMPLIANCE</text>
+            <text x="411" y="91" fill="white" fontSize="9" fontFamily="monospace" opacity="0.8">MCL · MCLG · AL</text>
+            <text x="411" y="103" fill="#4db8b8" fontSize="8" fontFamily="monospace" opacity="0.5">EPA limits verified</text>
           </svg>
         </div>
       </section>
