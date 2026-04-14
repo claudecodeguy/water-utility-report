@@ -3,7 +3,6 @@ import Link from "next/link";
 import { ArrowLeft, FlaskConical, CheckCircle2, AlertTriangle, MapPin } from "lucide-react";
 import wellWaterGuides from "@/lib/content/well-water";
 import contaminants from "@/lib/content/contaminants";
-import { states } from "@/lib/mock-data";
 import FaqSection from "@/components/faq-section";
 import RelatedPages from "@/components/related-pages";
 import SourcesBlock from "@/components/sources-block";
@@ -27,8 +26,6 @@ export default async function WellWaterStatePage({ params }: { params: Promise<{
   const { state: stateSlug } = await params;
   const guide = wellWaterGuides.find((g) => g.stateSlug === stateSlug);
   if (!guide) notFound();
-
-  const stateData = states.find((s) => s.slug === stateSlug);
 
   // All contaminants in the library are relevant to private well owners
   const relatedContaminants = contaminants;
@@ -70,13 +67,11 @@ export default async function WellWaterStatePage({ params }: { params: Promise<{
               <p className="text-white/65 max-w-2xl leading-relaxed">{guide.summary}</p>
             </div>
           </div>
-          {stateData && (
-            <div className="mt-6">
-              <span className="text-xs text-white/40 font-mono">
-                Est. {stateData.wellWaterPercent}% of {guide.stateName} residents rely on private wells
-              </span>
-            </div>
-          )}
+          <div className="mt-6">
+            <span className="text-xs text-white/40 font-mono">
+              Est. {guide.wellWaterPercent}% of {guide.stateName} residents rely on private wells
+            </span>
+          </div>
         </div>
       </div>
 

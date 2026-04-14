@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { AlertTriangle, ArrowRight, Building2, FlaskConical } from "lucide-react";
-import { states, contaminants } from "@/lib/mock-data";
+import stateContent from "@/lib/content/states";
+import contaminants from "@/lib/content/contaminants";
 import ZipLookup from "@/components/zip-lookup";
 import { prisma } from "@/lib/prisma";
 import type { Metadata } from "next";
@@ -109,10 +110,10 @@ async function SearchPageContent({
           <div className="lg:col-span-2">
             <h2 className="font-display text-2xl text-foreground mb-2">Browse by State</h2>
             <p className="text-sm text-muted-foreground mb-5">
-              Currently tracking {states.length} states — expanding coverage quarterly.
+              Currently tracking {stateContent.length} states — expanding coverage quarterly.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {states.map((state) => (
+              {stateContent.map((state) => (
                 <Link
                   key={state.slug}
                   href={`/states/${state.slug}`}
@@ -127,7 +128,7 @@ async function SearchPageContent({
                         {state.name}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {state.utilitiesCount.toLocaleString()} utilities · {(state.populationServed / 1e6).toFixed(1)}M served
+                        {(state.populationServed / 1e6).toFixed(1)}M residents served
                       </p>
                     </div>
                   </div>

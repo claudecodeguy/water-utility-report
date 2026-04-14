@@ -1,15 +1,31 @@
 import Link from "next/link";
 import { ArrowRight, MapPin } from "lucide-react";
-import { states } from "@/lib/mock-data";
+import stateContent from "@/lib/content/states";
 import contaminants from "@/lib/content/contaminants";
+import { prisma } from "@/lib/prisma";
 import type { Metadata } from "next";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Browse U.S. Drinking Water by State",
   description: "Browse water quality, utilities, and contaminant concerns by U.S. state. Currently tracking 5 states.",
 };
 
-export default function StatesPage() {
+export default async function StatesPage() {
+  // Query real utility counts per state from DB
+  const dbStates = await prisma.state.findMany({
+    select: { abbreviation: true, _count: { select: { utilities: true } } },
+  });
+
+  const utilityCountByAbbr: Record<string, number> = {};
+  for (const s of dbStates) {
+    utilityCountByAbbr[s.abbreviation] = s._count.utilities;
+  }
+
+  const totalUtilities = Object.values(utilityCountByAbbr).reduce((a, b) => a + b, 0);
+
   return (
     <div className="min-h-screen bg-background">
       <div className="bg-wur-teal text-white">
@@ -17,7 +33,7 @@ export default function StatesPage() {
           <p className="text-xs font-semibold uppercase tracking-widest text-white/50 mb-2">Directory</p>
           <h1 className="font-display text-4xl text-white mb-3">Browse by State</h1>
           <p className="text-white/60 max-w-xl">
-            Stage 1 coverage: 5 states, {states.reduce((s, st) => s + st.utilitiesCount, 0).toLocaleString()}+ utilities tracked.
+            Stage 1 coverage: 5 states, {totalUtilities > 0 ? totalUtilities.toLocaleString() : "5,000+"}+ utilities tracked.
             More states launching in Phase 2.
           </p>
         </div>
@@ -25,9 +41,11 @@ export default function StatesPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {states.map((state) => {
-            // Show the most common contaminants as context tags (all are nationally relevant)
-            const stateContaminants = contaminants.slice(0, 3);
+          {stateContent.map((state) => {
+            const utilityCount = utilityCountByAbbr[state.abbreviation] ?? 0;
+            const stateContaminants = contaminants.filter((c) =>
+              state.topContaminants.includes(c.slug)
+            ).slice(0, 3);
             return (
               <Link
                 key={state.slug}
@@ -41,7 +59,7 @@ export default function StatesPage() {
                   <div className="flex items-center justify-between mb-4">
                     <MapPin className="w-4 h-4 text-wur-teal" />
                     <span className="text-xs font-mono text-muted-foreground">
-                      {state.utilitiesCount.toLocaleString()} utilities
+                      {utilityCount > 0 ? `${utilityCount.toLocaleString()} utilities` : "utilities tracked"}
                     </span>
                   </div>
                   <h2 className="font-display text-2xl text-foreground group-hover:text-wur-teal transition-colors mb-1">
@@ -53,7 +71,7 @@ export default function StatesPage() {
                   <p className="text-sm text-muted-foreground line-clamp-2 mb-4">{state.summary}</p>
 
                   <div className="flex flex-wrap gap-1.5">
-                    {stateContaminants.slice(0, 3).map((c) => (
+                    {stateContaminants.map((c) => (
                       <span key={c.slug} className="text-[10px] px-2 py-0.5 rounded-full bg-secondary text-muted-foreground">
                         {c.shortName}
                       </span>

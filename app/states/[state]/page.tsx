@@ -1,7 +1,9 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowRight, MapPin, Droplets, FlaskConical, ArrowLeft } from "lucide-react";
-import { getStateBySlug, contaminants, states } from "@/lib/mock-data";
+import { getStateContentBySlug } from "@/lib/content/states";
+import stateContent from "@/lib/content/states";
+import contaminants from "@/lib/content/contaminants";
 import { prisma } from "@/lib/prisma";
 import FaqSection from "@/components/faq-section";
 import type { Metadata } from "next";
@@ -11,11 +13,11 @@ export const revalidate = 3600;
 
 export async function generateMetadata({ params }: { params: Promise<{ state: string }> }): Promise<Metadata> {
   const { state: stateSlug } = await params;
-  const state = getStateBySlug(stateSlug);
+  const state = getStateContentBySlug(stateSlug);
   if (!state) return {};
   return {
     title: `${state.name} Drinking Water Quality — Utilities, Contaminants & Reports`,
-    description: `Water quality overview for ${state.name}: ${state.utilitiesCount.toLocaleString()} utilities tracked, key contaminants, treatment guidance, and official report links.`,
+    description: `Water quality overview for ${state.name}: utilities, contaminants, treatment guidance, and official report links.`,
   };
 }
 
@@ -29,7 +31,7 @@ const riskBgs: Record<string, string> = {
 
 export default async function StatePage({ params }: { params: Promise<{ state: string }> }) {
   const { state: stateSlug } = await params;
-  const state = getStateBySlug(stateSlug);
+  const state = getStateContentBySlug(stateSlug);
   if (!state) notFound();
 
   // Real utilities from DB — top 20 by population
@@ -55,14 +57,15 @@ export default async function StatePage({ params }: { params: Promise<{ state: s
     ? await prisma.utility.count({ where: { state_id: dbState.id } })
     : 0;
 
+  // Filter real contaminants to those flagged for this state
   const stateContaminants = contaminants.filter((c) =>
-    c.affectedStates.includes(stateSlug)
+    state.topContaminants.includes(c.slug)
   );
 
   const stateFaqs = [
     {
       question: `Who provides drinking water in ${state.name}?`,
-      answer: `${state.name} has ${state.utilitiesCount.toLocaleString()} public water systems ranging from large municipal utilities serving millions to small community systems. About ${state.wellWaterPercent}% of ${state.name} residents rely on private wells. Use the ZIP lookup to find your specific utility.`,
+      answer: `${state.name} has ${dbUtilityCount > 0 ? dbUtilityCount.toLocaleString() : "thousands of"} public water systems ranging from large municipal utilities serving millions to small community systems. About ${state.wellWaterPercent}% of ${state.name} residents rely on private wells. Use the ZIP lookup to find your specific utility.`,
     },
     {
       question: `What are the main water quality concerns in ${state.name}?`,
@@ -235,10 +238,10 @@ export default async function StatePage({ params }: { params: Promise<{ state: s
             <div className="rounded-lg border border-border bg-card p-5">
               <h3 className="font-semibold text-foreground text-sm mb-3">Other States</h3>
               <div className="space-y-1">
-                {states.filter((s) => s.slug !== stateSlug).map((s) => (
+                {stateContent.filter((s) => s.slug !== stateSlug).map((s) => (
                   <Link key={s.slug} href={`/states/${s.slug}`} className="flex items-center justify-between py-1.5 text-sm text-muted-foreground hover:text-primary transition-colors group">
                     <span>{s.name}</span>
-                    <span className="text-xs font-mono text-muted-foreground/50 group-hover:text-primary/60">{s.utilitiesCount.toLocaleString()}</span>
+                    <span className="text-xs font-mono text-muted-foreground/50 group-hover:text-primary/60">{s.abbreviation}</span>
                   </Link>
                 ))}
               </div>

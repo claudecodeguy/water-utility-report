@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ArrowRight, Droplets, AlertTriangle, FlaskConical, CheckCircle2 } from "lucide-react";
-import { states } from "@/lib/mock-data";
 import wellWaterGuides from "@/lib/content/well-water";
 import type { Metadata } from "next";
 
@@ -134,7 +133,6 @@ export default function WellWaterPage() {
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {wellWaterGuides.map((guide) => {
-              const state = states.find((s) => s.slug === guide.stateSlug);
               return (
                 <Link
                   key={guide.stateSlug}
@@ -167,11 +165,9 @@ export default function WellWaterPage() {
               );
             })}
           </div>
-          {states.length > wellWaterGuides.length && (
-            <p className="text-sm text-muted-foreground mt-4">
-              Well water guides for additional states will be added as coverage expands in Phase 2.
-            </p>
-          )}
+          <p className="text-sm text-muted-foreground mt-4">
+            Well water guides for additional states will be added as coverage expands in Phase 2.
+          </p>
         </section>
 
         {/* EPA resources */}

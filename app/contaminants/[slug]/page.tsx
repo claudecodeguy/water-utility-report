@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowLeft, FlaskConical, Wrench, AlertTriangle, CheckCircle2 } from "lucide-react";
 import contaminants, { getContaminantBySlug } from "@/lib/content/contaminants";
 import treatmentMethods from "@/lib/content/treatments";
-import { states } from "@/lib/mock-data";
+import stateContent from "@/lib/content/states";
 import FaqSection from "@/components/faq-section";
 import RelatedPages from "@/components/related-pages";
 import JsonLd from "@/components/json-ld";
@@ -33,7 +33,7 @@ export default async function ContaminantPage({ params }: { params: Promise<{ sl
     contaminant.treatments.includes(t.slug)
   );
 
-  const affectedStatesData = states.filter((s) =>
+  const affectedStatesData = stateContent.filter((s) =>
     contaminant.affectedStates.includes(s.slug)
   );
 

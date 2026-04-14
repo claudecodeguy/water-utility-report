@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, FlaskConical, Wrench, MapPin, ShieldCheck, Database, BookOpen } from "lucide-react";
 import ZipLookup from "@/components/zip-lookup";
-import { states } from "@/lib/mock-data";
+import stateContent from "@/lib/content/states";
 import contaminants from "@/lib/content/contaminants";
 import treatmentMethods from "@/lib/content/treatments";
 import { prisma } from "@/lib/prisma";
@@ -89,7 +89,7 @@ export default async function HomePage() {
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/15 rounded-full px-3.5 py-1.5 mb-8">
               <span className="w-1.5 h-1.5 rounded-full bg-wur-aqua animate-pulse" />
               <span className="text-xs text-white/70 font-medium tracking-wide">
-                5 states · 5 utilities · official data only
+                {stateContent.length} states · {totalUtilities > 0 ? `${totalUtilities.toLocaleString()}+` : "5,000+"} utilities · official data only
               </span>
             </div>
 
@@ -110,7 +110,7 @@ export default async function HomePage() {
 
             <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 animate-fade-up opacity-0 stagger-4">
               <span className="text-xs text-white/30 uppercase tracking-widest">Or browse by</span>
-              {states.map((state) => (
+              {stateContent.map((state) => (
                 <Link
                   key={state.slug}
                   href={`/states/${state.slug}`}
@@ -204,7 +204,7 @@ export default async function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-            {states.map((state) => (
+            {stateContent.map((state) => (
               <Link
                 key={state.slug}
                 href={`/states/${state.slug}`}
@@ -216,7 +216,9 @@ export default async function HomePage() {
                   {state.name}
                 </div>
                 <div className="text-xs text-muted-foreground font-mono mb-3">
-                  {(dbCountMap[state.abbreviation] ?? state.utilitiesCount).toLocaleString()} utilities
+                  {dbCountMap[state.abbreviation]
+                    ? `${dbCountMap[state.abbreviation].toLocaleString()} utilities`
+                    : "utilities tracked"}
                 </div>
                 <div className="flex flex-wrap gap-1 mt-auto">
                   {state.topContaminants.slice(0, 2).map((c) => (

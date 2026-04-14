@@ -1,5 +1,8 @@
 import { MetadataRoute } from "next";
-import { states, contaminants, treatmentMethods, cities } from "@/lib/mock-data";
+import stateContent from "@/lib/content/states";
+import contaminants from "@/lib/content/contaminants";
+import treatmentMethods from "@/lib/content/treatments";
+import wellWaterGuides from "@/lib/content/well-water";
 import { prisma } from "@/lib/prisma";
 
 const BASE = "https://waterutilityreport.com";
@@ -16,22 +19,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/contaminants`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/treatment`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/well-water`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${BASE}/labs`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     { url: `${BASE}/methodology`, lastModified: now, changeFrequency: "yearly", priority: 0.5 },
     { url: `${BASE}/methodology/data-sources`, lastModified: now, changeFrequency: "yearly", priority: 0.4 },
     { url: `${BASE}/methodology/legal`, lastModified: now, changeFrequency: "yearly", priority: 0.4 },
   ];
 
-  const statePages: MetadataRoute.Sitemap = states.map((s) => ({
+  const statePages: MetadataRoute.Sitemap = stateContent.map((s) => ({
     url: `${BASE}/states/${s.slug}`,
     lastModified: s.lastUpdated,
     changeFrequency: "monthly",
     priority: 0.9,
   }));
 
-  const wellWaterPages: MetadataRoute.Sitemap = states.map((s) => ({
-    url: `${BASE}/well-water/${s.slug}`,
-    lastModified: s.lastUpdated,
+  const wellWaterPages: MetadataRoute.Sitemap = wellWaterGuides.map((g) => ({
+    url: `${BASE}/well-water/${g.stateSlug}`,
+    lastModified: g.lastUpdated,
     changeFrequency: "monthly",
     priority: 0.7,
   }));

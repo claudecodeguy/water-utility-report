@@ -2,6 +2,7 @@ export interface WellWaterGuide {
   stateSlug: string;
   stateName: string;
   stateAbbr: string;
+  wellWaterPercent: number; // % of state residents on private wells (USGS/EPA estimate)
   summary: string;
   annualTestingGuidance: string;
   whatToTestFor: string[];
@@ -17,6 +18,7 @@ const wellWaterGuides: WellWaterGuide[] = [
     stateSlug: "california",
     stateName: "California",
     stateAbbr: "CA",
+    wellWaterPercent: 15,
     summary: "Approximately 10% of Californians — over 4 million people — rely on private wells for drinking water. California's diverse geology creates region-specific contamination risks: naturally occurring arsenic and uranium in the Central Valley and foothills, nitrate contamination from intensive agriculture, PFAS near military installations, and hexavalent chromium (chromium-6) in several inland regions. The State Water Resources Control Board oversees small water systems, but private domestic wells are the responsibility of the homeowner.",
     annualTestingGuidance: "California recommends testing private wells at least annually for coliform bacteria and nitrates. Additional testing is strongly advised for arsenic and uranium (Central Valley and Sierra foothills), chromium-6 (Mojave Desert, Hinkley area, parts of the Central Valley), PFAS (within 1 mile of military bases, airports, or industrial sites), and manganese (agricultural regions). After significant rainfall, flooding, or nearby construction, bacterial re-testing is recommended regardless of your regular schedule.",
     whatToTestFor: [
@@ -69,6 +71,7 @@ const wellWaterGuides: WellWaterGuide[] = [
     stateSlug: "texas",
     stateName: "Texas",
     stateAbbr: "TX",
+    wellWaterPercent: 22,
     summary: "Texas has approximately 1.5 million private water wells, with rural and suburban residents across the Hill Country, West Texas, and the Panhandle commonly relying on groundwater. The state's primary well water concerns include naturally occurring arsenic (particularly in West Texas and the Hill Country), high nitrates from agricultural and septic sources, radium and uranium in granite-dominated regions, and bacterial contamination in shallow alluvial wells. The Texas Commission on Environmental Quality (TCEQ) oversees public water systems; private wells are the landowner's responsibility.",
     annualTestingGuidance: "TCEQ and Texas A&M AgriLife Extension recommend testing private wells annually for bacteria and nitrates as a minimum. Additional testing should be conducted for arsenic (West Texas and Hill Country), radium (Llano Uplift and granitic bedrock areas), fluoride (Trans-Pecos and parts of West Texas), iron and manganese (East Texas), hydrogen sulfide (Permian Basin and some Gulf Coast areas), and PFAS near military installations or industrial areas. New wells should receive a comprehensive baseline test before first use.",
     whatToTestFor: [
@@ -122,6 +125,7 @@ const wellWaterGuides: WellWaterGuide[] = [
     stateSlug: "florida",
     stateName: "Florida",
     stateAbbr: "FL",
+    wellWaterPercent: 10,
     summary: "Florida has over 1 million private wells, with use concentrated in rural areas of North and Central Florida. Florida's unique geology — primarily porous karst limestone (the Floridan Aquifer System) — creates both the state's water abundance and its contamination vulnerabilities. Key concerns include naturally occurring radium, uranium, and radon from phosphate-rich limestone, nitrate and bacterial contamination from septic systems and agricultural runoff, and legacy contamination from the phosphate mining industry in the central state.",
     annualTestingGuidance: "The Florida Department of Health recommends annual testing for bacteria and nitrates. Given Florida's karst geology (limestone with sinkholes and direct conduits to the aquifer), bacterial testing after heavy rainfall is especially important. Annual testing for radium and uranium is recommended for wells in the phosphate mining belt (Polk, Hillsborough, Manatee, Hardee, DeSoto counties). PFAS testing is advised near military bases and airports. All new wells should receive a comprehensive baseline test.",
     whatToTestFor: [
@@ -175,6 +179,7 @@ const wellWaterGuides: WellWaterGuide[] = [
     stateSlug: "arizona",
     stateName: "Arizona",
     stateAbbr: "AZ",
+    wellWaterPercent: 18,
     summary: "Arizona's private well users — primarily in rural areas outside the Phoenix and Tucson metro served areas — face some of the most challenging well water conditions in the nation. The state's arid geology concentrates naturally occurring contaminants including arsenic, uranium, fluoride, and chromium-6 in groundwater. Aquifer overdraft is also a serious concern, with many rural Arizona wells experiencing declining water levels. The Arizona Department of Environmental Quality (ADEQ) regulates public water systems; private domestic wells (fewer than 5 service connections) are minimally regulated.",
     annualTestingGuidance: "ADEQ and University of Arizona Extension recommend annual testing for bacteria and nitrates as a minimum. Given Arizona's geology, arsenic testing is strongly recommended for all wells — Arizona has documented some of the highest naturally occurring arsenic in groundwater in the United States. Testing for uranium, fluoride, and chromium-6 is advised based on location. All new wells and wells that haven't been tested in 3+ years should receive a comprehensive panel including heavy metals, radiologicals, and VOCs.",
     whatToTestFor: [
@@ -228,6 +233,7 @@ const wellWaterGuides: WellWaterGuide[] = [
     stateSlug: "ohio",
     stateName: "Ohio",
     stateAbbr: "OH",
+    wellWaterPercent: 12,
     summary: "Ohio has over 800,000 private wells serving approximately 2 million residents, concentrated in rural areas outside municipal water service areas. Ohio's glacial geology, agricultural intensity, and legacy industrial history create a complex contamination landscape. Primary concerns include nitrate from agriculture and septic systems, bacteria from karst geology in northwest Ohio and the limestone belt, lead from older well pump and pressure tank components, and PFAS from industrial sources concentrated in the northeastern and central portions of the state.",
     annualTestingGuidance: "Ohio EPA and Ohio State University Extension recommend testing private wells annually for bacteria (total coliform and E. coli) and nitrates. Additional testing is advised for: radon (Ohio ranks among the higher radon states — test indoor air first, then water if air levels are elevated), PFAS (near Scioto and Muskingum River industrial corridors, near military installations), arsenic (southern Ohio, particularly in areas with Ordovician shale), and volatile organic compounds (near legacy industrial sites in northeastern Ohio). All new wells should receive a baseline comprehensive test.",
     whatToTestFor: [
