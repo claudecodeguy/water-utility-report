@@ -127,9 +127,11 @@ export default async function StatePage({ params }: { params: Promise<{ state: s
                 <h2 className="font-display text-2xl text-foreground">
                   Utilities in {state.name}
                 </h2>
-                <span className="text-xs text-muted-foreground font-mono">
-                  Top 20 of {dbUtilityCount.toLocaleString()} by population
-                </span>
+                {dbUtilities.length > 0 && (
+                  <span className="text-xs text-muted-foreground font-mono">
+                    Top 20 of {dbUtilityCount.toLocaleString()} by population
+                  </span>
+                )}
               </div>
               {dbUtilities.length > 0 ? (
                 <div className="space-y-2">
