@@ -1,0 +1,406 @@
+generator client {
+  provider        = "prisma-client"
+  output          = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── ENUMS ─────────────────────────────────────────────────────────────────────
+
+enum RiskLevel {
+  safe
+  low
+  moderate
+  high
+  critical
+}
+
+enum PublishStatus {
+  draft
+  review
+  approved
+  published
+  archived
+}
+
+// ─── STATES ────────────────────────────────────────────────────────────────────
+
+model State {
+  id               String        @id @default(uuid())
+  slug             String        @unique
+  name             String
+  abbreviation     String        @unique
+  fips_code        String?       @unique
+  summary          String?
+  meta_title       String?
+  meta_description String?
+  publish_status   PublishStatus @default(draft)
+  noindex          Boolean       @default(false)
+  last_published_at DateTime?
+  content_version  Int           @default(1)
+  created_at       DateTime      @default(now())
+  updated_at       DateTime      @updatedAt
+
+  cities      City[]
+  utilities   Utility[]
+  well_guide  WellGuide?
+  labs        Lab[]
+}
+
+// ─── CITIES ────────────────────────────────────────────────────────────────────
+
+model City {
+  id               String        @id @default(uuid())
+  slug             String        @unique
+  name             String
+  state_id         String
+  population       Int?
+  lat              Float?
+  lng              Float?
+  summary          String?
+  meta_title       String?
+  meta_description String?
+  publish_status   PublishStatus @default(draft)
+  noindex          Boolean       @default(false)
+  last_published_at DateTime?
+  content_version  Int           @default(1)
+  created_at       DateTime      @default(now())
+  updated_at       DateTime      @updatedAt
+
+  state     State     @relation(fields: [state_id], references: [id])
+  utilities Utility[]
+}
+
+// ─── UTILITIES ─────────────────────────────────────────────────────────────────
+
+model Utility {
+  id                     String        @id @default(uuid())
+  slug                   String        @unique
+  name                   String
+  pwsid                  String        @unique
+  state_id               String
+  city_id                String?
+  address                String?
+  phone                  String?
+  website                String?
+  population_served      Int
+  service_type           String?
+  ownership_type         String?
+  risk_level             RiskLevel     @default(safe)
+  risk_score             Float?
+  ccr_url                String?
+  ccr_year               Int?
+  meta_title             String?
+  meta_description       String?
+  publish_status         PublishStatus @default(draft)
+  noindex                Boolean       @default(false)
+  last_published_at      DateTime?
+  content_version        Int           @default(1)
+  // Provenance
+  source_type            String?
+  source_url             String?
+  ingestion_date         DateTime?
+  last_verification_date DateTime?
+  transform_version      String?
+  confidence_score       Float?
+  created_at             DateTime      @default(now())
+  updated_at             DateTime      @updatedAt
+
+  state                State               @relation(fields: [state_id], references: [id])
+  city                 City?               @relation(fields: [city_id], references: [id])
+  service_areas        ServiceArea[]
+  zip_utility_matches  ZipUtilityMatch[]
+  ccr_reports          CcrReport[]
+  violations           Violation[]
+  utility_contaminants UtilityContaminant[]
+}
+
+// ─── SERVICE AREAS ─────────────────────────────────────────────────────────────
+
+model ServiceArea {
+  id                  String   @id @default(uuid())
+  utility_id          String
+  geometry            Json?
+  boundary_source     String?
+  boundary_confidence Float    @default(0)
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
+
+  utility Utility @relation(fields: [utility_id], references: [id])
+}
+
+// ─── ZIP → UTILITY MATCHES ─────────────────────────────────────────────────────
+
+model ZipUtilityMatch {
+  id               String   @id @default(uuid())
+  zip_code         String
+  utility_id       String
+  match_confidence Float    @default(0)
+  match_method     String?
+  is_primary       Boolean  @default(false)
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+
+  utility Utility @relation(fields: [utility_id], references: [id])
+
+  @@unique([zip_code, utility_id])
+  @@index([zip_code])
+}
+
+// ─── CCR REPORTS ───────────────────────────────────────────────────────────────
+
+model CcrReport {
+  id               String    @id @default(uuid())
+  utility_id       String
+  report_year      Int
+  report_url       String?
+  ingestion_date   DateTime?
+  raw_text         String?
+  parsed_at        DateTime?
+  parse_version    String?
+  confidence_score Float     @default(0)
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @updatedAt
+
+  utility Utility @relation(fields: [utility_id], references: [id])
+
+  @@unique([utility_id, report_year])
+}
+
+// ─── VIOLATIONS ────────────────────────────────────────────────────────────────
+
+model Violation {
+  id                String    @id @default(uuid())
+  utility_id        String
+  contaminant_code  String?
+  contaminant_name  String?
+  violation_type    String?
+  violation_date    DateTime?
+  resolution_date   DateTime?
+  is_health_based   Boolean   @default(false)
+  severity          String?
+  description       String?
+  source_url        String?
+  ingestion_date    DateTime?
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+
+  utility Utility @relation(fields: [utility_id], references: [id])
+
+  @@index([utility_id])
+}
+
+// ─── CONTAMINANTS ──────────────────────────────────────────────────────────────
+
+model Contaminant {
+  id                 String        @id @default(uuid())
+  slug               String        @unique
+  name               String
+  short_name         String?
+  category           String?
+  risk_level         RiskLevel     @default(safe)
+  epa_limit          String?
+  epa_limit_note     String?
+  summary            String?
+  definition         String?
+  why_care           String?
+  who_is_affected    String?
+  detection          String?
+  well_water_relevant Boolean      @default(false)
+  affected_states    String[]
+  meta_title         String?
+  meta_description   String?
+  publish_status     PublishStatus @default(draft)
+  noindex            Boolean       @default(false)
+  last_published_at  DateTime?
+  content_version    Int           @default(1)
+  created_at         DateTime      @default(now())
+  updated_at         DateTime      @updatedAt
+
+  utility_contaminants UtilityContaminant[]
+}
+
+// ─── UTILITY CONTAMINANTS ──────────────────────────────────────────────────────
+
+model UtilityContaminant {
+  id                     String    @id @default(uuid())
+  utility_id             String
+  contaminant_id         String
+  detected               Boolean   @default(false)
+  level                  Float?
+  unit                   String?
+  status                 RiskLevel @default(safe)
+  year_tested            Int?
+  // Provenance
+  source_type            String?
+  source_url             String?
+  ingestion_date         DateTime?
+  last_verification_date DateTime?
+  transform_version      String?
+  confidence_score       Float?
+  created_at             DateTime  @default(now())
+  updated_at             DateTime  @updatedAt
+
+  utility     Utility     @relation(fields: [utility_id], references: [id])
+  contaminant Contaminant @relation(fields: [contaminant_id], references: [id])
+
+  @@unique([utility_id, contaminant_id])
+}
+
+// ─── TREATMENT METHODS ─────────────────────────────────────────────────────────
+
+model TreatmentMethod {
+  id                String        @id @default(uuid())
+  slug              String        @unique
+  name              String
+  short_name        String?
+  summary           String?
+  solves            String[]
+  does_not_solve    String[]
+  point_of_use      Boolean       @default(false)
+  whole_home        Boolean       @default(false)
+  maintenance       String?
+  cost_range        String?
+  meta_title        String?
+  meta_description  String?
+  publish_status    PublishStatus @default(draft)
+  noindex           Boolean       @default(false)
+  last_published_at DateTime?
+  content_version   Int           @default(1)
+  created_at        DateTime      @default(now())
+  updated_at        DateTime      @updatedAt
+}
+
+// ─── WELL GUIDES ───────────────────────────────────────────────────────────────
+
+model WellGuide {
+  id                   String        @id @default(uuid())
+  state_id             String        @unique
+  slug                 String        @unique
+  common_contaminants  String[]
+  testing_frequency    String?
+  regulations_summary  String?
+  meta_title           String?
+  meta_description     String?
+  publish_status       PublishStatus @default(draft)
+  noindex              Boolean       @default(false)
+  last_published_at    DateTime?
+  content_version      Int           @default(1)
+  created_at           DateTime      @default(now())
+  updated_at           DateTime      @updatedAt
+
+  state State @relation(fields: [state_id], references: [id])
+}
+
+// ─── LABS ──────────────────────────────────────────────────────────────────────
+
+model Lab {
+  id                     String    @id @default(uuid())
+  slug                   String    @unique
+  name                   String
+  state_id               String
+  website                String?
+  service_area           String?
+  certifications         String[]
+  tests_offered          String[]
+  last_updated           DateTime?
+  // Provenance
+  source_type            String?
+  source_url             String?
+  ingestion_date         DateTime?
+  last_verification_date DateTime?
+  transform_version      String?
+  confidence_score       Float?
+  created_at             DateTime  @default(now())
+  updated_at             DateTime  @updatedAt
+
+  state State @relation(fields: [state_id], references: [id])
+}
+
+// ─── PAGE REGISTRY ─────────────────────────────────────────────────────────────
+
+model PageRegistry {
+  id              String        @id @default(uuid())
+  entity_type     String
+  entity_id       String
+  slug            String        @unique
+  canonical_url   String?
+  publish_status  PublishStatus @default(draft)
+  noindex         Boolean       @default(false)
+  robots_override String?
+  last_crawled_at DateTime?
+  indexed_at      DateTime?
+  content_hash    String?
+  content_version Int           @default(1)
+  created_at      DateTime      @default(now())
+  updated_at      DateTime      @updatedAt
+
+  @@index([entity_type, entity_id])
+}
+
+// ─── PAGE PUBLISH RULES ────────────────────────────────────────────────────────
+
+model PagePublishRule {
+  id                       String   @id @default(uuid())
+  entity_type              String   @unique
+  min_confidence           Float    @default(0.7)
+  require_human_review     Boolean  @default(true)
+  auto_publish             Boolean  @default(false)
+  noindex_below_confidence Float    @default(0.6)
+  created_at               DateTime @default(now())
+  updated_at               DateTime @updatedAt
+}
+
+// ─── SOURCE REGISTRY ───────────────────────────────────────────────────────────
+
+model SourceRegistry {
+  id                         String    @id @default(uuid())
+  source_type                String    @unique
+  name                       String
+  base_url                   String?
+  last_ingested_at           DateTime?
+  ingestion_cadence          String?
+  terms_allow_republication  Boolean   @default(false)
+  notes                      String?
+  created_at                 DateTime  @default(now())
+  updated_at                 DateTime  @updatedAt
+}
+
+// ─── LEGAL REVIEW FLAGS ────────────────────────────────────────────────────────
+
+model LegalReviewFlag {
+  id          String    @id @default(uuid())
+  entity_type String
+  entity_id   String
+  flag_type   String
+  flag_reason String?
+  flagged_at  DateTime  @default(now())
+  reviewed_at DateTime?
+  reviewer_id String?
+  resolution  String?
+  resolved_at DateTime?
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+
+  @@index([entity_type, entity_id])
+}
+
+// ─── CONTENT EXPERIMENTS ───────────────────────────────────────────────────────
+
+model ContentExperiment {
+  id            String    @id @default(uuid())
+  slug          String    @unique
+  name          String
+  entity_type   String
+  variant_a     Json
+  variant_b     Json
+  traffic_split Float     @default(0.5)
+  start_date    DateTime?
+  end_date      DateTime?
+  winner        String?
+  status        String    @default("draft")
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+}
