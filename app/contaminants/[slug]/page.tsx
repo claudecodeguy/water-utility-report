@@ -220,50 +220,6 @@ export default async function ContaminantPage({ params }: { params: Promise<{ sl
               </div>
             </section>
 
-            {/* Affected utilities */}
-            {affectedUtilities.length > 0 && (
-              <section>
-                <h2 className="font-display text-2xl text-foreground mb-2">
-                  Utilities Where {contaminant.shortName} Has Been Detected
-                </h2>
-                <p className="text-sm text-muted-foreground mb-5">
-                  Within our current tracking database (Stage 1: 5 states).
-                </p>
-                <div className="space-y-2">
-                  {affectedUtilities.map((u) => {
-                    const uc = u.contaminants.find((c) => c.slug === contaminant.slug);
-                    return (
-                      <Link
-                        key={u.slug}
-                        href={`/utilities/${u.slug}`}
-                        className="group flex items-center justify-between p-4 rounded-lg border border-border bg-card hover:border-wur-teal/40 transition-all"
-                      >
-                        <div className="flex items-center gap-3">
-                          {uc?.status === "safe" || uc?.status === "low" ? (
-                            <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                          ) : (
-                            <AlertTriangle className="w-4 h-4 text-wur-warning shrink-0" />
-                          )}
-                          <div>
-                            <p className="text-sm font-medium text-foreground group-hover:text-wur-teal transition-colors">
-                              {u.name}
-                            </p>
-                            <p className="text-xs text-muted-foreground font-mono">
-                              {u.stateAbbr} · {u.populationServed.toLocaleString()} served
-                            </p>
-                          </div>
-                        </div>
-                        {uc && (
-                          <span className="font-mono text-sm font-medium text-muted-foreground">
-                            {uc.detected ? `${uc.level} ${uc.unit}` : "ND"}
-                          </span>
-                        )}
-                      </Link>
-                    );
-                  })}
-                </div>
-              </section>
-            )}
 
             <FaqSection faqs={contaminant.faqs} />
             <RelatedPages pages={relatedPages} />
