@@ -80,8 +80,8 @@ export default async function UtilityPage({ params }: { params: Promise<{ slug: 
       url: `https://echo.epa.gov/detailed-facility-report?fid=${utility.pwsid}`,
     },
     {
-      label: "EPA SDWIS — Safe Drinking Water Data",
-      url: `https://sdwis.epa.gov/`,
+      label: "EPA CCR — Consumer Confidence Reports",
+      url: `https://www.epa.gov/ccr`,
     },
   ];
 
@@ -350,8 +350,8 @@ export default async function UtilityPage({ params }: { params: Promise<{ slug: 
                   <a href={`https://echo.epa.gov/detailed-facility-report?fid=${utility.pwsid}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs text-wur-teal hover:underline">
                     EPA ECHO Facility Report <ExternalLink className="w-3 h-3" />
                   </a>
-                  <a href="https://sdwis.epa.gov/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs text-wur-teal hover:underline">
-                    EPA SDWIS Database <ExternalLink className="w-3 h-3" />
+                  <a href="https://www.epa.gov/ccr" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs text-wur-teal hover:underline">
+                    EPA CCR Search <ExternalLink className="w-3 h-3" />
                   </a>
                 </div>
               </div>
