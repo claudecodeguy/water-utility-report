@@ -2,6 +2,10 @@ import Link from "next/link";
 import { ArrowRight, FlaskConical, Wrench, MapPin, ShieldCheck, Database, BookOpen } from "lucide-react";
 import ZipLookup from "@/components/zip-lookup";
 import { states, contaminants, treatmentMethods } from "@/lib/mock-data";
+import { prisma } from "@/lib/prisma";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 const featuredContaminants = ["pfas", "lead", "nitrates", "disinfection-byproducts"];
 
@@ -39,7 +43,14 @@ const methodologyPoints = [
   { icon: ShieldCheck, label: "State regulatory datasets", desc: "Where terms allow public use" },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const dbStates = await prisma.state.findMany({
+    select: { abbreviation: true, _count: { select: { utilities: true } } },
+  });
+  const dbCountMap = Object.fromEntries(
+    dbStates.map((s) => [s.abbreviation, s._count.utilities])
+  );
+
   const featuredContaminantData = contaminants.filter((c) =>
     featuredContaminants.includes(c.slug)
   );
@@ -161,7 +172,7 @@ export default function HomePage() {
                   {state.name}
                 </div>
                 <div className="text-xs text-muted-foreground font-mono mb-3">
-                  {state.utilitiesCount.toLocaleString()} utilities
+                  {(dbCountMap[state.abbreviation] ?? state.utilitiesCount).toLocaleString()} utilities
                 </div>
                 <div className="flex flex-wrap gap-1 mt-auto">
                   {state.topContaminants.slice(0, 2).map((c) => (
