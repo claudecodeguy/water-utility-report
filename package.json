@@ -15,6 +15,7 @@
     "publish:status": "tsx scripts/publish.ts --status"
   },
   "dependencies": {
+    "@next/third-parties": "^16.2.3",
     "@prisma/adapter-pg": "^7.7.0",
     "@prisma/client": "^7.7.0",
     "@radix-ui/react-accordion": "^1.2.1",
