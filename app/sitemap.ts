@@ -64,13 +64,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  const cityPages: MetadataRoute.Sitemap = cities.map((c) => ({
-    url: `${BASE}/cities/${c.slug}`,
-    lastModified: c.lastUpdated,
-    changeFrequency: "monthly",
-    priority: 0.85,
-  }));
-
   return [
     ...staticPages,
     ...statePages,
@@ -78,6 +71,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...utilityPages,
     ...contaminantPages,
     ...treatmentPages,
-    ...cityPages,
   ];
 }

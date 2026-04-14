@@ -19,6 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
   return {
     title: `${city.name}, ${city.stateAbbr} Tap Water Quality — Utilities & Contaminants`,
     description: `Drinking water quality in ${city.name}, ${city.stateAbbr}. Find your utility, key contaminants, and treatment options.`,
+    robots: { index: false, follow: false },
   };
 }
 

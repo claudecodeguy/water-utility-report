@@ -16,7 +16,6 @@ const navLinks = [
 ];
 
 const utilityLinks = [
-  { href: "/cities", label: "Cities" },
   { href: "/search", label: "ZIP Lookup" },
   { href: "/admin", label: "Admin" },
 ];
