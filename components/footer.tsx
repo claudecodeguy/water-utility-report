@@ -18,8 +18,8 @@ const footerLinks = {
   ],
   About: [
     { href: "/methodology", label: "Our Methodology" },
-    { href: "/data-sources", label: "Data Sources" },
-    { href: "/legal", label: "Legal & Disclaimer" },
+    { href: "/methodology/data-sources", label: "Data Sources" },
+    { href: "/methodology/legal", label: "Legal & Disclaimer" },
     { href: "/about", label: "About WUR" },
     { href: "/contact", label: "Contact" },
   ],
@@ -32,7 +32,7 @@ export default function Footer() {
       <div className="bg-wur-teal-dark border-b border-white/10 py-3 px-4">
         <p className="max-w-7xl mx-auto text-xs text-white/60 text-center">
           Water Utility Report provides informational content sourced from official U.S. government and public datasets. This site is not a substitute for professional water testing, utility confirmation, or medical advice.{" "}
-          <Link href="/legal" className="underline hover:text-white/80 transition-colors">
+          <Link href="/methodology/legal" className="underline hover:text-white/80 transition-colors">
             Full disclaimer
           </Link>
         </p>

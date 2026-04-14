@@ -1,7 +1,8 @@
 /**
  * check-links.ts
- * Scans all TypeScript/TSX source files for external URLs and verifies
- * each one returns a non-error HTTP status code.
+ * Scans all TypeScript/TSX source files for:
+ *   1. External URLs — HEAD/GET checks for 4xx/5xx and soft 404s
+ *   2. Internal href="/..." links — verifies a matching page.tsx exists in the app/ directory
  *
  * Run: npx tsx scripts/check-links.ts
  */
@@ -215,15 +216,75 @@ async function main() {
   }
 
   if (failures.length) {
-    console.log("\n✗  FAILURES:");
+    console.log("\n✗  EXTERNAL FAILURES:");
     for (const r of failures) {
       console.log(`  [${r.status ?? r.error}] ${r.url}`);
       for (const f of r.files) console.log(`       → ${f}`);
     }
-    console.log("\nFix these URLs before deploying.\n");
+  }
+
+  // ── Internal link check ─────────────────────────────────────────────────────
+  console.log("\n" + "=".repeat(80));
+  console.log("Checking internal links...");
+  console.log("=".repeat(80) + "\n");
+
+  const INTERNAL_HREF_REGEX = /href=["'](\/[^"'#?][^"']*?)["']/g;
+  // Segments that are dynamic (contain [param]) — skip these
+  const isDynamic = (route: string) => /\[/.test(route);
+  // Patterns that are clearly not page routes
+  const isAsset = (route: string) => /\.(xml|txt|ico|png|jpg|svg|json)$/.test(route);
+
+  const internalToFiles = new Map<string, Set<string>>();
+  for (const file of allFiles) {
+    const relFile = path.relative(PROJECT_ROOT, file);
+    if (SKIP_FILES.has(relFile)) continue;
+    const content = fs.readFileSync(file, "utf-8");
+    let m: RegExpExecArray | null;
+    INTERNAL_HREF_REGEX.lastIndex = 0;
+    while ((m = INTERNAL_HREF_REGEX.exec(content)) !== null) {
+      const href = m[1].split("?")[0].split("#")[0]; // strip query/hash
+      if (!internalToFiles.has(href)) internalToFiles.set(href, new Set());
+      internalToFiles.get(href)!.add(relFile);
+    }
+  }
+
+  const APP_DIR = path.join(PROJECT_ROOT, "app");
+  function routeExists(href: string): boolean {
+    // Check app/<route>/page.tsx or app/<route>.tsx
+    const segments = href.replace(/^\//, "").split("/");
+    // Dynamic segments — skip
+    if (segments.some((s) => s.startsWith("["))) return true;
+    const dirPage = path.join(APP_DIR, ...segments, "page.tsx");
+    const filePage = path.join(APP_DIR, ...segments.slice(0, -1), `${segments[segments.length - 1]}.tsx`);
+    return fs.existsSync(dirPage) || fs.existsSync(filePage);
+  }
+
+  const internalFailures: { href: string; files: string[] }[] = [];
+  for (const [href, files] of internalToFiles) {
+    if (isAsset(href)) continue;
+    if (isDynamic(href)) continue;
+    const exists = routeExists(href);
+    const label = exists ? "✓" : "✗ MISSING";
+    console.log(`  ${label}  ${href}`);
+    if (!exists) internalFailures.push({ href, files: [...files] });
+  }
+
+  if (internalFailures.length) {
+    console.log("\n✗  MISSING INTERNAL ROUTES:");
+    for (const r of internalFailures) {
+      console.log(`  ${r.href}`);
+      for (const f of r.files) console.log(`       → ${f}`);
+    }
+  }
+
+  const totalFailed = failures.length + internalFailures.length;
+  console.log(`\n${"=".repeat(80)}`);
+  console.log(`Final: ${totalFailed === 0 ? "ALL PASSED" : `${totalFailed} issue(s) found`}`);
+  console.log("=".repeat(80) + "\n");
+
+  if (totalFailed > 0) {
+    console.log("Fix these before deploying.\n");
     process.exit(1);
-  } else {
-    console.log("\nAll checked links passed.\n");
   }
 }
 
