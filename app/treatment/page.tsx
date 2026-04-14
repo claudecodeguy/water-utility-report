@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Wrench, ArrowRight } from "lucide-react";
-import { treatmentMethods } from "@/lib/mock-data";
+import treatmentMethods from "@/lib/content/treatments";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

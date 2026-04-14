@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { FlaskConical, ArrowRight } from "lucide-react";
-import { contaminants } from "@/lib/mock-data";
+import contaminants from "@/lib/content/contaminants";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

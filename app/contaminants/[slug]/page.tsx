@@ -1,7 +1,9 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, FlaskConical, Wrench, AlertTriangle, CheckCircle2 } from "lucide-react";
-import { getContaminantBySlug, treatmentMethods, contaminants, states } from "@/lib/mock-data";
+import contaminants, { getContaminantBySlug } from "@/lib/content/contaminants";
+import treatmentMethods from "@/lib/content/treatments";
+import { states } from "@/lib/mock-data";
 import FaqSection from "@/components/faq-section";
 import RelatedPages from "@/components/related-pages";
 import JsonLd from "@/components/json-ld";

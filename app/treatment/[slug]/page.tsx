@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, CheckCircle2, XCircle, Wrench, FlaskConical, DollarSign, Settings } from "lucide-react";
-import { getTreatmentBySlug, contaminants, treatmentMethods } from "@/lib/mock-data";
+import treatmentMethods, { getTreatmentBySlug } from "@/lib/content/treatments";
+import contaminants from "@/lib/content/contaminants";
 import FaqSection from "@/components/faq-section";
 import RelatedPages from "@/components/related-pages";
 import SourcesBlock from "@/components/sources-block";
@@ -161,7 +162,7 @@ export default async function TreatmentPage({ params }: { params: Promise<{ slug
                 <div className="rounded-lg border border-border bg-card p-4">
                   <Wrench className="w-4 h-4 text-muted-foreground mb-2" />
                   <p className="text-xs text-muted-foreground mb-1">Installation Type</p>
-                  <p className="text-sm text-foreground">{method.installationType}</p>
+                  <p className="text-sm text-foreground">{method.installation}</p>
                 </div>
               </div>
             </section>

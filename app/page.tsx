@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { ArrowRight, FlaskConical, Wrench, MapPin, ShieldCheck, Database, BookOpen } from "lucide-react";
 import ZipLookup from "@/components/zip-lookup";
-import { states, contaminants, treatmentMethods } from "@/lib/mock-data";
+import { states } from "@/lib/mock-data";
+import contaminants from "@/lib/content/contaminants";
+import treatmentMethods from "@/lib/content/treatments";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
