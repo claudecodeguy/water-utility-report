@@ -122,14 +122,53 @@ export default async function HomePage() {
           </div>
         </div>
 
-        {/* Decorative element */}
-        <div className="absolute right-0 top-0 w-1/2 h-full opacity-[0.04] pointer-events-none hidden xl:block">
-          <svg viewBox="0 0 600 800" className="w-full h-full" fill="none">
-            <circle cx="300" cy="400" r="280" stroke="white" strokeWidth="0.5" />
-            <circle cx="300" cy="400" r="220" stroke="white" strokeWidth="0.5" />
-            <circle cx="300" cy="400" r="160" stroke="white" strokeWidth="0.5" />
-            <circle cx="300" cy="400" r="100" stroke="white" strokeWidth="0.5" />
-            <circle cx="300" cy="400" r="40" stroke="white" strokeWidth="0.5" />
+        {/* Hero illustration */}
+        <div className="absolute right-0 top-0 w-1/2 h-full pointer-events-none hidden xl:flex items-center justify-center pr-16">
+          <svg viewBox="0 0 480 520" className="w-full max-w-md opacity-80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            {/* Water treatment plant schematic */}
+            {/* Main pipe horizontal */}
+            <rect x="40" y="260" width="400" height="12" rx="6" fill="#4db8b8" opacity="0.4"/>
+            {/* Vertical supply pipes */}
+            <rect x="100" y="180" width="10" height="80" rx="5" fill="#4db8b8" opacity="0.5"/>
+            <rect x="220" y="160" width="10" height="100" rx="5" fill="#4db8b8" opacity="0.5"/>
+            <rect x="340" y="190" width="10" height="70" rx="5" fill="#4db8b8" opacity="0.5"/>
+            {/* Treatment tanks */}
+            <rect x="70" y="120" width="70" height="60" rx="8" stroke="#4db8b8" strokeWidth="2" fill="#4db8b8" fillOpacity="0.08"/>
+            <rect x="190" y="100" width="70" height="60" rx="8" stroke="#4db8b8" strokeWidth="2" fill="#4db8b8" fillOpacity="0.08"/>
+            <rect x="310" y="130" width="70" height="60" rx="8" stroke="#4db8b8" strokeWidth="2" fill="#4db8b8" fillOpacity="0.08"/>
+            {/* Tank labels */}
+            <text x="105" y="154" textAnchor="middle" fill="#4db8b8" fontSize="9" fontFamily="monospace" opacity="0.7">FILTER</text>
+            <text x="225" y="134" textAnchor="middle" fill="#4db8b8" fontSize="9" fontFamily="monospace" opacity="0.7">TREAT</text>
+            <text x="345" y="164" textAnchor="middle" fill="#4db8b8" fontSize="9" fontFamily="monospace" opacity="0.7">TEST</text>
+            {/* Drop-off pipes to homes */}
+            <rect x="120" y="272" width="8" height="50" rx="4" fill="#4db8b8" opacity="0.35"/>
+            <rect x="200" y="272" width="8" height="50" rx="4" fill="#4db8b8" opacity="0.35"/>
+            <rect x="280" y="272" width="8" height="50" rx="4" fill="#4db8b8" opacity="0.35"/>
+            <rect x="360" y="272" width="8" height="50" rx="4" fill="#4db8b8" opacity="0.35"/>
+            {/* Houses */}
+            {[120, 200, 280, 360].map((x, i) => (
+              <g key={i} transform={`translate(${x - 14}, 322)`}>
+                <rect x="0" y="14" width="28" height="22" rx="2" fill="#4db8b8" fillOpacity="0.12" stroke="#4db8b8" strokeWidth="1.5" strokeOpacity="0.5"/>
+                <polygon points="14,0 28,14 0,14" fill="#4db8b8" fillOpacity="0.2" stroke="#4db8b8" strokeWidth="1.5" strokeOpacity="0.5"/>
+                <rect x="10" y="22" width="8" height="14" rx="1" fill="#4db8b8" fillOpacity="0.3"/>
+              </g>
+            ))}
+            {/* Water source at left */}
+            <ellipse cx="40" cy="266" rx="20" ry="20" fill="#4db8b8" fillOpacity="0.15" stroke="#4db8b8" strokeWidth="1.5" strokeOpacity="0.5"/>
+            <text x="40" y="270" textAnchor="middle" fill="#4db8b8" fontSize="8" fontFamily="monospace" opacity="0.7">SRC</text>
+            {/* Flow arrows */}
+            <text x="158" y="258" fill="#4db8b8" fontSize="11" opacity="0.4">›</text>
+            <text x="238" y="258" fill="#4db8b8" fontSize="11" opacity="0.4">›</text>
+            <text x="318" y="258" fill="#4db8b8" fontSize="11" opacity="0.4">›</text>
+            {/* EPA data badge */}
+            <rect x="160" y="400" width="160" height="36" rx="18" fill="#4db8b8" fillOpacity="0.1" stroke="#4db8b8" strokeWidth="1" strokeOpacity="0.3"/>
+            <text x="240" y="422" textAnchor="middle" fill="#4db8b8" fontSize="11" fontFamily="monospace" opacity="0.6">EPA SDWIS DATA</text>
+            {/* Grid dots background */}
+            {Array.from({length: 8}).map((_, row) =>
+              Array.from({length: 12}).map((_, col) => (
+                <circle key={`${row}-${col}`} cx={40 + col * 38} cy={60 + row * 52} r="1.5" fill="#4db8b8" opacity="0.08"/>
+              ))
+            )}
           </svg>
         </div>
       </section>

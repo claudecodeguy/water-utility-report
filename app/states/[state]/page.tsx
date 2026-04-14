@@ -157,7 +157,9 @@ export default async function StatePage({ params }: { params: Promise<{ state: s
                   ))}
                 </div>
               ) : (
-                <p className="text-muted-foreground text-sm">Loading utility data…</p>
+                <div className="rounded-lg border border-border bg-muted/30 p-5">
+                  <p className="text-sm text-muted-foreground">Detailed utility pages for {state.name} are being prepared and will go live soon. <a href="/states" className="text-wur-teal hover:underline">Browse available states →</a></p>
+                </div>
               )}
             </section>
 
