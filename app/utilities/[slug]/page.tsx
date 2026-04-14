@@ -348,10 +348,10 @@ export default async function UtilityPage({ params }: { params: Promise<{ slug: 
                 <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">Data Sources</p>
                 <div className="space-y-2">
                   <a href={`https://echo.epa.gov/detailed-facility-report?fid=${utility.pwsid}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs text-wur-teal hover:underline">
-                    EPA Water System Lookup <ExternalLink className="w-3 h-3" />
+                    EPA ECHO Facility Report <ExternalLink className="w-3 h-3" />
                   </a>
-                  <a href={`https://echo.epa.gov/detailed-facility-report?fid=${utility.pwsid}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs text-wur-teal hover:underline">
-                    EPA ECHO <ExternalLink className="w-3 h-3" />
+                  <a href="https://sdwis.epa.gov/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs text-wur-teal hover:underline">
+                    EPA SDWIS Database <ExternalLink className="w-3 h-3" />
                   </a>
                 </div>
               </div>
