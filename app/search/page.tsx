@@ -1,8 +1,11 @@
 import Link from "next/link";
-import { MapPin, AlertTriangle, ArrowRight, Building2, FlaskConical } from "lucide-react";
-import { states, utilities, contaminants, lookupByZip } from "@/lib/mock-data";
+import { AlertTriangle, ArrowRight, Building2, FlaskConical } from "lucide-react";
+import { states, contaminants } from "@/lib/mock-data";
 import ZipLookup from "@/components/zip-lookup";
+import { prisma } from "@/lib/prisma";
 import type { Metadata } from "next";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Search Water Quality by ZIP Code — Water Utility Report",
@@ -26,7 +29,16 @@ async function SearchPageContent({
   const { zip } = await searchParams;
   const trimmedZip = zip?.trim();
   const isValidZip = trimmedZip && /^\d{5}$/.test(trimmedZip);
-  const match = isValidZip ? lookupByZip(trimmedZip!) : null;
+
+  // Query DB for published utilities — show top results by population
+  const dbUtilities = isValidZip
+    ? await prisma.utility.findMany({
+        where: { publish_status: "published" },
+        select: { slug: true, name: true, population_served: true, state: { select: { abbreviation: true } } },
+        orderBy: { population_served: "desc" },
+        take: 5,
+      })
+    : [];
 
   return (
     <div className="min-h-screen bg-background">
@@ -136,16 +148,16 @@ async function SearchPageContent({
                 </p>
               </div>
               <div className="space-y-2">
-                {utilities.slice(0, 5).map((u) => (
+                {dbUtilities.map((u) => (
                   <Link
                     key={u.slug}
                     href={`/utilities/${u.slug}`}
                     className="flex items-center justify-between py-1.5 group"
                   >
                     <p className="text-sm text-muted-foreground group-hover:text-primary transition-colors truncate pr-2">
-                      {u.shortName}
+                      {u.name}
                     </p>
-                    <span className="text-xs font-mono text-muted-foreground/60 shrink-0">{u.stateAbbr}</span>
+                    <span className="text-xs font-mono text-muted-foreground/60 shrink-0">{u.state.abbreviation}</span>
                   </Link>
                 ))}
               </div>

@@ -26,13 +26,7 @@ export default function ZipLookup({ variant = "hero", className }: ZipLookupProp
     }
 
     setError("");
-    const match = zipUtilityMatches.find((z) => z.zip === trimmed);
-
-    if (match) {
-      router.push(`/utilities/${match.utilitySlug}?zip=${trimmed}`);
-    } else {
-      router.push(`/search?zip=${trimmed}`);
-    }
+    router.push(`/search?zip=${trimmed}`);
   };
 
   if (variant === "inline") {
