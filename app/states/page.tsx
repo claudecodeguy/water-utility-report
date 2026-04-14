@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, MapPin } from "lucide-react";
-import { states, contaminants } from "@/lib/mock-data";
+import { states } from "@/lib/mock-data";
+import contaminants from "@/lib/content/contaminants";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -25,9 +26,8 @@ export default function StatesPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {states.map((state) => {
-            const stateContaminants = contaminants.filter((c) =>
-              c.affectedStates.includes(state.slug)
-            );
+            // Show the most common contaminants as context tags (all are nationally relevant)
+            const stateContaminants = contaminants.slice(0, 3);
             return (
               <Link
                 key={state.slug}

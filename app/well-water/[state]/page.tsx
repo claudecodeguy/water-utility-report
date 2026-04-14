@@ -1,7 +1,9 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, FlaskConical, ExternalLink, CheckCircle2, AlertTriangle, MapPin } from "lucide-react";
-import { wellWaterGuides, getLabsByState, contaminants, states } from "@/lib/mock-data";
+import { ArrowLeft, FlaskConical, CheckCircle2, AlertTriangle, MapPin } from "lucide-react";
+import wellWaterGuides from "@/lib/content/well-water";
+import contaminants from "@/lib/content/contaminants";
+import { states } from "@/lib/mock-data";
 import FaqSection from "@/components/faq-section";
 import RelatedPages from "@/components/related-pages";
 import SourcesBlock from "@/components/sources-block";
@@ -26,17 +28,14 @@ export default async function WellWaterStatePage({ params }: { params: Promise<{
   const guide = wellWaterGuides.find((g) => g.stateSlug === stateSlug);
   if (!guide) notFound();
 
-  const stateLabs = getLabsByState(stateSlug);
   const stateData = states.find((s) => s.slug === stateSlug);
 
-  const relatedContaminants = contaminants.filter((c) =>
-    c.affectedStates.includes(stateSlug) && c.wellWaterRelevant
-  );
+  // All contaminants in the library are relevant to private well owners
+  const relatedContaminants = contaminants;
 
   const relatedPages = [
     { href: `/states/${stateSlug}`, label: `${guide.stateName} Public Water Overview`, type: "state" as const },
-    { href: `/labs?state=${stateSlug}`, label: `Certified Labs in ${guide.stateAbbr}`, type: "state" as const },
-    ...relatedContaminants.map((c) => ({
+    ...relatedContaminants.slice(0, 4).map((c) => ({
       href: `/contaminants/${c.slug}`,
       label: c.name,
       type: "contaminant" as const,
@@ -148,68 +147,22 @@ export default async function WellWaterStatePage({ params }: { params: Promise<{
               </section>
             )}
 
-            {/* Labs in state */}
-            {stateLabs.length > 0 && (
-              <section>
-                <h2 className="font-display text-2xl text-foreground mb-2">
-                  Certified Labs in {guide.stateName}
-                </h2>
-                <p className="text-sm text-muted-foreground mb-5">
-                  These labs are certified to test private well water in {guide.stateName}.
-                  Always confirm current certification before submitting samples.
-                </p>
-                <div className="space-y-3">
-                  {stateLabs.map((lab) => (
-                    <div key={lab.slug} className="p-5 rounded-lg border border-border bg-card">
-                      <div className="flex items-start justify-between gap-3 mb-2">
-                        <h3 className="font-medium text-foreground">{lab.name}</h3>
-                        {lab.website !== "#" && (
-                          <a
-                            href={lab.website}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-xs text-wur-teal hover:underline shrink-0"
-                          >
-                            Website <ExternalLink className="w-3 h-3" />
-                          </a>
-                        )}
-                      </div>
-                      <p className="text-xs text-muted-foreground mb-2">{lab.serviceArea}</p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {lab.certifications.map((cert, i) => (
-                          <span key={i} className="text-[10px] px-2 py-0.5 rounded-full bg-wur-teal/10 text-wur-teal border border-wur-teal/20">
-                            {cert}
-                          </span>
-                        ))}
-                      </div>
-                      <div className="mt-2 flex flex-wrap gap-1">
-                        {lab.testsOffered.slice(0, 4).map((test, i) => (
-                          <span key={i} className="text-[10px] px-2 py-0.5 rounded-full bg-secondary text-muted-foreground">
-                            {test}
-                          </span>
-                        ))}
-                        {lab.testsOffered.length > 4 && (
-                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-secondary text-muted-foreground">
-                            +{lab.testsOffered.length - 4} more
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-4 p-4 rounded-lg bg-muted/30 border border-border">
-                  <p className="text-xs text-muted-foreground leading-relaxed">
-                    <strong className="text-foreground">Find more labs:</strong> Use the{" "}
-                    <a href={guide.stateLabUrl} target="_blank" rel="noopener noreferrer" className="text-wur-teal hover:underline">
-                      {guide.stateName} certified lab program
-                    </a>{" "}
-                    to find the full current list of state-certified labs. Certification status changes —
-                    always verify before submitting samples.
-                  </p>
-                </div>
-              </section>
-            )}
+            {/* Find a lab */}
+            <section className="rounded-lg border border-border bg-muted/30 p-5">
+              <h2 className="font-semibold text-foreground mb-2">Find a Certified Lab in {guide.stateName}</h2>
+              <p className="text-sm text-muted-foreground leading-relaxed mb-3">
+                Use the {guide.stateName} state-certified laboratory program to find accredited labs for
+                private well testing. Always verify current certification before submitting samples.
+              </p>
+              <a
+                href={guide.stateLabUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-wur-teal hover:underline"
+              >
+                {guide.stateAbbr} Certified Lab Directory ↗
+              </a>
+            </section>
 
             <FaqSection faqs={guide.faqs} title={`${guide.stateName} Well Water FAQs`} />
             <RelatedPages pages={relatedPages} />
@@ -248,8 +201,15 @@ export default async function WellWaterStatePage({ params }: { params: Promise<{
                     </a>
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground">Certified labs found</p>
-                    <p className="text-lg font-mono font-semibold text-foreground">{stateLabs.length}</p>
+                    <p className="text-xs text-muted-foreground">State lab directory</p>
+                    <a
+                      href={guide.stateLabUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-wur-teal hover:underline"
+                    >
+                      {guide.stateAbbr} Certified Labs ↗
+                    </a>
                   </div>
                 </div>
               </div>

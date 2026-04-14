@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Certified Water Testing Labs — Find a Lab by State",
   description:
     "Find EPA-approved and state-certified drinking water testing labs by state. Includes private well testing, PFAS, lead, nitrates, and full panel analysis.",
+  robots: { index: false, follow: false },
 };
 
 export default function LabsPage() {

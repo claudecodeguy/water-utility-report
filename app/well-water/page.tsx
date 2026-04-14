@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Droplets, AlertTriangle, FlaskConical, CheckCircle2 } from "lucide-react";
-import { states, wellWaterGuides } from "@/lib/mock-data";
+import { states } from "@/lib/mock-data";
+import wellWaterGuides from "@/lib/content/well-water";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
