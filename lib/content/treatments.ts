@@ -36,11 +36,11 @@ const treatmentMethods: TreatmentMethod[] = [
       "Disinfection byproducts (TTHMs, HAA5) — 90%+ removal",
       "Fluoride — 85–95% removal",
       "Chromium-6 — 80–90% removal",
-      "Bacteria and viruses (as a secondary barrier)",
       "Chlorine and chloramine taste/odor",
     ],
     doesNotSolve: [
       "Does not treat the whole house — only the connected tap",
+      "Not certified as a primary disinfection method — bacteria and viruses require UV or boil-water treatment for reliable removal",
       "Does not remove dissolved gases (radon, hydrogen sulfide)",
       "Does not soften water (hardness minerals largely removed but purpose-specific softener is different)",
       "Reduces but does not eliminate all volatile organic compounds (VOCs) — carbon pre-filter handles most",
