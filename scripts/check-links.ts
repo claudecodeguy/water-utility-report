@@ -68,16 +68,30 @@ function extractUrls(filePath: string): string[] {
   return matches.map((u) => u.replace(/[`"',)}\]]+$/, "")).filter(Boolean);
 }
 
+// Patterns that indicate a soft 404 (page returns 200 but shows an error)
+const SOFT_404_PATTERNS = [
+  /ERR-\d+ Could not determine workspace/i,
+  /Sorry, this page isn.t available/i,
+  /Page Not Found/i,
+  /404 Not Found/i,
+  /This page does not exist/i,
+  /The page you requested could not be found/i,
+];
+
 function checkUrl(url: string): Promise<{ status: number | null; error?: string }> {
   return new Promise((resolve) => {
-    const timeout = 10_000;
+    const timeout = 15_000;
     const lib = url.startsWith("https") ? https : http;
+
+    // For URLs with query params (deep links), do a GET so we can inspect the body for soft 404s
+    const needsBodyCheck = url.includes("?");
+    const method = needsBodyCheck ? "GET" : "HEAD";
 
     try {
       const req = lib.request(
         url,
         {
-          method: "HEAD",
+          method,
           headers: {
             "User-Agent":
               "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
@@ -85,13 +99,37 @@ function checkUrl(url: string): Promise<{ status: number | null; error?: string 
           },
         },
         (res) => {
-          // Follow a single redirect
-          if (res.statusCode && res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+          if (res.statusCode && res.statusCode >= 300 && res.statusCode < 400) {
+            res.resume();
             resolve({ status: res.statusCode });
-          } else {
-            resolve({ status: res.statusCode ?? null });
+            return;
           }
-          res.resume();
+
+          if (!needsBodyCheck || res.statusCode !== 200) {
+            res.resume();
+            resolve({ status: res.statusCode ?? null });
+            return;
+          }
+
+          // Read body to check for soft 404s
+          let body = "";
+          res.setEncoding("utf-8");
+          res.on("data", (chunk: string) => {
+            body += chunk;
+            if (body.length > 50_000) res.destroy(); // stop after 50KB
+          });
+          res.on("end", () => {
+            const softError = SOFT_404_PATTERNS.find((p) => p.test(body));
+            if (softError) {
+              resolve({ status: 200, error: `soft-404: matched "${softError.source}"` });
+            } else {
+              resolve({ status: 200 });
+            }
+          });
+          res.on("close", () => {
+            // body read was cut short (50KB limit) — treat as OK
+            if (!body) resolve({ status: 200 });
+          });
         }
       );
       req.setTimeout(timeout, () => {
@@ -112,8 +150,8 @@ function isBotBlocked(url: string): boolean {
 
 function isSkipped(url: string): boolean {
   if (SKIP_URLS.has(url)) return true;
-  // Skip template literal fragments (contain ${)
-  if (url.includes("${")) return true;
+  // Skip template literal fragments (contain ${ or end with bare $)
+  if (url.includes("${") || /\$$/.test(url) || url.endsWith("=$")) return true;
   // Skip localhost / local dev
   if (/localhost|127\.0\.0\.1/.test(url)) return true;
   return false;
@@ -154,8 +192,10 @@ async function main() {
     }
 
     const { status, error } = await checkUrl(url);
-    const ok = status !== null && status < 400;
-    process.stdout.write(`${status ?? "ERR"} ${ok ? "✓" : "✗"}\n`);
+    const isSoft404 = status === 200 && error?.startsWith("soft-404");
+    const ok = !isSoft404 && status !== null && status < 400;
+    const label = isSoft404 ? `200 SOFT-404` : (status ?? "ERR");
+    process.stdout.write(`${label} ${ok ? "✓" : "✗"}\n`);
     results.push({ url, status, ok, files: [...files], error });
   }
 
