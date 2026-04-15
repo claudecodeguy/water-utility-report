@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Building2,
@@ -12,6 +12,7 @@ import {
   Database,
   Settings,
   ChevronRight,
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -28,6 +29,15 @@ const navItems = [
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  // Skip layout for login page
+  if (pathname === "/admin/login") return <>{children}</>;
+
+  async function handleLogout() {
+    await fetch("/api/admin/logout", { method: "POST" });
+    router.push("/admin/login");
+  }
 
   return (
     <div className="min-h-screen bg-muted/30 flex">
@@ -64,10 +74,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             );
           })}
         </nav>
-        <div className="px-5 py-4 border-t border-white/10">
-          <Link href="/" className="text-xs text-white/30 hover:text-white/60 transition-colors">
+        <div className="px-5 py-4 border-t border-white/10 space-y-3">
+          <Link href="/" className="text-xs text-white/30 hover:text-white/60 transition-colors block">
             ← Back to site
           </Link>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-1.5 text-xs text-white/30 hover:text-wur-danger/80 transition-colors"
+          >
+            <LogOut className="w-3 h-3" /> Sign out
+          </button>
         </div>
       </aside>
 
@@ -85,8 +101,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </>
           )}
           <div className="ml-auto flex items-center gap-3">
-            <span className="text-xs px-2 py-0.5 rounded-full bg-wur-caution-bg border border-wur-caution-border text-wur-caution">
-              Mock Data
+            <span className="text-xs px-2 py-0.5 rounded-full bg-wur-safe-bg border border-wur-safe-border text-wur-safe">
+              Live Data
             </span>
           </div>
         </header>
