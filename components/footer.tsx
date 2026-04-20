@@ -4,6 +4,7 @@ import { Droplets } from "lucide-react";
 const footerLinks = {
   Directory: [
     { href: "/states", label: "Browse by State" },
+    { href: "/pfas-watchlist", label: "PFAS Watchlist" },
     { href: "/contaminants", label: "Contaminants" },
     { href: "/treatment", label: "Treatment Methods" },
     { href: "/labs", label: "Certified Labs" },

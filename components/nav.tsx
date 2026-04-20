@@ -6,9 +6,11 @@ import { usePathname } from "next/navigation";
 import { Droplets, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const navLinks = [
+const navLinks: { href: string; label: string; highlight?: boolean }[] = [
   { href: "/states", label: "Browse by State" },
+  { href: "/cities", label: "Browse by City" },
   { href: "/contaminants", label: "Contaminants" },
+  { href: "/pfas-watchlist", label: "PFAS Watchlist", highlight: true },
   { href: "/treatment", label: "Treatment" },
   { href: "/guides", label: "Guides" },
   { href: "/learn", label: "Learn" },
@@ -61,20 +63,27 @@ export default function Nav() {
 
           {/* Desktop nav */}
           <div className="hidden lg:flex items-center gap-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  "px-3 py-1.5 rounded-md text-sm transition-colors",
-                  pathname.startsWith(link.href)
-                    ? cn("font-medium", activeColor)
-                    : cn(textColor, "hover:text-primary hover:bg-secondary/50")
-                )}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = pathname.startsWith(link.href);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={cn(
+                    "px-3 py-1.5 rounded-md text-sm transition-colors",
+                    isActive
+                      ? cn("font-medium", activeColor)
+                      : link.highlight && !isHome
+                      ? "text-amber-600 font-medium hover:text-amber-700 hover:bg-amber-50"
+                      : link.highlight && isHome
+                      ? "text-amber-300 font-medium hover:text-amber-200"
+                      : cn(textColor, "hover:text-primary hover:bg-secondary/50")
+                  )}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
             <span className={cn("w-px h-4 mx-1", isHome && !scrolled ? "bg-white/20" : "bg-border")} />
             {utilityLinks.map((link) => (
               <Link
@@ -115,6 +124,8 @@ export default function Nav() {
                   "block px-3 py-2.5 rounded-md text-sm transition-colors",
                   pathname.startsWith(link.href)
                     ? "font-medium text-primary bg-secondary"
+                    : link.highlight
+                    ? "text-amber-600 font-medium hover:text-amber-700 hover:bg-amber-50"
                     : "text-foreground hover:text-primary hover:bg-secondary/50"
                 )}
               >

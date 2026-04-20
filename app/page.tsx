@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, FlaskConical, Wrench, MapPin, ShieldCheck, Database, BookOpen } from "lucide-react";
+import { ArrowRight, FlaskConical, Wrench, MapPin, ShieldCheck, Database, BookOpen, Shield, AlertTriangle } from "lucide-react";
 import ZipLookup from "@/components/zip-lookup";
 import stateContent from "@/lib/content/states";
 import contaminants from "@/lib/content/contaminants";
@@ -386,6 +386,107 @@ export default async function HomePage() {
               View all {contaminants.length} contaminant guides
               <ArrowRight className="w-4 h-4" />
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── PFAS WATCHLIST ───────────────────────────────────────────────── */}
+      <section className="py-20 bg-wur-ink text-white relative overflow-hidden">
+        {/* Subtle grid pattern */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(circle, #f59e0b 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 bg-amber-500/15 border border-amber-500/30 rounded-full px-3.5 py-1.5 mb-6">
+                <Shield className="w-3.5 h-3.5 text-amber-400" />
+                <span className="text-xs text-amber-300 font-medium tracking-wide">Government Data Watchlist</span>
+              </div>
+
+              <h2 className="font-display text-4xl text-white mb-4 leading-tight">
+                PFAS in Your <br />
+                <em className="text-amber-400 not-italic">Drinking Water</em>
+              </h2>
+              <p className="text-white/60 leading-relaxed mb-6">
+                Track official EPA UCMR 5 PFAS monitoring records for public water systems nationwide.
+                Every record is sourced from government data — no risk scores, no estimates, no guesswork.
+              </p>
+
+              <div className="flex items-start gap-2 text-xs text-white/40 mb-8">
+                <AlertTriangle className="w-3.5 h-3.5 text-amber-500/60 shrink-0 mt-0.5" />
+                <span>
+                  Monitoring results ≠ compliance determinations. Missing data ≠ absence of PFAS.{" "}
+                  <Link href="/pfas-watchlist/methodology" className="text-amber-400/70 hover:text-amber-400 transition-colors underline">
+                    Methodology
+                  </Link>
+                </span>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link
+                  href="/pfas-watchlist"
+                  className="inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 text-white font-semibold text-sm px-5 py-2.5 rounded-md transition-colors"
+                >
+                  Explore PFAS Records
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+                <Link
+                  href="/pfas-watchlist/methodology"
+                  className="inline-flex items-center justify-center gap-2 border border-white/20 text-white/70 hover:text-white hover:border-white/40 text-sm px-5 py-2.5 rounded-md transition-colors"
+                >
+                  How it works
+                </Link>
+              </div>
+            </div>
+
+            {/* Right: feature callouts */}
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                {
+                  label: "Official PFAS records",
+                  desc: "Every result linked to EPA UCMR 5 source data",
+                  icon: Shield,
+                },
+                {
+                  label: "29 analytes tracked",
+                  desc: "All compounds monitored under UCMR 5",
+                  icon: FlaskConical,
+                },
+                {
+                  label: "Search by utility",
+                  desc: "Look up any water system by PWSID or name",
+                  icon: Database,
+                },
+                {
+                  label: "No risk scoring",
+                  desc: "We never generate PFAS risk labels — only source data",
+                  icon: ShieldCheck,
+                },
+              ].map((item, i) => {
+                const Icon = item.icon;
+                return (
+                  <div
+                    key={i}
+                    className="bg-white/5 border border-white/10 rounded-lg p-4 hover:bg-white/8 hover:border-amber-500/30 transition-all"
+                  >
+                    <Icon className="w-4 h-4 text-amber-400 mb-3" />
+                    <p className="text-sm font-semibold text-white mb-1">{item.label}</p>
+                    <p className="text-xs text-white/50 leading-relaxed">{item.desc}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Bottom: source badge */}
+          <div className="mt-10 pt-6 border-t border-white/10 flex items-center gap-4 flex-wrap">
+            <span className="text-xs text-white/30 uppercase tracking-widest">Data sources</span>
+            {["EPA UCMR 5", "EPA SDWIS", "EPA ECHO"].map((src) => (
+              <span key={src} className="text-xs font-mono text-white/50 bg-white/5 px-2.5 py-1 rounded">
+                {src}
+              </span>
+            ))}
+            <span className="text-xs text-white/25">· official government data only</span>
           </div>
         </div>
       </section>

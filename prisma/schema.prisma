@@ -83,6 +83,8 @@ model Utility {
   state_id               String
   city_id                String?
   address                String?
+  city_served            String?
+  county_served          String?
   phone                  String?
   website                String?
   population_served      Int
@@ -115,6 +117,8 @@ model Utility {
   ccr_reports          CcrReport[]
   violations           Violation[]
   utility_contaminants UtilityContaminant[]
+  pfas_records         PfasRecord[]
+  pfas_statuses        PfasOfficialStatus[]
 }
 
 // ─── SERVICE AREAS ─────────────────────────────────────────────────────────────
@@ -366,6 +370,82 @@ model SourceRegistry {
   notes                      String?
   created_at                 DateTime  @default(now())
   updated_at                 DateTime  @updatedAt
+}
+
+// ─── PFAS WATCHLIST ────────────────────────────────────────────────────────────
+
+model PfasAnalyte {
+  id          String   @id @default(uuid())
+  code        String   @unique  // e.g. "PFOA", "PFOS", "HFPO-DA"
+  name        String            // full official name
+  short_name  String?           // abbreviation / trade name
+  cas_number  String?
+  epa_mcl_ppt Float?            // finalized EPA MCL in ppt (null if not yet set)
+  epa_hal_ppt Float?            // health advisory level in ppt
+  ucmr_round  String?           // e.g. "UCMR 5"
+  note        String?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  records PfasRecord[]
+}
+
+model PfasRecord {
+  id                  String    @id @default(uuid())
+  pwsid               String
+  analyte_id          String
+
+  // Raw source fields — preserved exactly as provided by source
+  raw_result_value    String
+  raw_unit            String
+  raw_detection_flag  String    // e.g. "Detected above MRL" / "Not Detected above MRL"
+  raw_reporting_limit String?
+
+  sample_date         DateTime
+  sample_point        String?
+
+  // Provenance
+  source_dataset      String    // e.g. "EPA UCMR 5"
+  source_version      String?   // e.g. "2024-11"
+  source_url          String
+  source_published_at DateTime?
+  source_retrieved_at DateTime
+  source_hash         String    @unique   // SHA-256 of raw record for dedup
+  raw_payload         Json                // immutable snapshot
+
+  // Validation
+  validated           Boolean   @default(false)
+  validation_errors   String[]
+  suppressed          Boolean   @default(false)
+  suppressed_reason   String?
+  last_seen_at        DateTime  @default(now())
+  created_at          DateTime  @default(now())
+  updated_at          DateTime  @updatedAt
+
+  utility Utility?    @relation(fields: [pwsid], references: [pwsid])
+  analyte PfasAnalyte @relation(fields: [analyte_id], references: [id])
+
+  @@index([pwsid])
+  @@index([analyte_id])
+  @@index([sample_date])
+}
+
+model PfasOfficialStatus {
+  id                String    @id @default(uuid())
+  pwsid             String
+  status_type       String    // e.g. "MCL_EXCEEDANCE", "VIOLATION", "ENFORCEMENT_ACTION"
+  raw_status_label  String    // exact wording from source
+  raw_status_reason String?
+  source_dataset    String
+  source_url        String
+  effective_date    DateTime?
+  retrieved_at      DateTime
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+
+  utility Utility? @relation(fields: [pwsid], references: [pwsid])
+
+  @@index([pwsid])
 }
 
 // ─── LEGAL REVIEW FLAGS ────────────────────────────────────────────────────────
