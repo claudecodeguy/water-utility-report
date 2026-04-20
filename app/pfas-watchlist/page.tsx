@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, Shield, AlertTriangle, ExternalLink, FlaskConical, Info } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import stateContent from "@/lib/content/states";
+import PfasSearch from "@/components/pfas-search";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -42,35 +43,42 @@ const faqItems = [
 ];
 
 export default async function PfasWatchlistHub() {
-  const [totalRecords, totalPws, analyteCounts, analyteList] = await Promise.all([
+  const [totalRecords, totalPws, analyteCounts, analyteList, statesWithData, mostRecentRecord] = await Promise.all([
     prisma.pfasRecord.count({ where: { suppressed: false, validated: true } }),
     prisma.pfasRecord.groupBy({ by: ["pwsid"], where: { suppressed: false, validated: true } }).then((r) => r.length),
     prisma.pfasRecord.groupBy({
       by: ["analyte_id"],
-      where: { suppressed: false, validated: true, raw_detection_flag: { contains: "Detected" } },
+      where: { suppressed: false, validated: true, raw_detection_flag: "Detected above MRL" },
       _count: { id: true },
       orderBy: { _count: { id: "desc" } },
       take: 10,
     }),
     prisma.pfasAnalyte.findMany({ orderBy: { code: "asc" } }),
+    // States that have PFAS data, with record counts
+    prisma.state.findMany({
+      where: { utilities: { some: { pfas_records: { some: { validated: true, suppressed: false } } } } },
+      select: {
+        abbreviation: true,
+        _count: {
+          select: { utilities: { where: { pfas_records: { some: { validated: true, suppressed: false } } } } },
+        },
+      },
+    }),
+    prisma.pfasRecord.findFirst({
+      orderBy: { source_retrieved_at: "desc" },
+      select: { source_retrieved_at: true, source_dataset: true },
+    }),
   ]);
 
-  // States with PFAS record counts (via utility join)
-  const stateRecordMap: Record<string, number> = {};
-  if (totalRecords > 0) {
-    const byState = await prisma.pfasRecord.groupBy({
-      by: ["pwsid"],
-      where: { suppressed: false, validated: true },
-      _count: { id: true },
-    });
-    // We'd need a join here — skip for now when empty
-    void byState;
-  }
+  // Map abbr → utility count with PFAS data
+  const stateDataMap = Object.fromEntries(
+    statesWithData.map((s) => [s.abbreviation, s._count.utilities])
+  );
 
-  const mostRecentRecord = await prisma.pfasRecord.findFirst({
-    orderBy: { source_retrieved_at: "desc" },
-    select: { source_retrieved_at: true, source_dataset: true },
-  });
+  // Only show states that have PFAS data, sorted by record count desc
+  const activeStates = stateContent
+    .filter((s) => stateDataMap[s.abbreviation] !== undefined)
+    .sort((a, b) => (stateDataMap[b.abbreviation] ?? 0) - (stateDataMap[a.abbreviation] ?? 0));
 
   const hasData = totalRecords > 0;
 
@@ -86,7 +94,7 @@ export default async function PfasWatchlistHub() {
             <span className="text-xs text-white/60">PFAS Watchlist</span>
           </div>
 
-          <div className="flex items-start gap-4 mb-6">
+          <div className="flex items-start gap-4 mb-8">
             <div className="w-10 h-10 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center shrink-0 mt-1">
               <Shield className="w-5 h-5 text-amber-400" />
             </div>
@@ -99,11 +107,18 @@ export default async function PfasWatchlistHub() {
               </h1>
               <p className="text-white/60 max-w-2xl text-base leading-relaxed">
                 Official EPA UCMR 5 monitoring records for public water systems nationwide.
-                Every displayed record links to a government source. No inferred risk scores.
-                No safety judgments. Only what the official data says.
+                Search for your water system below, or browse by state.
               </p>
             </div>
           </div>
+
+          {/* ── LOOKUP ── */}
+          <div className="max-w-xl mb-3">
+            <PfasSearch />
+          </div>
+          <p className="text-xs text-white/30 mb-6">
+            Search by utility name, city, or PWSID — {totalPws.toLocaleString()} systems with official records
+          </p>
 
           {/* Disclosure */}
           <div className="mt-6 flex items-start gap-3 bg-amber-500/10 border border-amber-500/25 rounded-lg p-4 max-w-3xl">
@@ -169,8 +184,8 @@ export default async function PfasWatchlistHub() {
           )}
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-            {stateContent.map((state) => {
-              const count = stateRecordMap[state.abbreviation];
+            {activeStates.map((state) => {
+              const utilityCount = stateDataMap[state.abbreviation];
               return (
                 <Link
                   key={state.slug}
@@ -182,7 +197,7 @@ export default async function PfasWatchlistHub() {
                     {state.name}
                   </div>
                   <div className="text-xs text-muted-foreground font-mono mt-auto pt-2">
-                    {count !== undefined ? `${count.toLocaleString()} records` : "View records"}
+                    {utilityCount !== undefined ? `${utilityCount.toLocaleString()} systems` : "View records"}
                   </div>
                   <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/30 group-hover:text-wur-teal transition-colors mt-1" />
                 </Link>
