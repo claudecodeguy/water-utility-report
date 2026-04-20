@@ -5,6 +5,7 @@ import { getStateContentBySlug } from "@/lib/content/states";
 import stateContent from "@/lib/content/states";
 import contaminants from "@/lib/content/contaminants";
 import { prisma } from "@/lib/prisma";
+import { normalizeName } from "@/lib/normalize-name";
 import FaqSection from "@/components/faq-section";
 import type { Metadata } from "next";
 
@@ -29,33 +30,45 @@ const riskBgs: Record<string, string> = {
   critical: "bg-wur-danger-bg text-wur-danger border-wur-danger-border",
 };
 
-export default async function StatePage({ params }: { params: Promise<{ state: string }> }) {
-  const { state: stateSlug } = await params;
+const PAGE_SIZE = 25;
+
+export default async function StatePage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ state: string }>;
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const [{ state: stateSlug }, { page: pageParam }] = await Promise.all([params, searchParams]);
   const state = getStateContentBySlug(stateSlug);
   if (!state) notFound();
 
-  // Real utilities from DB — top 20 by population
-  const dbState = await prisma.state.findUnique({ where: { abbreviation: state.abbreviation } });
-  const dbUtilities = dbState
-    ? await prisma.utility.findMany({
-        where: { state_id: dbState.id, publish_status: "published" },
-        orderBy: { population_served: "desc" },
-        take: 20,
-        select: {
-          slug: true,
-          name: true,
-          pwsid: true,
-          population_served: true,
-          risk_level: true,
-          service_type: true,
-          ownership_type: true,
-        },
-      })
-    : [];
+  const page = Math.max(1, parseInt(pageParam ?? "1", 10) || 1);
 
-  const dbUtilityCount = dbState
-    ? await prisma.utility.count({ where: { state_id: dbState.id } })
-    : 0;
+  const dbState = await prisma.state.findUnique({ where: { abbreviation: state.abbreviation } });
+
+  const [dbUtilities, dbUtilityCount] = dbState
+    ? await Promise.all([
+        prisma.utility.findMany({
+          where: { state_id: dbState.id, publish_status: "published" },
+          orderBy: { population_served: "desc" },
+          skip: (page - 1) * PAGE_SIZE,
+          take: PAGE_SIZE,
+          select: {
+            slug: true,
+            name: true,
+            pwsid: true,
+            population_served: true,
+            risk_level: true,
+            service_type: true,
+            ownership_type: true,
+          },
+        }),
+        prisma.utility.count({ where: { state_id: dbState.id, publish_status: "published" } }),
+      ])
+    : [[], 0];
+
+  const totalPages = Math.ceil(dbUtilityCount / PAGE_SIZE);
 
   // Filter real contaminants to those flagged for this state
   const stateContaminants = contaminants.filter((c) =>
@@ -127,40 +140,72 @@ export default async function StatePage({ params }: { params: Promise<{ state: s
                 <h2 className="font-display text-2xl text-foreground">
                   Utilities in {state.name}
                 </h2>
-                {dbUtilities.length > 0 && (
+                {dbUtilityCount > 0 && (
                   <span className="text-xs text-muted-foreground font-mono">
-                    Top 20 of {dbUtilityCount.toLocaleString()} by population
+                    {((page - 1) * PAGE_SIZE + 1).toLocaleString()}–{Math.min(page * PAGE_SIZE, dbUtilityCount).toLocaleString()} of {dbUtilityCount.toLocaleString()}
                   </span>
                 )}
               </div>
               {dbUtilities.length > 0 ? (
-                <div className="space-y-2">
-                  {dbUtilities.map((utility) => (
-                    <Link
-                      key={utility.slug}
-                      href={`/utilities/${utility.slug}`}
-                      className="group flex items-center gap-4 p-4 rounded-lg border border-border bg-card hover:border-wur-teal/50 hover:shadow-sm transition-all"
-                    >
-                      <Droplets className="w-4 h-4 text-wur-teal shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between gap-3">
-                          <div>
-                            <p className="font-medium text-foreground group-hover:text-wur-teal transition-colors text-sm truncate">
-                              {utility.name}
-                            </p>
-                            <p className="text-xs text-muted-foreground font-mono mt-0.5">
-                              {utility.pwsid} · {utility.population_served.toLocaleString()} served
-                            </p>
+                <>
+                  <div className="space-y-2">
+                    {dbUtilities.map((utility) => (
+                      <Link
+                        key={utility.slug}
+                        href={`/utilities/${utility.slug}`}
+                        className="group flex items-center gap-4 p-4 rounded-lg border border-border bg-card hover:border-wur-teal/50 hover:shadow-sm transition-all"
+                      >
+                        <Droplets className="w-4 h-4 text-wur-teal shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between gap-3">
+                            <div>
+                              <p className="font-medium text-foreground group-hover:text-wur-teal transition-colors text-sm truncate">
+                                {normalizeName(utility.name)}
+                              </p>
+                              <p className="text-xs text-muted-foreground font-mono mt-0.5">
+                                {utility.pwsid} · {utility.population_served.toLocaleString()} served
+                              </p>
+                            </div>
+                            <span className={`text-xs px-2 py-0.5 rounded-full border font-medium shrink-0 ${riskBgs[utility.risk_level]}`}>
+                              {utility.risk_level}
+                            </span>
                           </div>
-                          <span className={`text-xs px-2 py-0.5 rounded-full border font-medium shrink-0 ${riskBgs[utility.risk_level]}`}>
-                            {utility.risk_level}
-                          </span>
                         </div>
-                      </div>
-                      <ArrowRight className="w-4 h-4 text-muted-foreground/30 group-hover:text-wur-teal shrink-0 transition-colors" />
-                    </Link>
-                  ))}
-                </div>
+                        <ArrowRight className="w-4 h-4 text-muted-foreground/30 group-hover:text-wur-teal shrink-0 transition-colors" />
+                      </Link>
+                    ))}
+                  </div>
+
+                  {totalPages > 1 && (
+                    <div className="flex items-center justify-between mt-6 pt-4 border-t border-border">
+                      <Link
+                        href={page > 1 ? `/states/${stateSlug}?page=${page - 1}` : "#"}
+                        aria-disabled={page <= 1}
+                        className={`flex items-center gap-1.5 text-sm px-4 py-2 rounded-lg border transition-colors ${
+                          page <= 1
+                            ? "border-border text-muted-foreground/30 pointer-events-none"
+                            : "border-border text-muted-foreground hover:border-wur-teal hover:text-wur-teal"
+                        }`}
+                      >
+                        <ArrowLeft className="w-3.5 h-3.5" /> Previous
+                      </Link>
+                      <span className="text-xs text-muted-foreground font-mono">
+                        Page {page} of {totalPages}
+                      </span>
+                      <Link
+                        href={page < totalPages ? `/states/${stateSlug}?page=${page + 1}` : "#"}
+                        aria-disabled={page >= totalPages}
+                        className={`flex items-center gap-1.5 text-sm px-4 py-2 rounded-lg border transition-colors ${
+                          page >= totalPages
+                            ? "border-border text-muted-foreground/30 pointer-events-none"
+                            : "border-border text-muted-foreground hover:border-wur-teal hover:text-wur-teal"
+                        }`}
+                      >
+                        Next <ArrowRight className="w-3.5 h-3.5" />
+                      </Link>
+                    </div>
+                  )}
+                </>
               ) : (
                 <div className="rounded-lg border border-border bg-muted/30 p-5">
                   <p className="text-sm text-muted-foreground">Detailed utility pages for {state.name} are being prepared and will go live soon. <a href="/states" className="text-wur-teal hover:underline">Browse available states →</a></p>
