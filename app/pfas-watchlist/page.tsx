@@ -245,12 +245,12 @@ export default async function PfasWatchlistHub() {
                     return (
                       <tr key={analyte.id} className="hover:bg-secondary/30 transition-colors group">
                         <td className="px-4 py-3 font-mono text-xs font-semibold text-wur-teal">
-                          <Link href={`/pfas-watchlist/analyte/${analyte.code}`} className="hover:underline">
+                          <Link href={`/pfas-watchlist/analyte/${encodeURIComponent(analyte.code)}`} className="hover:underline">
                             {analyte.code}
                           </Link>
                         </td>
                         <td className="px-4 py-3">
-                          <Link href={`/pfas-watchlist/analyte/${analyte.code}`} className="hover:text-wur-teal transition-colors">
+                          <Link href={`/pfas-watchlist/analyte/${encodeURIComponent(analyte.code)}`} className="hover:text-wur-teal transition-colors">
                             <div className="font-medium text-foreground group-hover:text-wur-teal transition-colors">{analyte.name}</div>
                             {analyte.note && (
                               <div className="text-xs text-muted-foreground mt-0.5">{analyte.note}</div>
@@ -269,7 +269,7 @@ export default async function PfasWatchlistHub() {
                         </td>
                         <td className="px-4 py-3 text-right font-mono text-xs hidden md:table-cell">
                           {detCount != null ? (
-                            <Link href={`/pfas-watchlist/analyte/${analyte.code}`} className="text-amber-600 hover:underline font-semibold">
+                            <Link href={`/pfas-watchlist/analyte/${encodeURIComponent(analyte.code)}`} className="text-amber-600 hover:underline font-semibold">
                               {detCount.toLocaleString()}
                             </Link>
                           ) : "—"}
