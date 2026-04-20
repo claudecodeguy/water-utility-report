@@ -12,7 +12,7 @@ export const revalidate = 3600;
 const featuredContaminants = ["pfas", "lead", "nitrates", "disinfection-byproducts"];
 
 const trustStats = (totalUtilities: number) => [
-  { value: totalUtilities.toLocaleString(), label: "Utilities tracked", sub: "across 5 launch states" },
+  { value: totalUtilities.toLocaleString(), label: "Utilities tracked", sub: "across 25 states" },
   { value: "6", label: "Contaminants mapped", sub: "with treatment guidance" },
   { value: "100%", label: "Official data sources", sub: "EPA, SDWIS, ECHO, WQP" },
 ];
@@ -293,11 +293,11 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between mb-10">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-wur-teal mb-2">Stage 1 Coverage</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-wur-teal mb-2">Coverage</p>
               <h2 className="font-display text-4xl text-foreground">Browse by State</h2>
             </div>
             <span className="text-sm text-muted-foreground hidden sm:block">
-              More states coming in Phase 2
+              25 states · more coming
             </span>
           </div>
 
