@@ -243,13 +243,19 @@ export default async function PfasWatchlistHub() {
                   {analyteList.map((analyte) => {
                     const detCount = analyteCounts.find((a) => a.analyte_id === analyte.id)?._count?.id;
                     return (
-                      <tr key={analyte.id} className="hover:bg-secondary/30 transition-colors">
-                        <td className="px-4 py-3 font-mono text-xs font-semibold text-wur-teal">{analyte.code}</td>
+                      <tr key={analyte.id} className="hover:bg-secondary/30 transition-colors group">
+                        <td className="px-4 py-3 font-mono text-xs font-semibold text-wur-teal">
+                          <Link href={`/pfas-watchlist/analyte/${analyte.code}`} className="hover:underline">
+                            {analyte.code}
+                          </Link>
+                        </td>
                         <td className="px-4 py-3">
-                          <div className="font-medium text-foreground">{analyte.name}</div>
-                          {analyte.note && (
-                            <div className="text-xs text-muted-foreground mt-0.5">{analyte.note}</div>
-                          )}
+                          <Link href={`/pfas-watchlist/analyte/${analyte.code}`} className="hover:text-wur-teal transition-colors">
+                            <div className="font-medium text-foreground group-hover:text-wur-teal transition-colors">{analyte.name}</div>
+                            {analyte.note && (
+                              <div className="text-xs text-muted-foreground mt-0.5">{analyte.note}</div>
+                            )}
+                          </Link>
                         </td>
                         <td className="px-4 py-3 text-xs text-muted-foreground font-mono hidden sm:table-cell">
                           {analyte.cas_number ?? "—"}
@@ -261,8 +267,12 @@ export default async function PfasWatchlistHub() {
                             <span className="text-xs text-muted-foreground">See mixture rule</span>
                           )}
                         </td>
-                        <td className="px-4 py-3 text-right font-mono text-xs text-muted-foreground hidden md:table-cell">
-                          {detCount != null ? detCount.toLocaleString() : "—"}
+                        <td className="px-4 py-3 text-right font-mono text-xs hidden md:table-cell">
+                          {detCount != null ? (
+                            <Link href={`/pfas-watchlist/analyte/${analyte.code}`} className="text-amber-600 hover:underline font-semibold">
+                              {detCount.toLocaleString()}
+                            </Link>
+                          ) : "—"}
                         </td>
                       </tr>
                     );
