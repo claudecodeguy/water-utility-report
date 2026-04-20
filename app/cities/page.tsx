@@ -34,18 +34,26 @@ export default async function CitiesPage() {
       const cityMap = new Map<string, { pop: number; worstRisk: string }>();
 
       for (const u of rows) {
-        const city = u.city_served!;
-        const existing = cityMap.get(city);
-        const currentRiskIdx = riskOrder.indexOf(u.risk_level);
-        const existingRiskIdx = existing ? riskOrder.indexOf(existing.worstRisk) : -1;
-        cityMap.set(city, {
-          pop: (existing?.pop ?? 0) + u.population_served,
-          worstRisk: currentRiskIdx > existingRiskIdx ? u.risk_level : (existing?.worstRisk ?? u.risk_level),
-        });
+        // city_served may be a comma-separated list for regional utilities
+        const parts = u.city_served!.split(",").map((s) =>
+          s.trim().replace(/-\d{3,4}$/, "").trim()
+        ).filter(Boolean);
+
+        for (const city of parts) {
+          const existing = cityMap.get(city);
+          const currentRiskIdx = riskOrder.indexOf(u.risk_level);
+          const existingRiskIdx = existing ? riskOrder.indexOf(existing.worstRisk) : -1;
+          // Divide population evenly among served cities to avoid over-counting
+          const pop = Math.round(u.population_served / parts.length);
+          cityMap.set(city, {
+            pop: (existing?.pop ?? 0) + pop,
+            worstRisk: currentRiskIdx > existingRiskIdx ? u.risk_level : (existing?.worstRisk ?? u.risk_level),
+          });
+        }
       }
 
       const cities = Array.from(cityMap.entries())
-        .sort((a, b) => b[1].pop - a[1].pop)
+        .sort((a, b) => a[0].localeCompare(b[0]))
         .map(([name, data]) => ({
           name,
           slug: `${slugifyCity(name)}-${abbr.toLowerCase()}`,
