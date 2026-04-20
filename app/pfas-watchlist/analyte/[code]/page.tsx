@@ -16,7 +16,7 @@ export async function generateMetadata({
   params: Promise<{ code: string }>;
 }): Promise<Metadata> {
   const { code: rawCode } = await params;
-  const code = decodeURIComponent(rawCode).toUpperCase();
+  const code = decodeURIComponent(rawCode);
   const analyte = await prisma.pfasAnalyte.findUnique({
     where: { code },
     select: { name: true, code: true },
@@ -34,7 +34,7 @@ export default async function AnalytePage({
   params: Promise<{ code: string }>;
 }) {
   const { code: rawCode } = await params;
-  const code = decodeURIComponent(rawCode).toUpperCase();
+  const code = decodeURIComponent(rawCode);
 
   const analyte = await prisma.pfasAnalyte.findUnique({ where: { code } });
   if (!analyte) notFound();

@@ -28,10 +28,11 @@ check "/states"
 check "/cities"
 check "/contaminants"
 
-# PFAS analytes (includes special chars)
+# PFAS analytes (plain, mixed-case, and special chars)
 check "/pfas-watchlist/analyte/PFOA"
 check "/pfas-watchlist/analyte/PFOS"
 check "/pfas-watchlist/analyte/PFNA"
+check "/pfas-watchlist/analyte/$(python3 -c 'import urllib.parse; print(urllib.parse.quote("11Cl-PF3OUdS"))')"
 check "/pfas-watchlist/analyte/$(python3 -c 'import urllib.parse; print(urllib.parse.quote("6:2FTS"))')"
 
 # State pages
