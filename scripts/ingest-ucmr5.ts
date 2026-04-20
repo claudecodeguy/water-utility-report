@@ -189,8 +189,8 @@ async function main() {
   let processed = 0, inserted = 0, skipped = 0, failed = 0;
   const errors: string[] = [];
 
-  type RecordRow = Parameters<typeof prisma.pfasRecord.createMany>[0]["data"][number];
-  let batch: RecordRow[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let batch: any[] = [];
 
   const flushBatch = async () => {
     if (batch.length === 0) return;
