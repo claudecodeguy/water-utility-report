@@ -395,6 +395,116 @@ const stateContent: StateContent[] = [
       "Mississippi has 794 community water systems serving approximately 3.1 million residents. Primary water sources include groundwater. The most commonly reported contaminants include disinfection byproducts, lead, nitrates. 30% of Mississippi residents rely on private wells. MDEQ holds primary enforcement authority under the Safe Drinking Water Act.",
     lastUpdated: "2026-04-22",
   },
+  {
+    slug: "new-mexico",
+    name: "New Mexico",
+    abbreviation: "NM",
+    populationServed: 1861828,
+    wellWaterPercent: 30,
+    topContaminants: ["disinfection-byproducts","nitrates"],
+    summary:
+      "New Mexico has 184 community water systems serving approximately 1.9 million residents. Primary water sources include groundwater. The most commonly reported contaminants include disinfection byproducts, nitrates. 30% of New Mexico residents rely on private wells. NMED holds primary enforcement authority under the Safe Drinking Water Act.",
+    lastUpdated: "2026-04-22",
+  },
+  {
+    slug: "nebraska",
+    name: "Nebraska",
+    abbreviation: "NE",
+    populationServed: 1634835,
+    wellWaterPercent: 40,
+    topContaminants: ["disinfection-byproducts","lead","nitrates"],
+    summary:
+      "Nebraska has 221 community water systems serving approximately 1.6 million residents. Primary water sources include groundwater. The most commonly reported contaminants include disinfection byproducts, lead, nitrates. 40% of Nebraska residents rely on private wells. DHHS holds primary enforcement authority under the Safe Drinking Water Act.",
+    lastUpdated: "2026-04-22",
+  },
+  {
+    slug: "west-virginia",
+    name: "West Virginia",
+    abbreviation: "WV",
+    populationServed: 1528132,
+    wellWaterPercent: 38,
+    topContaminants: ["disinfection-byproducts","lead"],
+    summary:
+      "West Virginia has 299 community water systems serving approximately 1.5 million residents. Primary water sources include surface water. The most commonly reported contaminants include disinfection byproducts, lead. 38% of West Virginia residents rely on private wells. BPH holds primary enforcement authority under the Safe Drinking Water Act.",
+    lastUpdated: "2026-04-22",
+  },
+  {
+    slug: "idaho",
+    name: "Idaho",
+    abbreviation: "ID",
+    populationServed: 1480366,
+    wellWaterPercent: 40,
+    topContaminants: ["arsenic","nitrates"],
+    summary:
+      "Idaho has 174 community water systems serving approximately 1.5 million residents. Primary water sources include groundwater. The most commonly reported contaminants include arsenic, nitrates. 40% of Idaho residents rely on private wells. DEQ holds primary enforcement authority under the Safe Drinking Water Act.",
+    lastUpdated: "2026-04-22",
+  },
+  {
+    slug: "hawaii",
+    name: "Hawaii",
+    abbreviation: "HI",
+    populationServed: 1499441,
+    wellWaterPercent: 18,
+    topContaminants: ["disinfection-byproducts","lead"],
+    summary:
+      "Hawaii has 75 community water systems serving approximately 1.5 million residents. Primary water sources include groundwater. The most commonly reported contaminants include disinfection byproducts, lead. 18% of Hawaii residents rely on private wells. DOH holds primary enforcement authority under the Safe Drinking Water Act.",
+    lastUpdated: "2026-04-22",
+  },
+  {
+    slug: "new-hampshire",
+    name: "New Hampshire",
+    abbreviation: "NH",
+    populationServed: 836487,
+    wellWaterPercent: 55,
+    topContaminants: ["disinfection-byproducts","nitrates"],
+    summary:
+      "New Hampshire has 131 community water systems serving approximately 0.8 million residents. Primary water sources include groundwater. The most commonly reported contaminants include disinfection byproducts, nitrates. 55% of New Hampshire residents rely on private wells. DES holds primary enforcement authority under the Safe Drinking Water Act.",
+    lastUpdated: "2026-04-22",
+  },
+  {
+    slug: "maine",
+    name: "Maine",
+    abbreviation: "ME",
+    populationServed: 662155,
+    wellWaterPercent: 48,
+    topContaminants: ["lead","nitrates"],
+    summary:
+      "Maine has 121 community water systems serving approximately 0.7 million residents. Primary water sources include groundwater. The most commonly reported contaminants include lead, nitrates. 48% of Maine residents rely on private wells. DHHS holds primary enforcement authority under the Safe Drinking Water Act.",
+    lastUpdated: "2026-04-23",
+  },
+  {
+    slug: "montana",
+    name: "Montana",
+    abbreviation: "MT",
+    populationServed: 700569,
+    wellWaterPercent: 48,
+    topContaminants: ["disinfection-byproducts","nitrates"],
+    summary:
+      "Montana has 145 community water systems serving approximately 0.7 million residents. Primary water sources include groundwater. The most commonly reported contaminants include disinfection byproducts, nitrates. 48% of Montana residents rely on private wells. MDEQ holds primary enforcement authority under the Safe Drinking Water Act.",
+    lastUpdated: "2026-04-23",
+  },
+  {
+    slug: "rhode-island",
+    name: "Rhode Island",
+    abbreviation: "RI",
+    populationServed: 1052459,
+    wellWaterPercent: 12,
+    topContaminants: ["disinfection-byproducts","lead"],
+    summary:
+      "Rhode Island has 38 community water systems serving approximately 1.1 million residents. Primary water sources include surface water. The most commonly reported contaminants include disinfection byproducts, lead. 12% of Rhode Island residents rely on private wells. DEM holds primary enforcement authority under the Safe Drinking Water Act.",
+    lastUpdated: "2026-04-23",
+  },
+  {
+    slug: "delaware",
+    name: "Delaware",
+    abbreviation: "DE",
+    populationServed: 997436,
+    wellWaterPercent: 24,
+    topContaminants: ["disinfection-byproducts","nitrates"],
+    summary:
+      "Delaware has 79 community water systems serving approximately 1.0 million residents. Primary water sources include groundwater. The most commonly reported contaminants include disinfection byproducts, nitrates. 24% of Delaware residents rely on private wells. DNREC holds primary enforcement authority under the Safe Drinking Water Act.",
+    lastUpdated: "2026-04-23",
+  },
 ];
 
 export default stateContent;
