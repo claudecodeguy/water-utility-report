@@ -12,7 +12,7 @@ export const revalidate = 3600;
 const featuredContaminants = ["pfas", "lead", "nitrates", "disinfection-byproducts"];
 
 const trustStats = (totalUtilities: number) => [
-  { value: totalUtilities.toLocaleString(), label: "Utilities tracked", sub: "across 25 states" },
+  { value: totalUtilities.toLocaleString(), label: "Utilities tracked", sub: "across 45 states" },
   { value: "6", label: "Contaminants mapped", sub: "with treatment guidance" },
   { value: "100%", label: "Official data sources", sub: "EPA, SDWIS, ECHO, WQP" },
 ];
@@ -297,7 +297,7 @@ export default async function HomePage() {
               <h2 className="font-display text-4xl text-foreground">Browse by State</h2>
             </div>
             <span className="text-sm text-muted-foreground hidden sm:block">
-              25 states · more coming
+              45 states · more coming
             </span>
           </div>
 

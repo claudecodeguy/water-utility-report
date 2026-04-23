@@ -92,7 +92,7 @@ export default function Footer() {
           </p>
           <div className="flex items-center gap-1.5">
             <span className="inline-block w-1.5 h-1.5 rounded-full bg-wur-aqua" />
-            <span className="text-xs text-white/30 font-mono">25 states · 6,189 utilities with PFAS records</span>
+            <span className="text-xs text-white/30 font-mono">45 states · 6,189 utilities with PFAS records</span>
           </div>
         </div>
       </div>
