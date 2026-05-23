@@ -75,7 +75,72 @@ export async function POST(request: Request) {
   }
 
   if (!pitchId) {
-    console.log(`[webhook/reply] no pitch match for ${from_email} — logging and ignoring`);
+    // ── Try org pitch match ──────────────────────────────────────────────────
+    const cutoff = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
+    const org = await prisma.outreachOrganization.findUnique({
+      where: { email: from_email.toLowerCase() },
+    });
+
+    if (org) {
+      const orgPitch = await prisma.outreachOrgPitch.findFirst({
+        where: {
+          organization_id: org.id,
+          status: "sent",
+          sent_at: { gte: cutoff },
+        },
+        orderBy: { sent_at: "desc" },
+      });
+
+      if (orgPitch) {
+        // ── Update org pitch + org ─────────────────────────────────────────
+        await prisma.outreachOrgPitch.update({
+          where: { id: orgPitch.id },
+          data: { status: "replied", replied_at: new Date(), reply_text: body },
+        });
+
+        await prisma.outreachOrganization.update({
+          where: { id: org.id },
+          data: { reply_count: { increment: 1 } },
+        });
+
+        // ── Classify sentiment ─────────────────────────────────────────────
+        try {
+          const response = await anthropic.messages.create({
+            model: MODELS.classifier,
+            max_tokens: 256,
+            system: REPLY_CLASSIFIER_PROMPT,
+            messages: [{ role: "user", content: body }],
+          });
+
+          const rawText = (response.content[0] as { type: string; text: string }).text;
+          const cleaned = rawText
+            .replace(/^```(?:json)?\n?/m, "")
+            .replace(/\n?```$/m, "")
+            .trim();
+
+          const classification = ReplyClassifierOutputSchema.parse(JSON.parse(cleaned));
+
+          await prisma.outreachOrgPitch.update({
+            where: { id: orgPitch.id },
+            data: { reply_sentiment: classification.sentiment },
+          });
+
+          if (classification.sentiment === "unsubscribe") {
+            await prisma.outreachOrganization.update({
+              where: { id: org.id },
+              data: { status: "unsubscribed" },
+            });
+            console.log(`[webhook/reply] org ${org.id} unsubscribed`);
+          }
+        } catch (err) {
+          console.error("[webhook/reply] org classifier error:", err);
+        }
+
+        return Response.json({ ok: true, matched: true, pitchId: orgPitch.id, pitch_type: "org" });
+      }
+    }
+
+    console.log(`[webhook/reply] unmatched reply from ${from_email} subject ${parsed.data.subject ?? "(no subject)"}`);
     return Response.json({ ok: true, matched: false });
   }
 
