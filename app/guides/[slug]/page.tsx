@@ -25,6 +25,71 @@ export async function generateMetadata({
   };
 }
 
+const GUIDE_DATA_LINKS: Record<string, { href: string; label: string }[]> = {
+  "best-filter-for-lead-in-tap-water": [
+    { href: "/contaminants/lead", label: "Lead in drinking water — violations and data" },
+    { href: "/contaminants/lead/illinois", label: "Lead in Illinois drinking water" },
+    { href: "/contaminants/lead/michigan", label: "Lead in Michigan drinking water" },
+    { href: "/contaminants/lead/new-jersey", label: "Lead in New Jersey drinking water" },
+    { href: "/guides/what-does-lead-in-tap-water-actually-mean", label: "What lead in tap water actually means" },
+    { href: "/states", label: "Explore state water quality data" },
+  ],
+  "best-filter-for-pfas-in-drinking-water": [
+    { href: "/pfas-watchlist", label: "PFAS watchlist — official EPA UCMR 5 records" },
+    { href: "/contaminants/pfas", label: "PFAS contamination overview" },
+    { href: "/pfas-watchlist/california", label: "California PFAS records" },
+    { href: "/pfas-watchlist/texas", label: "Texas PFAS records" },
+    { href: "/pfas-watchlist/ohio", label: "Ohio PFAS records" },
+    { href: "/states", label: "Explore all state water quality data" },
+  ],
+  "reverse-osmosis-vs-carbon-filter": [
+    { href: "/contaminants/pfas", label: "PFAS contamination data by utility" },
+    { href: "/contaminants/lead", label: "Lead contamination data by utility" },
+    { href: "/pfas-watchlist", label: "PFAS watchlist — official EPA records" },
+  ],
+  "what-does-lead-in-tap-water-actually-mean": [
+    { href: "/contaminants/lead", label: "Lead in drinking water — violations and data" },
+    { href: "/contaminants/lead/michigan", label: "Lead in Michigan drinking water" },
+    { href: "/contaminants/lead/wisconsin", label: "Lead in Wisconsin drinking water" },
+    { href: "/contaminants/lead/pennsylvania", label: "Lead in Pennsylvania drinking water" },
+    { href: "/search", label: "Find your water utility by ZIP code" },
+    { href: "/states", label: "Explore state water quality data" },
+  ],
+  "what-are-nitrates-in-water": [
+    { href: "/contaminants/nitrate", label: "Nitrate in drinking water — violations and data" },
+    { href: "/contaminants/nitrate/iowa", label: "Nitrate in Iowa drinking water" },
+    { href: "/contaminants/nitrate/nebraska", label: "Nitrate in Nebraska drinking water" },
+    { href: "/contaminants/nitrate/california", label: "Nitrate in California drinking water" },
+    { href: "/well-water", label: "Private well water guidance" },
+    { href: "/states", label: "Explore state water quality data" },
+  ],
+  "how-to-read-a-water-quality-report": [
+    { href: "/search", label: "Find your utility's water report" },
+    { href: "/states", label: "Explore state-level water quality data" },
+    { href: "/pfas-watchlist", label: "PFAS watchlist — EPA monitoring records" },
+  ],
+  "home-water-test-kits-vs-certified-labs": [
+    { href: "/labs", label: "Find a certified testing lab by state" },
+    { href: "/search", label: "Find your water utility" },
+    { href: "/contaminants/lead", label: "Lead in drinking water — EPA data" },
+  ],
+  "does-boiling-water-remove-lead-pfas-or-nitrates": [
+    { href: "/contaminants/lead", label: "Lead contamination data" },
+    { href: "/pfas-watchlist", label: "PFAS watchlist — EPA monitoring records" },
+    { href: "/contaminants/nitrates", label: "Nitrate data by utility" },
+  ],
+  "whole-house-filter-vs-under-sink-filter": [
+    { href: "/pfas-watchlist", label: "PFAS watchlist — official EPA records" },
+    { href: "/contaminants/pfas", label: "PFAS contamination overview" },
+    { href: "/states", label: "Explore state water quality data" },
+  ],
+  "what-type-of-water-filter-do-you-need": [
+    { href: "/search", label: "Find your water utility" },
+    { href: "/pfas-watchlist", label: "PFAS watchlist — official EPA records" },
+    { href: "/states", label: "Explore state water quality data" },
+  ],
+};
+
 export default async function GuidePage({
   params,
 }: {
@@ -220,6 +285,27 @@ export default async function GuidePage({
                           {related.title}
                         </p>
                         <p className="text-xs text-muted-foreground mt-0.5">{related.categoryLabel}</p>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Contextual data links */}
+              {GUIDE_DATA_LINKS[guide.slug] && (
+                <div className="rounded-xl border border-border bg-card p-5">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">
+                    Explore Your Water Data
+                  </p>
+                  <div className="space-y-2">
+                    {GUIDE_DATA_LINKS[guide.slug].map(link => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className="flex items-center gap-1.5 py-1 text-sm text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        <ArrowRight className="w-3 h-3 shrink-0" />
+                        {link.label}
                       </Link>
                     ))}
                   </div>

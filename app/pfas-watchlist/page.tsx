@@ -75,10 +75,14 @@ export default async function PfasWatchlistHub() {
     statesWithData.map((s) => [s.abbreviation, s._count.utilities])
   );
 
-  // Only show states that have PFAS data, sorted by record count desc
+  // All 50 states — those with PFAS data first (sorted by record count), then the rest alphabetically
   const activeStates = stateContent
     .filter((s) => stateDataMap[s.abbreviation] !== undefined)
     .sort((a, b) => (stateDataMap[b.abbreviation] ?? 0) - (stateDataMap[a.abbreviation] ?? 0));
+  const inactiveStates = stateContent
+    .filter((s) => stateDataMap[s.abbreviation] === undefined)
+    .sort((a, b) => a.name.localeCompare(b.name));
+  const allStates = [...activeStates, ...inactiveStates];
 
   const hasData = totalRecords > 0;
 
@@ -184,9 +188,10 @@ export default async function PfasWatchlistHub() {
           )}
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-            {activeStates.map((state) => {
+            {allStates.map((state) => {
               const utilityCount = stateDataMap[state.abbreviation];
-              return (
+              const hasData = utilityCount !== undefined;
+              return hasData ? (
                 <Link
                   key={state.slug}
                   href={`/pfas-watchlist/${state.slug}`}
@@ -197,9 +202,24 @@ export default async function PfasWatchlistHub() {
                     {state.name}
                   </div>
                   <div className="text-xs text-muted-foreground font-mono mt-auto pt-2">
-                    {utilityCount !== undefined ? `${utilityCount.toLocaleString()} systems` : "View records"}
+                    {utilityCount.toLocaleString()} systems
                   </div>
                   <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/30 group-hover:text-wur-teal transition-colors mt-1" />
+                </Link>
+              ) : (
+                <Link
+                  key={state.slug}
+                  href={`/states/${state.slug}`}
+                  className="group flex flex-col bg-card border border-border/50 rounded-lg p-4 hover:border-border hover:shadow-sm transition-all opacity-50 hover:opacity-75"
+                >
+                  <div className="text-2xl font-display text-muted-foreground/50 mb-2">{state.abbreviation}</div>
+                  <div className="text-sm font-semibold text-muted-foreground group-hover:text-foreground transition-colors mb-1 leading-snug">
+                    {state.name}
+                  </div>
+                  <div className="text-xs text-muted-foreground/60 font-mono mt-auto pt-2">
+                    No PFAS records yet
+                  </div>
+                  <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/20 group-hover:text-muted-foreground transition-colors mt-1" />
                 </Link>
               );
             })}

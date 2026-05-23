@@ -265,6 +265,7 @@ export default function MethodologyPage() {
             {[
               { href: "/methodology/data-sources", label: "Data Sources", desc: "Full list of ingested datasets with source URLs and update cadences." },
               { href: "/methodology/legal", label: "Legal & Usage Boundaries", desc: "Detailed legal discussion of data use rights, citation, and acceptable use." },
+              { href: "/help", label: "Water Records Help Center", desc: "Common questions about what official monitoring records show and what to do next." },
             ].map((page) => (
               <Link
                 key={page.href}

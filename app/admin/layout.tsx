@@ -13,6 +13,8 @@ import {
   Settings,
   ChevronRight,
   LogOut,
+  Newspaper,
+  Send,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -22,6 +24,8 @@ const navItems = [
   { href: "/admin/contaminants", label: "Contaminants", icon: FlaskConical },
   { href: "/admin/treatments", label: "Treatments", icon: Wrench },
   { href: "/admin/states", label: "States", icon: MapPin },
+  { href: "/admin/outreach", label: "Outreach", icon: Send, exact: true },
+  { href: "/admin/outreach/journalists", label: "Journalists", icon: Newspaper },
   { href: "/admin/flags", label: "Review Flags", icon: Flag },
   { href: "/admin/sources", label: "Data Sources", icon: Database },
   { href: "/admin/settings", label: "Settings", icon: Settings },

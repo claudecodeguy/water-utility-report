@@ -4,10 +4,20 @@ import { ArrowLeft, ArrowRight, AlertTriangle, ExternalLink, Info } from "lucide
 import { getStateContentBySlug } from "@/lib/content/states";
 import { prisma } from "@/lib/prisma";
 import { normalizeName } from "@/lib/normalize-name";
+import JsonLd from "@/components/json-ld";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 3600;
+
+// States confirmed to have records in the EPA UCMR 5 dataset
+const STATES_WITH_PFAS_DATA = new Set([
+  "arizona", "california", "colorado", "florida", "georgia", "illinois",
+  "indiana", "louisiana", "maryland", "massachusetts", "michigan", "minnesota",
+  "missouri", "new-jersey", "new-york", "north-carolina", "ohio", "oregon",
+  "pennsylvania", "south-carolina", "tennessee", "texas", "virginia", "washington",
+  "wisconsin",
+]);
 
 export async function generateMetadata({
   params,
@@ -17,9 +27,16 @@ export async function generateMetadata({
   const { state: stateSlug } = await params;
   const state = getStateContentBySlug(stateSlug);
   if (!state) return {};
+  const hasRecords = STATES_WITH_PFAS_DATA.has(stateSlug);
+  const title = `${state.name} PFAS Watchlist: Official EPA Drinking Water Records`;
+  const description = `View official EPA UCMR 5 PFAS monitoring records for public water systems in ${state.name}, including analytes, sample dates, and detection results.`;
+  const url = `https://waterutilityreport.com/pfas-watchlist/${stateSlug}`;
   return {
-    title: `${state.name} PFAS Watchlist — Official EPA Drinking Water Records`,
-    description: `Official EPA UCMR 5 PFAS monitoring records for public water systems in ${state.name}. Source-backed, no inferred risk scores.`,
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: { title, description, url },
+    robots: hasRecords ? "index, follow" : "noindex, follow",
   };
 }
 
@@ -95,8 +112,44 @@ export default async function PfasStatePage({
 
   const hasData = utilitiesWithPfas.length > 0;
 
+  const pfasStateCanonical = `https://waterutilityreport.com/pfas-watchlist/${stateSlug}`;
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://waterutilityreport.com" },
+      { "@type": "ListItem", position: 2, name: "PFAS Watchlist", item: "https://waterutilityreport.com/pfas-watchlist" },
+      { "@type": "ListItem", position: 3, name: stateContent.name, item: pfasStateCanonical },
+    ],
+  };
+
+  const collectionPageJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: `${stateContent.name} PFAS Watchlist`,
+    description: `Official EPA UCMR 5 PFAS monitoring records for public water systems in ${stateContent.name}. ${hasData ? `${utilitiesWithPfas.length} water system${utilitiesWithPfas.length !== 1 ? "s" : ""} with qualifying records.` : "No qualifying official records located in the current dataset."}`,
+    url: pfasStateCanonical,
+  };
+
+  const itemListJsonLd = hasData ? {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: `Water systems with PFAS records in ${stateContent.name}`,
+    numberOfItems: utilitiesWithPfas.length,
+    itemListElement: utilitiesWithPfas.map((u, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: normalizeName(u.name),
+      url: `https://waterutilityreport.com/pfas-watchlist/utility/${u.pwsid}`,
+    })),
+  } : null;
+
   return (
     <div className="min-h-screen bg-background">
+      <JsonLd data={breadcrumbJsonLd} />
+      <JsonLd data={collectionPageJsonLd} />
+      {itemListJsonLd && <JsonLd data={itemListJsonLd} />}
 
       {/* ── HEADER ── */}
       <section className="bg-wur-ink text-white">

@@ -25,6 +25,35 @@ const STAGE1_STATES = [
   { code: "OH", name: "Ohio",       abbr: "OH", fips: "39" },
 ];
 
+// Full 50-state lookup — used when --state is passed for a state outside STAGE1_STATES
+const ALL_STATES: Record<string, { name: string; fips: string }> = {
+  AL: { name: "Alabama",        fips: "01" }, AK: { name: "Alaska",         fips: "02" },
+  AZ: { name: "Arizona",        fips: "04" }, AR: { name: "Arkansas",        fips: "05" },
+  CA: { name: "California",     fips: "06" }, CO: { name: "Colorado",        fips: "08" },
+  CT: { name: "Connecticut",    fips: "09" }, DE: { name: "Delaware",        fips: "10" },
+  FL: { name: "Florida",        fips: "12" }, GA: { name: "Georgia",         fips: "13" },
+  HI: { name: "Hawaii",         fips: "15" }, ID: { name: "Idaho",           fips: "16" },
+  IL: { name: "Illinois",       fips: "17" }, IN: { name: "Indiana",         fips: "18" },
+  IA: { name: "Iowa",           fips: "19" }, KS: { name: "Kansas",          fips: "20" },
+  KY: { name: "Kentucky",       fips: "21" }, LA: { name: "Louisiana",       fips: "22" },
+  ME: { name: "Maine",          fips: "23" }, MD: { name: "Maryland",        fips: "24" },
+  MA: { name: "Massachusetts",  fips: "25" }, MI: { name: "Michigan",        fips: "26" },
+  MN: { name: "Minnesota",      fips: "27" }, MS: { name: "Mississippi",     fips: "28" },
+  MO: { name: "Missouri",       fips: "29" }, MT: { name: "Montana",         fips: "30" },
+  NE: { name: "Nebraska",       fips: "31" }, NV: { name: "Nevada",          fips: "32" },
+  NH: { name: "New Hampshire",  fips: "33" }, NJ: { name: "New Jersey",      fips: "34" },
+  NM: { name: "New Mexico",     fips: "35" }, NY: { name: "New York",        fips: "36" },
+  NC: { name: "North Carolina", fips: "37" }, ND: { name: "North Dakota",    fips: "38" },
+  OH: { name: "Ohio",           fips: "39" }, OK: { name: "Oklahoma",        fips: "40" },
+  OR: { name: "Oregon",         fips: "41" }, PA: { name: "Pennsylvania",    fips: "42" },
+  RI: { name: "Rhode Island",   fips: "44" }, SC: { name: "South Carolina",  fips: "45" },
+  SD: { name: "South Dakota",   fips: "46" }, TN: { name: "Tennessee",       fips: "47" },
+  TX: { name: "Texas",          fips: "48" }, UT: { name: "Utah",            fips: "49" },
+  VT: { name: "Vermont",        fips: "50" }, VA: { name: "Virginia",        fips: "51" },
+  WA: { name: "Washington",     fips: "53" }, WV: { name: "West Virginia",   fips: "54" },
+  WI: { name: "Wisconsin",      fips: "55" }, WY: { name: "Wyoming",         fips: "56" },
+};
+
 const SDWIS_BASE = "https://data.epa.gov/efservice";
 
 // Only ingest systems serving >= this many people to keep Stage 1 focused
@@ -244,17 +273,45 @@ async function ingestState(
 
       // Insert violations
       if (opts.withViolations && violations.length > 0) {
+        // EPA returns multiple rows per violation_id (enforcement history).
+        // Deduplicate by violation_id, preferring any row that has an rtc_date.
+        const dedupedMap = new Map<string, typeof violations[0]>();
         for (const v of violations) {
+          const existing = dedupedMap.get(v.violation_id);
+          if (!existing || (!existing.rtc_date && v.rtc_date)) {
+            dedupedMap.set(v.violation_id, v);
+          }
+        }
+        const deduped = Array.from(dedupedMap.values());
+        for (const v of deduped) {
           await prisma.violation.upsert({
             where: { id: `${sys.pwsid}-${v.violation_id}` },
-            update: {},
+            update: {
+              // Refresh resolution status on every re-ingest so resolved violations are not stuck open
+              resolution_date: v.rtc_date ? new Date(v.rtc_date) : null,
+              violation_type: v.violation_code_name,
+              contaminant_name: v.contaminant_name,
+              is_health_based: v.is_health_based_ind === "Y",
+              description: v.rule_name,
+              // Keep violation_date current — prefer violation_begin_date, fall back to compl_per_begin_date
+              violation_date: v.violation_begin_date
+                ? new Date(v.violation_begin_date)
+                : v.compl_per_begin_date
+                ? new Date(v.compl_per_begin_date)
+                : null,
+            },
             create: {
               id: `${sys.pwsid}-${v.violation_id}`,
               utility_id: utility.id,
               contaminant_code: v.contaminant_code,
               contaminant_name: v.contaminant_name,
               violation_type: v.violation_code_name,
-              violation_date: v.violation_begin_date ? new Date(v.violation_begin_date) : null,
+              // Prefer violation_begin_date; fall back to compl_per_begin_date (what SDWIS bulk API returns)
+              violation_date: v.violation_begin_date
+                ? new Date(v.violation_begin_date)
+                : v.compl_per_begin_date
+                ? new Date(v.compl_per_begin_date)
+                : null,
               resolution_date: v.rtc_date ? new Date(v.rtc_date) : null,
               is_health_based: v.is_health_based_ind === "Y",
               severity: v.violation_category_code,
@@ -308,13 +365,14 @@ async function main() {
   const limitArg = args.find((_, i) => args[i - 1] === "--limit");
   const withViolations = args.includes("--violations");
 
-  const statesToRun = stateArg
-    ? STAGE1_STATES.filter((s) => s.code === stateArg.toUpperCase())
-    : STAGE1_STATES;
-
-  if (statesToRun.length === 0) {
-    console.error(`Unknown state: ${stateArg}`);
-    process.exit(1);
+  let statesToRun: typeof STAGE1_STATES;
+  if (stateArg) {
+    const abbr = stateArg.toUpperCase();
+    const known = ALL_STATES[abbr];
+    if (!known) { console.error(`Unknown state: ${abbr}`); process.exit(1); }
+    statesToRun = [{ code: abbr, name: known.name, abbr, fips: known.fips }];
+  } else {
+    statesToRun = STAGE1_STATES;
   }
 
   const limit = limitArg ? parseInt(limitArg) : undefined;

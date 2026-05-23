@@ -831,6 +831,616 @@ const guides: Guide[] = [
       "best-filter-for-pfas-in-drinking-water",
     ],
   },
+
+  // ── 11. Is Tap Water Safe to Drink ───────────────────────────────────────
+  {
+    slug: "is-tap-water-safe-to-drink",
+    title: "Is Tap Water Safe to Drink?",
+    metaTitle: "Is Tap Water Safe to Drink? | What the Data Actually Shows",
+    metaDescription:
+      "For most Americans, tap water is safe — but 'safe' has real limits. Learn what regulated utilities guarantee, what they don't, and when filtering makes sense.",
+    publishDate: "2026-04-30",
+    lastUpdated: "2026-04-30",
+    category: "understanding",
+    categoryLabel: "Understanding Your Water",
+    intro:
+      "For most Americans served by a regulated public water utility, tap water is safe to drink by legal standards. It is tested far more frequently than bottled water, subject to federal Maximum Contaminant Levels (MCLs), and must be reported publicly each year. That said, 'meets the legal standard' and 'poses zero health risk' are not the same thing — and the gaps between those two statements are exactly where the real questions about tap water safety live.",
+    blocks: [
+      {
+        t: "callout",
+        c: "The fastest way to know your specific water: enter your ZIP at [waterutilityreport.com/search](/search) to see your utility's EPA violation history and risk level.",
+      },
+      { t: "h2", c: "Is Tap Water Safe to Drink in the United States?" },
+      {
+        t: "p",
+        c: "Yes — for the vast majority of Americans, municipal tap water is safe to drink day to day. The EPA regulates over 90 contaminants in public water systems, requires regular testing, and mandates public reporting through annual Consumer Confidence Reports (CCRs). The U.S. has one of the most regulated drinking water systems in the world. Most utilities meet federal standards consistently.",
+      },
+      { t: "h2", c: "What Does 'Safe' Actually Mean?" },
+      {
+        t: "p",
+        c: "Safe means the water meets EPA Maximum Contaminant Levels (MCLs) — legally enforceable limits set at concentrations where the population-wide health risk is considered acceptable. It does not mean zero contaminants, zero risk, or that every individual in every circumstance faces no harm. The EPA's MCLGs (Maximum Contaminant Level Goals) are often more protective than the enforceable MCLs — for lead and several other contaminants, the MCLG is zero, meaning no level is technically without risk.",
+      },
+      { t: "h2", c: "What the Regulations Do Guarantee" },
+      {
+        t: "ul",
+        items: [
+          "Regular testing for over 90 regulated contaminants — including bacteria, nitrates, disinfection byproducts, lead, and others",
+          "Public reporting: utilities must publish an annual Consumer Confidence Report (CCR) with test results",
+          "Violation notices: customers must be notified promptly if a health-based standard is exceeded",
+          "Corrective action requirements when violations occur",
+        ],
+      },
+      { t: "h2", c: "What the Regulations Do Not Guarantee" },
+      {
+        t: "ul",
+        items: [
+          "Zero lead at your specific tap — lead enters water from service lines and plumbing inside your home, which the utility does not control",
+          "Safety for all populations equally — the elderly, infants, pregnant women, and immunocompromised individuals face higher risk at levels that are legal for the general population",
+          "Protection from unregulated contaminants — PFAS was unregulated until 2024; many other chemicals are not yet regulated",
+          "Clean water from private wells — roughly 43 million Americans on private wells receive no federal regulatory protection and no required testing",
+        ],
+      },
+      { t: "h2", c: "The Biggest Real-World Gaps in Tap Water Safety" },
+      { t: "h3", c: "Lead at the Tap" },
+      {
+        t: "p",
+        c: "Lead is the most common gap between a utility's clean report and what actually comes out of your faucet. An estimated 9.2 million lead service lines still connect homes to water mains across the U.S. Utilities test their system — not your specific tap — so a utility can be fully compliant while your home still has elevated lead. Homes built before 1986 carry the highest risk. See the full [lead in drinking water guide](/contaminants/lead) and the [best filter for lead](/guides/best-filter-for-lead-in-tap-water).",
+      },
+      { t: "h3", c: "PFAS ('Forever Chemicals')" },
+      {
+        t: "p",
+        c: "PFAS were present in U.S. drinking water for decades before the EPA set its first limits in April 2024. An estimated 45% of U.S. tap water samples contain at least one detectable PFAS compound. Utilities have until 2029 to comply with the new 4 parts per trillion limit for PFOA and PFOS. Until then, your water may legally contain PFAS above levels now considered concerning. See the [PFAS contaminant guide](/contaminants/pfas).",
+      },
+      { t: "h3", c: "Nitrates in Agricultural Areas" },
+      {
+        t: "p",
+        c: "Nitrate contamination from agricultural runoff is the most widespread agricultural contaminant in U.S. groundwater. The current EPA limit of 10 mg/L was set in 1991 to protect infants — not based on cancer risk data. Emerging research suggests cancer risk may begin at 3–5 mg/L. Rural residents and private well owners in farming regions face the highest exposure. See the [nitrates guide](/contaminants/nitrates).",
+      },
+      { t: "h3", c: "Disinfection Byproducts" },
+      {
+        t: "p",
+        c: "Chlorine — used to kill bacteria — reacts with organic matter in source water to form disinfection byproducts (DBPs) including trihalomethanes. Long-term high-level DBP exposure is associated with increased bladder cancer risk. DBPs are regulated, but individual samples can spike while annual averages stay within limits. See the [disinfection byproducts guide](/contaminants/disinfection-byproducts).",
+      },
+      { t: "h2", c: "How to Check Your Specific Water Safety" },
+      {
+        t: "p",
+        c: "The most direct way to assess your tap water is to look up your utility's violation history and risk profile. [Search by ZIP code](/search) to find your utility, see EPA violations over the past decade, and understand whether any health-based standards have been exceeded. Your utility's annual Consumer Confidence Report (CCR) contains the specific test results for your water system — it must be published each year and is usually available on your utility's website.",
+      },
+      { t: "h2", c: "Is Tap Water Safe for Infants and Babies?" },
+      {
+        t: "p",
+        c: "Tap water is generally considered acceptable for healthy, full-term infants when prepared formula is mixed with water that meets EPA standards and has no known lead contamination. However, infants face a higher risk from both nitrates (blue baby syndrome) and lead (no safe exposure threshold). If your home is pre-1986 construction, has a known lead service line, or your utility has a history of nitrate violations, using filtered or bottled water for formula preparation is prudent. A [reverse osmosis system](/treatment/reverse-osmosis) eliminates both risks at the kitchen tap.",
+      },
+      { t: "h2", c: "Is Tap Water Safe During Pregnancy?" },
+      {
+        t: "p",
+        c: "For most pregnant people on regulated public water systems, tap water is safe. Specific concerns include lead (crosses the placental barrier), nitrates (associated with adverse birth outcomes at higher levels), and PFAS (associated with developmental effects). If you are pregnant and your home has pre-1986 plumbing, near-limit nitrate levels, or known PFAS contamination, filtering your drinking water is a reasonable precaution.",
+      },
+      { t: "h2", c: "Is Tap Water Safer Than Bottled Water?" },
+      {
+        t: "p",
+        c: "In the United States, tap water from a regulated utility is generally more stringently regulated than bottled water. Municipal water is tested hundreds to thousands of times per year and results are publicly disclosed. Bottled water is regulated by the FDA, which requires it to meet EPA-equivalent standards — but testing is less frequent and results are not public. Bottled water also has a significant environmental footprint. The exception is areas with known contamination, lead service lines, or private well situations where tap water may genuinely be the less safe option.",
+      },
+      { t: "h2", c: "When a Filter Is Worth It" },
+      {
+        t: "table",
+        headers: ["Situation", "Recommendation"],
+        rows: [
+          ["Pre-1986 home, unknown service line material", "Test for lead; install certified lead-reduction filter while waiting"],
+          ["Infant or formula preparation in household", "Use RO or NSF/ANSI 53 lead-certified filter for drinking/cooking water"],
+          ["Agricultural area or rural well", "Annual nitrate testing; RO if above 5 mg/L"],
+          ["Near military base, airport, or industrial site", "Test for PFAS; RO if detected"],
+          ["Chlorine taste or odor concern", "Activated carbon filter handles taste and DBPs"],
+          ["Private well, no recent test", "Full baseline lab test before drawing any conclusions"],
+          ["Utility with recent health-based violation", "Check the specific contaminant; act accordingly"],
+        ],
+      },
+      { t: "h2", c: "When Tap Water Is Fine Without Any Filtering" },
+      {
+        t: "p",
+        c: "If your utility has a clean violation history, your home was built after 1986, you are not in an agricultural or known PFAS-contaminated area, and you are not in a high-risk population group, your tap water is very likely safe to drink without additional filtration. Most Americans fall into this category. Filtering for taste or peace of mind is always reasonable — but it is not required for safety in most cases.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is tap water safe to drink in the United States?",
+        answer: "Yes, for most Americans. Public water utilities are regulated by the EPA, required to test for over 90 contaminants, and must report results publicly. However, 'meets legal standards' is not the same as 'zero risk' — lead at the tap, PFAS, and nitrates are real gaps that affect specific populations and locations.",
+      },
+      {
+        question: "How do I know if my tap water is safe?",
+        answer: "Search by ZIP code to find your utility's EPA violation history. Your utility's annual Consumer Confidence Report (CCR) contains the actual test results for your water system. For lead specifically, testing your own tap is more informative than the utility's system-wide report.",
+      },
+      {
+        question: "Is tap water safe for babies?",
+        answer: "Generally yes, when the water meets EPA standards and there is no lead contamination. Infants face higher risk from both nitrates and lead. If your home is pre-1986, use filtered or bottled water for formula preparation until you confirm there is no lead issue.",
+      },
+      {
+        question: "Is bottled water safer than tap water?",
+        answer: "Usually not. U.S. tap water from regulated utilities is tested far more frequently than bottled water, and results are public. Bottled water must meet EPA-equivalent standards but is tested less often. The exception is situations involving known tap water contamination, lead service lines, or private wells.",
+      },
+      {
+        question: "What contaminants are most commonly found in tap water?",
+        answer: "The most widespread concerns are lead (from aging infrastructure, not source water), PFAS (present in about 45% of sampled systems), nitrates (particularly in agricultural areas), and disinfection byproducts from chlorine treatment. All are regulated, but the gaps between regulation and individual exposure are real.",
+      },
+      {
+        question: "Does a Brita filter make tap water safe?",
+        answer: "A Brita pitcher filter improves taste by reducing chlorine and some sediment. It does NOT reliably remove lead, PFAS, or nitrates unless the specific model is certified for those contaminants (most standard Brita models are not). For health-based concerns, look for NSF/ANSI 53 certification for lead or choose a reverse osmosis system.",
+      },
+    ],
+    nextSteps: [
+      "Check your utility's violation history with [ZIP lookup](/search).",
+      "Read your utility's annual Consumer Confidence Report — look it up on your utility's website.",
+      "See [lead](/contaminants/lead), [PFAS](/contaminants/pfas), [nitrates](/contaminants/nitrates), or [disinfection byproducts](/contaminants/disinfection-byproducts) for contaminant-specific detail.",
+      "Compare [reverse osmosis](/treatment/reverse-osmosis) and [activated carbon](/treatment/activated-carbon) if filtering makes sense for your situation.",
+      "Private well owner? See [how to test well water](/guides/how-to-test-well-water).",
+    ],
+    relatedGuides: [
+      "how-to-read-a-water-quality-report",
+      "home-water-test-kits-vs-certified-labs",
+      "best-filter-for-lead-in-tap-water",
+      "what-type-of-water-filter-do-you-need",
+    ],
+  },
+
+  // ── 12. Best filter for nitrates ─────────────────────────────────────────
+  {
+    slug: "best-filter-for-nitrates-in-drinking-water",
+    title: "Best Filter for Nitrates in Drinking Water",
+    metaTitle: "Best Filter for Nitrates in Drinking Water | What Actually Works",
+    metaDescription:
+      "Only two technologies reliably remove nitrates from drinking water: reverse osmosis and ion exchange. Learn which one fits your situation — and what to avoid.",
+    publishDate: "2026-04-30",
+    lastUpdated: "2026-04-30",
+    category: "filtration",
+    categoryLabel: "Filtration Guide",
+    intro:
+      "Only two in-home filtration technologies reliably remove nitrates from drinking water: **reverse osmosis (RO)** and **anion exchange (ion exchange)**. Activated carbon filters, pitcher filters, water softeners, UV purifiers, and boiling do not remove nitrates — and boiling actually makes the problem worse by concentrating them as water evaporates. If nitrate is your specific concern, the filter choice is narrower than most categories.",
+    blocks: [
+      {
+        t: "callout",
+        c: "Boiling water does NOT remove nitrates. It concentrates them. Never use boiling as a treatment for nitrate-contaminated water, especially for infant formula.",
+      },
+      { t: "h2", c: "Why Nitrate Removal Is Different from Most Filtration" },
+      {
+        t: "p",
+        c: "Nitrate (NO₃⁻) is a dissolved ionic compound — not a particle, heavy metal, or organic chemical. This means it passes straight through most filtration media that work well for contaminants like lead, chlorine, or sediment. Most filters are designed and certified for entirely different mechanisms. When shopping for a nitrate filter, the relevant certifications are NSF/ANSI Standard 58 (for RO systems) and NSF/ANSI Standard 62 (for distillation). See the full [nitrates contaminant guide](/contaminants/nitrates) for health background.",
+      },
+      { t: "h2", c: "The Two Technologies That Actually Work" },
+      { t: "h3", c: "1. Reverse Osmosis (RO)" },
+      {
+        t: "p",
+        c: "Reverse osmosis removes 85–95% of nitrate by forcing water through a semi-permeable membrane that blocks dissolved ions, including nitrate. It is the most widely available and easiest-to-install point-of-use solution for nitrates. A countertop or under-sink RO system costs $150–$400 and handles nitrate alongside lead, PFAS, arsenic, and most other dissolved contaminants simultaneously. This makes RO particularly valuable if you have multiple concerns or live in an agricultural area where several contaminants may be present. See the full [reverse osmosis guide](/treatment/reverse-osmosis).",
+      },
+      { t: "h3", c: "2. Anion Exchange (Ion Exchange for Nitrate)" },
+      {
+        t: "p",
+        c: "Anion exchange resins are specifically designed to remove nitrate ions by swapping them for chloride ions. When properly sized and maintained, anion exchange systems can remove over 90% of nitrate. They are more commonly used in whole-house or point-of-entry applications — making them the better choice when you want nitrate removed from all household water, not just drinking water. Anion exchange does not remove other contaminants like lead or PFAS. Note: standard water softeners use cation exchange and do NOT remove nitrate.",
+      },
+      { t: "h2", c: "What Does NOT Remove Nitrate" },
+      {
+        t: "ul",
+        items: [
+          "**Activated carbon filters** (pitcher, faucet, under-sink, whole-house) — no mechanism for ionic nitrate removal",
+          "**Water softeners** — use cation exchange, which targets calcium and magnesium, not nitrate anions",
+          "**UV purification** — kills bacteria but has no effect on dissolved chemicals",
+          "**Sediment filters** — remove particles only",
+          "**Boiling** — concentrates nitrate as water evaporates; makes it worse",
+          "**Refrigerator filters** — typically certified only for taste/odor and chlorine reduction",
+        ],
+      },
+      { t: "h2", c: "Reverse Osmosis vs Anion Exchange for Nitrates" },
+      {
+        t: "table",
+        headers: ["Factor", "Reverse Osmosis", "Anion Exchange"],
+        rows: [
+          ["Nitrate removal rate", "85–95%", "90%+ when properly maintained"],
+          ["Handles multiple contaminants?", "Yes — lead, PFAS, arsenic, and more", "No — nitrate-specific"],
+          ["Point-of-use or whole-house?", "Point-of-use (drinking/cooking tap)", "Both; common whole-house"],
+          ["Cost (unit)", "$150–$400", "$400–$1,500+"],
+          ["Maintenance", "Membrane + filter cartridge changes", "Resin recharge with salt/chloride"],
+          ["Produces wastewater?", "Yes — 3–4 gallons per gallon filtered", "Minimal during normal use"],
+          ["Renter-friendly?", "Countertop models available", "Typically requires installation"],
+          ["Best when", "Multiple concerns; drinking/cooking only", "Nitrate-only concern; whole-house needed"],
+        ],
+      },
+      { t: "h2", c: "Who Most Needs a Nitrate Filter" },
+      { t: "h3", c: "Households with Infants Under 6 Months" },
+      {
+        t: "p",
+        c: "Infants are the highest-risk group for nitrate toxicity — their digestive systems convert more nitrate to nitrite, which binds to hemoglobin and causes methemoglobinemia ('blue baby syndrome'). The EPA and CDC both recommend against using water above 10 mg/L for infant formula. If your water tests above 5 mg/L and you have or are expecting an infant, installing an RO system before the baby arrives is the most protective action you can take.",
+      },
+      { t: "h3", c: "Pregnant Women in Agricultural Areas" },
+      {
+        t: "p",
+        c: "Nitrate exposure during pregnancy is associated with adverse birth outcomes at higher levels. If you are pregnant and your water tests above 5 mg/L — even within the legal 10 mg/L limit — filtering your drinking and cooking water is a reasonable precaution.",
+      },
+      { t: "h3", c: "Private Well Owners in Farming Regions" },
+      {
+        t: "p",
+        c: "Agricultural nitrate contamination is the dominant risk for private wells in the Midwest Corn Belt (Iowa, Nebraska, Kansas, Indiana, Illinois) and California's Central Valley. The USGS estimates over 20% of tested wells in some farming counties exceed the EPA limit. Private well owners receive no regulatory protection and no automatic notification. Annual testing plus an RO system is the standard recommendation for high-risk agricultural areas. See [how to test well water](/guides/how-to-test-well-water) for testing guidance.",
+      },
+      { t: "h3", c: "Long-Term Cancer Risk Concern at Sub-MCL Levels" },
+      {
+        t: "p",
+        c: "Emerging research links long-term nitrate exposure above 3–5 mg/L to increased colorectal and bladder cancer risk — levels that are legal under the current 10 mg/L standard. If your water regularly tests at 5 mg/L or above, an RO system for drinking and cooking water is an inexpensive hedge against a risk that may not fully appear in current regulation.",
+      },
+      { t: "h2", c: "Decision Framework: Which Filter Is Right for You" },
+      {
+        t: "table",
+        headers: ["Your situation", "Best option"],
+        rows: [
+          ["Infant or pregnancy in household", "Under-sink or countertop RO immediately"],
+          ["Agricultural area well, multiple unknowns", "RO — handles nitrate plus other potential contaminants"],
+          ["Nitrate is the only confirmed concern", "Anion exchange or RO — compare whole-house vs point-of-use needs"],
+          ["Renter, limited installation options", "Countertop RO system"],
+          ["Want to protect all household uses", "Whole-house anion exchange"],
+          ["Don't know your nitrate level yet", "Test first (certified lab, $25–$40), then decide"],
+        ],
+      },
+      { t: "h2", c: "What to Check Before Buying" },
+      {
+        t: "ul",
+        items: [
+          "**NSF/ANSI 58 certification** on the full RO system — not just the membrane",
+          "**Rated for nitrate reduction** explicitly — not just TDS or general mineral reduction",
+          "**Maintenance schedule** — RO membranes typically need replacement every 2–3 years; pre-filters every 6–12 months",
+          "**Water waste ratio** — standard RO wastes 3–4 gallons per gallon filtered; newer models are more efficient",
+          "**Anion exchange resin type** — must be type II strong base anion resin for nitrate; not all ion exchange removes nitrate",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "What is the best filter for nitrates in drinking water?",
+        answer: "Reverse osmosis is the most widely available and effective option for most households, removing 85–95% of nitrate. Anion exchange systems are an alternative, particularly for whole-house treatment. Both are effective when properly maintained. Activated carbon filters, water softeners, and pitcher filters do not remove nitrate.",
+      },
+      {
+        question: "Does boiling water remove nitrates?",
+        answer: "No — boiling makes nitrate concentration worse, not better. As water evaporates during boiling, the nitrate remains and becomes more concentrated in the remaining water. Never use boiling to treat nitrate-contaminated water, especially for infant formula.",
+      },
+      {
+        question: "Does a water softener remove nitrates?",
+        answer: "No. Standard water softeners use cation exchange to remove calcium and magnesium (the minerals that cause hardness). Nitrate is an anion and passes through a standard softener unchanged. You need a reverse osmosis system or an anion exchange system specifically designed for nitrate.",
+      },
+      {
+        question: "Does Brita or a carbon filter remove nitrates?",
+        answer: "No. Activated carbon filters — including Brita, PUR, and similar pitcher or faucet filters — do not remove nitrate. Nitrate is an ionic compound that passes through carbon media without being captured. Only reverse osmosis and anion exchange reliably remove nitrate.",
+      },
+      {
+        question: "What nitrate level requires a filter?",
+        answer: "The EPA limit is 10 mg/L. For infants under 6 months, any level above 10 mg/L is a medical concern — use filtered or bottled water for formula. For healthy adults, 10 mg/L is the legal threshold. Emerging cancer risk research suggests filtering is prudent at levels above 5 mg/L with long-term exposure, even though those levels are technically legal.",
+      },
+      {
+        question: "How much does a nitrate filter cost?",
+        answer: "A countertop or under-sink reverse osmosis system costs $150–$400 upfront, with ongoing filter replacement costs of roughly $50–$100 per year. A whole-house anion exchange system runs $400–$1,500 installed. Certified lab nitrate testing runs $25–$40 — testing before buying ensures you're treating a confirmed problem.",
+      },
+    ],
+    nextSteps: [
+      "Read the [nitrates contaminant guide](/contaminants/nitrates) for the health background.",
+      "Check if your utility has nitrate violations with [ZIP lookup](/search).",
+      "Private well? See [how to test well water](/guides/how-to-test-well-water) before choosing a filter.",
+      "Compare [reverse osmosis](/treatment/reverse-osmosis) in depth for the full technology overview.",
+      "Use [certified labs](/labs) to get an accurate nitrate reading — test strips are not accurate enough near the MCL.",
+    ],
+    relatedGuides: [
+      "what-are-nitrates-in-water",
+      "reverse-osmosis-vs-carbon-filter",
+      "how-to-test-well-water",
+      "does-boiling-water-remove-lead-pfas-or-nitrates",
+    ],
+  },
+
+  // ── 13. How to Test Well Water ────────────────────────────────────────────
+  {
+    slug: "how-to-test-well-water",
+    title: "How to Test Well Water: A Step-by-Step Guide",
+    metaTitle: "How to Test Well Water: Step-by-Step | What to Test & When",
+    metaDescription:
+      "Private well owners have no regulatory safety net. Here's exactly how to test your well water, what to test for, how often, and how to read the results.",
+    publishDate: "2026-04-30",
+    lastUpdated: "2026-04-30",
+    category: "testing",
+    categoryLabel: "Testing Guide",
+    intro:
+      "Private well owners receive no regulatory protection and no required testing — the entire responsibility for knowing what is in your water falls on you. Unlike tap water from a regulated utility, your well is not monitored by the EPA, state environmental agencies, or your county unless you initiate it. This guide covers exactly what to test for, how to collect a proper sample, where to send it, and how to interpret the results.",
+    blocks: [
+      {
+        t: "callout",
+        c: "An estimated 43 million Americans rely on private wells. None of them receive routine federal water quality monitoring. If you have a well and have never tested your water, testing should be your first action.",
+      },
+      { t: "h2", c: "Why Well Water Testing Is Different from Utility Water" },
+      {
+        t: "p",
+        c: "Municipal water systems are tested hundreds to thousands of times per year by the utility and reported publicly. Private wells are tested only when the owner initiates it. Your neighbor's well can test clean while yours tests positive for nitrates — groundwater contamination is highly localized, and what's true for your county or region is not necessarily true for your specific well. Annual testing is the minimum; twice-yearly is better in high-risk agricultural or karst areas.",
+      },
+      { t: "h2", c: "What to Test Your Well Water For" },
+      { t: "h3", c: "The Annual Minimum — Test Every Year" },
+      {
+        t: "ul",
+        items: [
+          "**Total coliform bacteria** — the most critical annual test; coliform presence indicates fecal contamination pathway",
+          "**E. coli** — a subset of coliform; direct indicator of fecal contamination and immediate health risk",
+          "**Nitrates** — the most widespread agricultural contaminant in groundwater; critical for households with infants",
+          "**pH** — acidic water (below 7.0) leaches lead and copper from plumbing; affects treatment decisions",
+        ],
+      },
+      { t: "h3", c: "Every 3–5 Years — Comprehensive Panel" },
+      {
+        t: "ul",
+        items: [
+          "**Arsenic** — naturally occurring in many geological formations; colorless, tasteless, and carcinogenic at long-term exposure",
+          "**Lead** — from well casing, pump components, or household plumbing; particularly important for pre-1986 homes",
+          "**Hardness (calcium, magnesium)** — affects water treatment and appliance life",
+          "**Iron and manganese** — common aesthetic problems that also indicate oxidizing conditions",
+          "**Total dissolved solids (TDS)** — overall mineral load; baseline for well chemistry",
+          "**Fluoride** — naturally elevated in some geological formations in western U.S.",
+        ],
+      },
+      { t: "h3", c: "Location-Specific Tests — Add Based on Your Area" },
+      {
+        t: "ul",
+        items: [
+          "**PFAS** — if within 2 miles of a military base, airport, industrial site, or if you're in a known PFAS contamination area",
+          "**Radon** — Pennsylvania, New England, and granite-heavy geological regions; radon in well water off-gasses indoors",
+          "**Uranium** — wells in the western U.S., particularly New Mexico, Nevada, Wyoming, and Colorado",
+          "**Volatile organic compounds (VOCs)** — near gas stations, dry cleaners, landfills, or industrial facilities",
+          "**Pesticides and herbicides (atrazine)** — agricultural regions; particularly the Midwest Corn Belt",
+          "**Selenium** — near coal mining areas, particularly eastern Kentucky, West Virginia, and Wyoming",
+          "**Methane** — within 1 mile of active oil or gas wells",
+          "**Coliform more frequently** — after flooding, heavy rainfall, nearby construction, or any visible change in water appearance or odor",
+        ],
+      },
+      { t: "h2", c: "Step 1: Choose a Certified Lab" },
+      {
+        t: "p",
+        c: "Use a state-certified drinking water lab — not a home test kit for health-based testing. Your state environmental or health agency maintains a list of certified labs. Many labs offer mail-in kits for rural well owners. [Find a certified lab in your area](/labs). Expect to pay $25–$60 for a basic bacteria and nitrate panel; $100–$250 for a comprehensive metals and minerals panel; $200–$400+ for PFAS.",
+      },
+      { t: "h2", c: "Step 2: Order the Right Test Package" },
+      {
+        t: "p",
+        c: "Labs offer different packages. For a first-ever test on an untested well, order a comprehensive baseline panel that includes bacteria, nitrates, pH, hardness, arsenic, lead, iron, manganese, and TDS — even if you don't suspect a specific problem. For annual re-testing of a known-clean well, bacteria and nitrates are the minimum. Add location-specific tests based on proximity to contamination sources in your area. Many university extension programs (Penn State Extension, K-State Extension, OSU Extension) offer guidance on what to order by state.",
+      },
+      { t: "h2", c: "Step 3: Collect the Sample Correctly" },
+      {
+        t: "p",
+        c: "Sample collection is where most people make mistakes that invalidate results. The lab will send collection instructions with the sample container — follow them exactly. Key rules for accurate results:",
+      },
+      {
+        t: "ul",
+        items: [
+          "**For bacteria testing**: do not run the tap before sampling (or follow the lab's specific flushing instructions). Do not touch the inside of the container or cap. Keep samples cold during transport.",
+          "**For lead testing**: use 'first draw' water — water that has sat in contact with plumbing for at least 6 hours. Do not flush the tap first.",
+          "**For nitrates and metals**: flush the tap for 2–5 minutes to clear stagnant water and pull a representative aquifer sample (unless lead is included, in which case see above).",
+          "**Submit samples within the time window** — bacteria samples typically must reach the lab within 24–30 hours of collection. Ship overnight or drop off in person.",
+          "**Test at the kitchen tap** — this is your primary drinking and cooking source. Do not sample from an outdoor spigot or hose bib.",
+        ],
+      },
+      { t: "h2", c: "Step 4: Understand Your Results" },
+      { t: "h3", c: "Bacteria" },
+      {
+        t: "p",
+        c: "Any detection of total coliform or E. coli is a health concern requiring action — there is no 'acceptable' level. If coliform is detected, re-test immediately, shock-chlorinate the well, and re-test again after shock chlorination. Repeat coliform detection may indicate a structural well problem requiring professional evaluation.",
+      },
+      { t: "h3", c: "Nitrates" },
+      {
+        t: "p",
+        c: "The EPA MCL is 10 mg/L. Any result above 10 mg/L requires action, especially with infants or pregnant women in the household. Results between 5–10 mg/L are legal but worth monitoring and filtering if you have long-term exposure concerns. A [reverse osmosis system](/treatment/reverse-osmosis) is the most effective point-of-use treatment. See [best filter for nitrates](/guides/best-filter-for-nitrates-in-drinking-water) for a full comparison.",
+      },
+      { t: "h3", c: "Arsenic" },
+      {
+        t: "p",
+        c: "The EPA MCL is 10 ppb. At exactly 10 ppb over a lifetime, epidemiological models suggest meaningful cancer risk. If your result is above 5 ppb, a point-of-use RO system or adsorptive media filter is a prudent addition. See the [arsenic contaminant guide](/contaminants/arsenic) and [best filter for arsenic](/guides/best-filter-for-arsenic-in-well-water).",
+      },
+      { t: "h3", c: "Lead" },
+      {
+        t: "p",
+        c: "The EPA action level is 15 ppb, but the MCLG is zero — no level is without risk. Lead at any detectable level in well water is almost always coming from pump components, well casing, pressure tank, or household plumbing — not the aquifer itself. A certified lead-reduction filter at the kitchen tap addresses the drinking and cooking exposure. See [best filter for lead](/guides/best-filter-for-lead-in-tap-water).",
+      },
+      { t: "h2", c: "When to Test More Often Than Once a Year" },
+      {
+        t: "ul",
+        items: [
+          "**After significant flooding** — floodwater can overwhelm well seals and introduce surface contamination",
+          "**After nearby construction** — soil disturbance can affect groundwater",
+          "**After a new oil or gas well is drilled within a mile** — potential methane migration and casing failure",
+          "**Any time water appearance, taste, or odor changes noticeably** — a change in cloudiness, color, smell, or taste is an indicator",
+          "**When a new baby joins the household** — reassess for nitrates and lead before the infant begins formula",
+          "**After purchasing a property with a well** — always do a fresh baseline test; prior owner's history is not your baseline",
+        ],
+      },
+      { t: "h2", c: "State-Specific Well Water Resources" },
+      {
+        t: "p",
+        c: "Groundwater contamination is highly regional. See the state-specific well water guides for your location: [California](/well-water/california), [Texas](/well-water/texas), [Florida](/well-water/florida), [Pennsylvania](/well-water/pennsylvania), [Ohio](/well-water/ohio), [Arizona](/well-water/arizona), [Oregon](/well-water/oregon), [Washington](/well-water/washington), [Nevada](/well-water/nevada), [Kansas](/well-water/kansas), [Kentucky](/well-water/kentucky), [Alabama](/well-water/alabama), and [New Mexico](/well-water/new-mexico).",
+      },
+    ],
+    faqs: [
+      {
+        question: "How often should I test my well water?",
+        answer: "At minimum, test for bacteria and nitrates annually. Do a comprehensive panel (including arsenic, lead, metals, and TDS) every 3–5 years, or whenever you are on a new well for the first time. Test more often after flooding, nearby construction, or any change in water appearance, taste, or odor.",
+      },
+      {
+        question: "Where do I send well water for testing?",
+        answer: "Use a state-certified drinking water laboratory. Your state's environmental or health agency maintains a list of certified labs. Many offer mail-in kits. University extension programs in your state (Penn State Extension, K-State Extension, etc.) can also provide referrals and guidance on what to order.",
+      },
+      {
+        question: "How much does well water testing cost?",
+        answer: "A basic bacteria and nitrate panel runs $25–$60. A comprehensive metals and minerals panel costs $100–$250. PFAS testing adds $200–$400. A full first-time baseline panel covering bacteria, nitrates, arsenic, lead, metals, and basic chemistry typically runs $150–$300 depending on the lab and your state.",
+      },
+      {
+        question: "Can I use a home test kit for well water?",
+        answer: "Home test kits are useful for quick screening but are not accurate enough for health-based decisions, especially for arsenic and nitrates near the MCL. A result near the legal limit — either above or below — can easily be misread with strips. Use a certified lab for any result you plan to act on. See the full [home test kits vs certified labs guide](/guides/home-water-test-kits-vs-certified-labs).",
+      },
+      {
+        question: "What does coliform bacteria in well water mean?",
+        answer: "Coliform detection means there is a contamination pathway from surface sources into your well. It does not necessarily mean you have been drinking actively harmful water, but it requires immediate action: re-test to confirm, shock-chlorinate the well, and re-test after treatment. Repeated coliform detection after treatment suggests a structural well problem requiring professional evaluation.",
+      },
+      {
+        question: "Does my well water need a filter?",
+        answer: "It depends entirely on what your test results show. A well that tests clean for all relevant contaminants may not need treatment. A well with nitrates above 5 mg/L, detectable arsenic, or bacterial contamination does need treatment. Test first — then decide on filtration based on confirmed results rather than guessing.",
+      },
+    ],
+    nextSteps: [
+      "Find [certified labs in your area](/labs) to order a test.",
+      "Browse [well water guides by state](/well-water) for location-specific contamination risks.",
+      "If nitrates are found, read [best filter for nitrates](/guides/best-filter-for-nitrates-in-drinking-water).",
+      "If arsenic is found, read [best filter for arsenic](/guides/best-filter-for-arsenic-in-well-water).",
+      "If lead is found, read [best filter for lead](/guides/best-filter-for-lead-in-tap-water).",
+      "Compare [home test kits vs certified labs](/guides/home-water-test-kits-vs-certified-labs) before buying a quick test.",
+    ],
+    relatedGuides: [
+      "home-water-test-kits-vs-certified-labs",
+      "best-filter-for-nitrates-in-drinking-water",
+      "best-filter-for-arsenic-in-well-water",
+      "what-type-of-water-filter-do-you-need",
+    ],
+  },
+
+  // ── 14. Best filter for arsenic ───────────────────────────────────────────
+  {
+    slug: "best-filter-for-arsenic-in-well-water",
+    title: "Best Filter for Arsenic in Well Water",
+    metaTitle: "Best Filter for Arsenic in Well Water | What Actually Works",
+    metaDescription:
+      "Arsenic affects millions of private well users in the U.S. Learn which filters remove arsenic, which certifications matter, and how to pick the right system for your result.",
+    publishDate: "2026-04-30",
+    lastUpdated: "2026-04-30",
+    category: "filtration",
+    categoryLabel: "Filtration Guide",
+    intro:
+      "The best filter for arsenic in well water is a **reverse osmosis system** or **certified adsorptive media filter** — both can remove 90–95% of dissolved inorganic arsenic when properly maintained. Standard activated carbon filters provide minimal arsenic removal. The right choice depends on whether you want point-of-use treatment (drinking and cooking water only) or whole-house removal, your confirmed arsenic level, and your budget.",
+    blocks: [
+      {
+        t: "callout",
+        c: "Arsenic is colorless, tasteless, and odorless. You cannot detect it without testing. An estimated 2.1 million Americans drink private well water with arsenic above the EPA limit — most without knowing it.",
+      },
+      { t: "h2", c: "Why Arsenic in Well Water Is a Serious Concern" },
+      {
+        t: "p",
+        c: "Arsenic is a Group 1 human carcinogen — the highest evidence tier. Long-term exposure is strongly linked to bladder, lung, and skin cancer. The EPA MCL is 10 ppb (parts per billion), but even at the legal limit, lifetime exposure carries meaningful cancer risk — some epidemiological models put bladder cancer risk at roughly 1 in 500 at exactly 10 ppb. Arsenic is tasteless and colorless, so you will not detect it without a lab test. See the full [arsenic contaminant guide](/contaminants/arsenic) for the health and geographic context.",
+      },
+      { t: "h2", c: "The Three Technologies That Actually Remove Arsenic" },
+      { t: "h3", c: "1. Reverse Osmosis" },
+      {
+        t: "p",
+        c: "Reverse osmosis removes 90–95% of dissolved inorganic arsenic (As(V) and As(III) in oxidized form) by forcing water through a semi-permeable membrane. RO is the most accessible point-of-use solution for private well owners — under-sink systems are available for $150–$400, require no whole-house plumbing modification, and simultaneously address lead, nitrates, PFAS, and most other dissolved contaminants. This makes RO the default recommendation for well owners with arsenic plus other concerns. See the full [reverse osmosis guide](/treatment/reverse-osmosis).",
+      },
+      { t: "h3", c: "2. Adsorptive Media (Activated Alumina / Iron-Based Media)" },
+      {
+        t: "p",
+        c: "Adsorptive media filters use alumina or iron-based granular media that arsenic bonds to as water passes through. They are highly effective for arsenic specifically — often exceeding 95% removal — and are commonly used in whole-house point-of-entry systems. Activated alumina is the most established; iron-based media (such as GFO — granular ferric oxide) is increasingly common. These systems require periodic media replacement. They do not remove nitrates, PFAS, or lead, so they work best when arsenic is the isolated concern.",
+      },
+      { t: "h3", c: "3. Distillation" },
+      {
+        t: "p",
+        c: "Distillation removes virtually all arsenic by boiling water and collecting the steam — arsenic and other dissolved solids stay behind. It is highly effective but slow (typically 1 gallon per hour), expensive to run (uses significant electricity), and impractical as a whole-house solution. Distillation is rarely the first choice compared to RO or adsorptive media, but is an option for households without access to RO installation.",
+      },
+      { t: "h2", c: "What Does NOT Remove Arsenic" },
+      {
+        t: "ul",
+        items: [
+          "**Standard activated carbon filters** (pitcher, faucet, under-sink) — minimal arsenic removal; not the right mechanism",
+          "**Water softeners** — remove calcium and magnesium; not arsenic",
+          "**UV purification** — kills bacteria and viruses; no effect on dissolved chemicals",
+          "**Sediment filters** — remove particles; arsenic is dissolved, not particulate",
+          "**Boiling** — concentrates arsenic as water evaporates; never use for arsenic treatment",
+        ],
+      },
+      { t: "h2", c: "Reverse Osmosis vs Adsorptive Media for Arsenic" },
+      {
+        t: "table",
+        headers: ["Factor", "Reverse Osmosis", "Adsorptive Media"],
+        rows: [
+          ["Arsenic removal rate", "90–95%", "95%+ when properly maintained"],
+          ["Arsenic species handled", "As(V) best; oxidize As(III) first for optimal results", "Both As(V) and As(III)"],
+          ["Other contaminants removed?", "Yes — lead, nitrates, PFAS, and more", "No — arsenic-specific"],
+          ["Point-of-use or whole-house?", "Point-of-use (kitchen tap)", "Whole-house point-of-entry common"],
+          ["Cost (unit)", "$150–$400", "$500–$2,000 installed"],
+          ["Maintenance", "Membrane + filter cartridge changes", "Media replacement every 1–3 years"],
+          ["Water waste?", "Yes — 3–4 gallons per filtered gallon", "Minimal"],
+          ["Best when", "Multiple concerns; drinking/cooking focus", "Arsenic only; whole-house treatment desired"],
+        ],
+      },
+      { t: "h2", c: "An Important Note About Arsenic Chemistry" },
+      {
+        t: "p",
+        c: "Arsenic exists in groundwater in two oxidation states: arsenate As(V) and arsenite As(III). Most filters perform best on As(V). If your well water is low in dissolved oxygen (common in deep wells), As(III) may dominate and some filters will perform less effectively. Pre-oxidation — injecting a small amount of air or using a chlorine contact tank — converts As(III) to As(V) before filtration. If your lab test reports a high proportion of As(III) or if your well is anaerobic (low oxygen), discuss pre-oxidation with a water treatment professional.",
+      },
+      { t: "h2", c: "Certifications to Look For" },
+      {
+        t: "ul",
+        items: [
+          "**NSF/ANSI Standard 58** — for RO systems; look for arsenic reduction specifically in the system's certified claims",
+          "**NSF/ANSI Standard 53** — for carbon filters claiming arsenic reduction (limited options; verify explicitly)",
+          "**NSF/ANSI Standard 62** — for distillation units",
+          "**WQA Gold Seal** — alternative third-party certification recognized for adsorptive media systems",
+          "Verify that certification covers the **full system** at the rated flow rate — not just the media or membrane in isolation",
+        ],
+      },
+      { t: "h2", c: "Decision Framework by Arsenic Level and Situation" },
+      {
+        t: "table",
+        headers: ["Arsenic result", "Situation", "Recommended action"],
+        rows: [
+          ["Below 5 ppb", "Well owner, no other concerns", "Monitor annually; no immediate treatment required"],
+          ["5–10 ppb", "Long-term residence, health-conscious", "Point-of-use RO for drinking/cooking water"],
+          ["Above 10 ppb (over MCL)", "Any household", "Immediate point-of-use RO; evaluate whole-house if budget allows"],
+          ["Above 10 ppb + infants", "Highest priority", "Do not use well water for drinking or formula until RO is installed"],
+          ["Any level + other contaminants present", "Multiple concerns", "RO — addresses arsenic, nitrates, lead, PFAS simultaneously"],
+          ["Arsenic only, whole-house desired", "Single concern", "Adsorptive media point-of-entry system"],
+        ],
+      },
+      { t: "h2", c: "How to Know Your Arsenic Level" },
+      {
+        t: "p",
+        c: "Testing is the only way to know your well's arsenic level — it is tasteless, colorless, and odorless. Use a state-certified laboratory, not home test strips. Home strips for arsenic are not accurate at concentrations near the 10 ppb EPA limit. A certified arsenic test typically costs $15–$40 as a standalone or is included in a comprehensive well water panel. See the full [well water testing guide](/guides/how-to-test-well-water) for step-by-step collection instructions and lab selection.",
+      },
+      { t: "h2", c: "Geographic Areas with the Highest Arsenic Risk" },
+      {
+        t: "p",
+        c: "Arsenic in well water is a nationwide concern, but risk is highest in specific geological formations. Well owners in the following areas should prioritize arsenic testing: the western United States (Arizona, Nevada, California's Central Valley), New England (Maine, New Hampshire, Vermont), the Midwest (Minnesota, Wisconsin, Michigan), and parts of the Great Plains (South Dakota, Wyoming). See the [arsenic contaminant guide](/contaminants/arsenic) for state-level detail.",
+      },
+    ],
+    faqs: [
+      {
+        question: "What is the best filter for arsenic in well water?",
+        answer: "Reverse osmosis is the most practical and widely available option for point-of-use arsenic removal, achieving 90–95% reduction. Adsorptive media systems (activated alumina or iron-based media) are highly effective for whole-house or point-of-entry treatment. Standard carbon filters and water softeners do not remove arsenic.",
+      },
+      {
+        question: "Does reverse osmosis remove arsenic?",
+        answer: "Yes. Reverse osmosis removes 90–95% of dissolved inorganic arsenic. It performs best on arsenate (As(V)). If your well water contains predominantly As(III) — common in low-oxygen deep wells — pre-oxidation before the RO membrane improves removal efficiency.",
+      },
+      {
+        question: "Does a Brita or carbon filter remove arsenic?",
+        answer: "No. Standard activated carbon pitcher and faucet filters do not reliably remove arsenic. Arsenic is a dissolved ionic compound that passes through activated carbon media with minimal reduction. Do not use a Brita or similar carbon filter as your primary arsenic treatment.",
+      },
+      {
+        question: "What is the EPA limit for arsenic in drinking water?",
+        answer: "The EPA MCL for arsenic is 10 parts per billion (ppb), effective since 2006. The Maximum Contaminant Level Goal (MCLG) is zero — no level is considered without cancer risk. At exactly 10 ppb with lifetime exposure, some epidemiological models estimate approximately 1 in 500 lifetime bladder cancer risk.",
+      },
+      {
+        question: "How much arsenic in well water is dangerous?",
+        answer: "The EPA MCL is 10 ppb. Above 10 ppb, health risk is well-established and filtration is important. At 5–10 ppb, long-term cancer risk is present though smaller. Even below 5 ppb, some lifetime cancer risk accumulates with long-term exposure. Arsenic has no truly safe threshold — the MCL reflects a regulatory balance between risk and treatment feasibility, not zero risk.",
+      },
+      {
+        question: "How do I test my well for arsenic?",
+        answer: "Use a state-certified drinking water laboratory — home test strips are not accurate at concentrations near the EPA limit. Order a sample kit, follow the lab's collection instructions exactly, and ship overnight. Standalone arsenic tests cost $15–$40; comprehensive panels including arsenic typically run $100–$200. See the [well water testing guide](/guides/how-to-test-well-water) for step-by-step instructions.",
+      },
+    ],
+    nextSteps: [
+      "Test your well first — [find certified labs](/labs) in your area.",
+      "Read the [arsenic contaminant guide](/contaminants/arsenic) for the full health and geographic context.",
+      "Compare [reverse osmosis](/treatment/reverse-osmosis) in depth for technology details.",
+      "Not sure if you have other contaminants? See [how to test well water](/guides/how-to-test-well-water) for a full testing protocol.",
+      "Browse your [state's well water guide](/well-water) for regional contamination context.",
+    ],
+    relatedGuides: [
+      "how-to-test-well-water",
+      "reverse-osmosis-vs-carbon-filter",
+      "best-filter-for-nitrates-in-drinking-water",
+      "home-water-test-kits-vs-certified-labs",
+    ],
+  },
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

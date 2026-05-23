@@ -1,13 +1,17 @@
 import Link from "next/link";
 import { ArrowRight, Clock, Tag } from "lucide-react";
 import articles from "@/lib/content/learn";
+import JsonLd from "@/components/json-ld";
 import type { Metadata } from "next";
 
+const learnCanonical = "https://waterutilityreport.com/learn";
+
 export const metadata: Metadata = {
-  title: "Water Research & Analysis — AI, Policy, and Water Quality",
+  title: "Water Research & Analysis — PFAS, Records, AI, and Policy",
   description:
-    "In-depth research on AI data centers and water quality, water-positive claims, semiconductor wastewater, and what communities should be asking. Built on official sources.",
+    "In-depth research on PFAS monitoring records, utility compliance data, lead service lines, harmful algal blooms, AI infrastructure water use, and water policy. Built on official sources.",
   robots: { index: true, follow: true },
+  alternates: { canonical: learnCanonical },
 };
 
 const categoryMeta: Record<string, { label: string; color: string; bg: string }> = {
@@ -30,8 +34,42 @@ export default function LearnPage() {
   const featured = articles[0];
   const rest = articles.slice(1);
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://waterutilityreport.com" },
+      { "@type": "ListItem", position: 2, name: "Learn", item: learnCanonical },
+    ],
+  };
+
+  const collectionPageJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Water Research & Analysis — AI, Policy, and Water Quality",
+    description: "In-depth research on PFAS monitoring records, utility compliance data, lead service lines, harmful algal blooms, AI infrastructure water use, and water policy. Built on official sources.",
+    url: learnCanonical,
+    publisher: { "@type": "Organization", name: "Water Utility Report", url: "https://waterutilityreport.com" },
+  };
+
+  const itemListJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Water Research & Analysis articles",
+    numberOfItems: articles.length,
+    itemListElement: articles.map((a, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: a.title,
+      url: `https://waterutilityreport.com/learn/${a.slug}`,
+    })),
+  };
+
   return (
     <div className="min-h-screen bg-background">
+      <JsonLd data={breadcrumbJsonLd} />
+      <JsonLd data={collectionPageJsonLd} />
+      <JsonLd data={itemListJsonLd} />
       {/* Hero */}
       <div className="bg-wur-ink text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -40,8 +78,8 @@ export default function LearnPage() {
             Water Intelligence
           </h1>
           <p className="text-white/60 max-w-2xl leading-relaxed text-lg">
-            Sourced research on the forces shaping water quality in the U.S. — AI infrastructure,
-            industrial water use, policy gaps, and what local communities should be asking.
+            Sourced research on PFAS monitoring records, utility compliance data, lead service lines,
+            harmful algal blooms, AI infrastructure water use, and water policy — built on official sources.
           </p>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ExternalLink, CheckCircle2 } from "lucide-react";
 import { prisma } from "@/lib/prisma";
+import AdminPublishStateBtn from "@/components/admin-publish-state-btn";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -85,18 +86,23 @@ export default async function AdminStatesPage() {
                   </td>
                   <td className="py-3 px-4 text-right">
                     <div className="flex items-center justify-end gap-2">
+                      <AdminPublishStateBtn
+                        stateId={s.id}
+                        draft={s.draft}
+                        published={s.published}
+                      />
+                      <Link
+                        href={`/admin/utilities?state=${s.abbreviation}`}
+                        className="text-xs text-wur-teal hover:underline"
+                      >
+                        Utilities
+                      </Link>
                       <Link
                         href={`/states/${s.slug}`}
                         target="_blank"
                         className="text-xs text-muted-foreground hover:text-wur-teal transition-colors"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
-                      </Link>
-                      <Link
-                        href={`/admin/utilities?state=${s.abbreviation}`}
-                        className="text-xs text-wur-teal hover:underline"
-                      >
-                        Utilities
                       </Link>
                     </div>
                   </td>

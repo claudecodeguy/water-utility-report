@@ -14,6 +14,9 @@ import {
 } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { normalizeName } from "@/lib/normalize-name";
+import PageIntroBox from "@/components/page-intro-box";
+import DataLimitationsNote from "@/components/data-limitations-note";
+import JsonLd from "@/components/json-ld";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -25,14 +28,28 @@ export async function generateMetadata({
   params: Promise<{ pwsid: string }>;
 }): Promise<Metadata> {
   const { pwsid } = await params;
-  const utility = await prisma.utility.findUnique({
-    where: { pwsid: pwsid.toUpperCase() },
-    select: { name: true, pwsid: true },
-  });
-  if (!utility) return {};
+  const uppercasePwsid = pwsid.toUpperCase();
+  const [utility, recordCount] = await Promise.all([
+    prisma.utility.findUnique({
+      where: { pwsid: uppercasePwsid },
+      select: { name: true, pwsid: true, state: { select: { abbreviation: true } } },
+    }),
+    prisma.pfasRecord.count({
+      where: { pwsid: uppercasePwsid, suppressed: false, validated: true },
+    }),
+  ]);
+  if (!utility && recordCount === 0) return {};
+  const displayName = utility ? normalizeName(utility.name) : uppercasePwsid;
+  const stateAbbr = utility?.state?.abbreviation ? ` (${utility.state.abbreviation})` : "";
+  const title = `${displayName}${stateAbbr} PFAS & PFOA Testing Records: EPA UCMR 5 Data`;
+  const description = `Official EPA UCMR 5 PFAS monitoring records for ${displayName}, including PFOA, PFOS, and other perfluoroalkyl substances. Analytes, detection levels, sample dates, and source data.`;
+  const url = `https://waterutilityreport.com/pfas-watchlist/utility/${uppercasePwsid}`;
   return {
-    title: `${normalizeName(utility.name)} PFAS Records — Official EPA Monitoring Data`,
-    description: `Official EPA UCMR 5 PFAS monitoring records for ${normalizeName(utility.name)} (PWSID: ${utility.pwsid}). Source-backed, no inferred risk scores.`,
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: { title, description, url },
+    robots: recordCount > 0 ? "index, follow" : "noindex, follow",
   };
 }
 
@@ -88,8 +105,42 @@ export default async function PfasUtilityPage({
   const stateSlug = utility?.state?.slug;
   const utilityName = utility ? normalizeName(utility.name) : pwsid;
 
+  const pfasCanonical = `https://waterutilityreport.com/pfas-watchlist/utility/${pwsid}`;
+  const uniqueAnalyteNames = [...new Set(pfasRecords.map((r) => r.analyte.name))];
+
+  const breadcrumbItems: { "@type": "ListItem"; position: number; name: string; item: string }[] = [
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://waterutilityreport.com" },
+    { "@type": "ListItem", position: 2, name: "PFAS Watchlist", item: "https://waterutilityreport.com/pfas-watchlist" },
+  ];
+  if (utility?.state && stateSlug) {
+    breadcrumbItems.push({ "@type": "ListItem", position: 3, name: utility.state.name, item: `https://waterutilityreport.com/pfas-watchlist/${stateSlug}` });
+  }
+  breadcrumbItems.push({ "@type": "ListItem", position: breadcrumbItems.length + 1, name: utilityName, item: pfasCanonical });
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: breadcrumbItems,
+  };
+
+  const datasetJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    name: `${utilityName} PFAS Monitoring Records — EPA UCMR 5`,
+    description: `Official EPA UCMR 5 PFAS monitoring records for ${utilityName} (PWSID: ${pwsid}). Includes analytes, sample dates, reporting limits, detection flags, and source attribution from the EPA Unregulated Contaminant Monitoring Rule 5 dataset.`,
+    url: pfasCanonical,
+    isAccessibleForFree: true,
+    creator: { "@type": "Organization", name: "Water Utility Report", url: "https://waterutilityreport.com" },
+    citation: "https://www.epa.gov/dwucmr/occurrence-data-unregulated-contaminant-monitoring-rule#5",
+    temporalCoverage: "2023/2025",
+    ...(utility?.state ? { spatialCoverage: { "@type": "Place", name: utility.state.name } } : {}),
+    ...(uniqueAnalyteNames.length > 0 ? { variableMeasured: uniqueAnalyteNames } : {}),
+  };
+
   return (
     <div className="min-h-screen bg-background">
+      <JsonLd data={breadcrumbJsonLd} />
+      <JsonLd data={datasetJsonLd} />
 
       {/* ── HEADER ── */}
       <section className="bg-wur-ink text-white">
@@ -161,6 +212,17 @@ export default async function PfasUtilityPage({
             </p>
           </div>
         </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-0">
+        <PageIntroBox
+          summary={`Official EPA UCMR 5 PFAS monitoring records for ${utilityName}. This page shows only government-reported test results — no risk scores or compliance judgments are generated.`}
+          dataItems={[
+            { label: "UCMR 5 monitoring records", available: pfasRecords.length > 0 },
+            { label: "Official detections above MRL", available: detections.length > 0 },
+            { label: "Enforcement context records", available: officialStatuses.length > 0 },
+          ]}
+        />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -347,6 +409,7 @@ export default async function PfasUtilityPage({
                 </div>
               </div>
             )}
+            <DataLimitationsNote />
           </div>
 
           {/* ── SIDEBAR ── */}
@@ -415,6 +478,58 @@ export default async function PfasUtilityPage({
               </div>
             </div>
 
+            {/* Internal links */}
+            <div className="rounded-lg border border-border bg-card p-5">
+              <h3 className="font-semibold text-foreground text-sm mb-3">Related Pages</h3>
+              <div className="space-y-2">
+                {utility?.state && stateSlug && (
+                  <Link
+                    href={`/states/${stateSlug}`}
+                    className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-wur-teal transition-colors py-0.5"
+                  >
+                    <ArrowRight className="w-3 h-3 shrink-0" />
+                    {utility.state.name} drinking water overview
+                  </Link>
+                )}
+                {utility?.city_served && stateSlug && (() => {
+                  const firstCity = utility.city_served.split(",")[0].trim().replace(/-\d{3,4}$/, "").trim();
+                  const citySlug = firstCity.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+                  return citySlug ? (
+                    <Link
+                      href={`/cities/${citySlug}-${utility.state?.abbreviation?.toLowerCase() ?? ""}`}
+                      className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-wur-teal transition-colors py-0.5"
+                    >
+                      <ArrowRight className="w-3 h-3 shrink-0" />
+                      {firstCity} city water report
+                    </Link>
+                  ) : null;
+                })()}
+                {stateSlug && (
+                  <Link
+                    href={`/pfas-watchlist/${stateSlug}`}
+                    className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-wur-teal transition-colors py-0.5"
+                  >
+                    <ArrowRight className="w-3 h-3 shrink-0" />
+                    {utility?.state?.name ?? "State"} PFAS records — all utilities
+                  </Link>
+                )}
+                <Link
+                  href="/guides/best-filter-for-pfas-in-drinking-water"
+                  className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-wur-teal transition-colors py-0.5"
+                >
+                  <ArrowRight className="w-3 h-3 shrink-0" />
+                  Best filters for PFAS removal
+                </Link>
+                <Link
+                  href="/contaminants/pfas"
+                  className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-wur-teal transition-colors py-0.5"
+                >
+                  <ArrowRight className="w-3 h-3 shrink-0" />
+                  PFAS contaminant overview
+                </Link>
+              </div>
+            </div>
+
             {/* External links */}
             <div className="rounded-lg border border-border bg-card p-5">
               <h3 className="font-semibold text-foreground text-sm mb-4">Official Sources</h3>
@@ -445,6 +560,28 @@ export default async function PfasUtilityPage({
                     </span>
                     <ExternalLink className="w-3 h-3 text-muted-foreground/40 group-hover:text-wur-teal transition-colors shrink-0" />
                   </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Key Terms */}
+            <div className="rounded-lg border border-border bg-card p-5">
+              <h3 className="font-semibold text-foreground text-sm mb-3">Key Terms</h3>
+              <div className="space-y-2">
+                {[
+                  { term: "UCMR 5", definition: "The 5th Unregulated Contaminant Monitoring Rule — an EPA program requiring large water systems to test for emerging contaminants, including PFAS, from 2023–2025." },
+                  { term: "PFAS", definition: "Per- and polyfluoroalkyl substances. A family of synthetic chemicals used in industry and consumer products, some of which have been detected in drinking water." },
+                  { term: "MRL (Minimum Reporting Limit)", definition: "The lowest concentration at which a lab can reliably detect and report a substance. Results below MRL are reported as non-detects." },
+                  { term: "Detection above MRL", definition: "The analyte was measured at a concentration at or above the minimum reporting limit. This is a monitoring result, not a compliance determination." },
+                  { term: "Non-detect", definition: "The analyte was tested but not found above the minimum reporting limit. Absence of detection does not guarantee absence of the substance." },
+                ].map(({ term, definition }) => (
+                  <details key={term} className="group">
+                    <summary className="text-xs font-medium text-foreground cursor-pointer list-none flex items-center justify-between py-1 border-b border-border/50">
+                      {term}
+                      <span className="text-muted-foreground text-[10px] group-open:rotate-180 transition-transform">▾</span>
+                    </summary>
+                    <p className="text-[11px] text-muted-foreground leading-relaxed pt-1.5 pb-2">{definition}</p>
+                  </details>
                 ))}
               </div>
             </div>

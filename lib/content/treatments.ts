@@ -51,7 +51,7 @@ const treatmentMethods: TreatmentMethod[] = [
     maintenance: "Pre-filters (sediment and carbon): replace every 6–12 months. RO membrane: replace every 2–5 years depending on water quality and usage. Post-carbon filter: replace annually. Total annual filter cost typically $50–$150. Some systems have filter replacement indicator lights.",
     costRange: "$200–$600 for the unit; $50–$150/year for replacement filters. Professional installation adds $150–$300.",
     certifications: ["NSF/ANSI 58 (RO systems)", "NSF/ANSI 53 (contaminant reduction claims)", "WQA Gold Seal"],
-    contaminants: ["pfas", "lead", "nitrates", "arsenic", "disinfection-byproducts"],
+    contaminants: ["pfas", "lead", "nitrates", "arsenic", "disinfection-byproducts", "chlorine", "microplastics", "bacteria", "fluoride", "chromium-6", "copper", "iron-and-manganese", "uranium", "perchlorate", "vocs", "radium", "cryptosporidium", "selenium", "cadmium", "mercury", "barium"],
     faqs: [
       {
         question: "Does reverse osmosis remove PFAS?",
@@ -108,7 +108,7 @@ const treatmentMethods: TreatmentMethod[] = [
     maintenance: "Replace filters on schedule — this is critical. An overloaded carbon filter can release contaminants. Pitcher filters: every 40–60 gallons (roughly 2 months). Under-sink carbon: every 6 months. Whole-house carbon: every 6–12 months or per manufacturer specification based on water usage.",
     costRange: "Pitcher filters: $25–$60 plus $5–$10/month in replacement filters. Under-sink: $50–$300 plus $30–$80/year in filters. Whole-house: $300–$1,000 installed plus $100–$200/year in media.",
     certifications: ["NSF/ANSI 42 (aesthetic effects — taste, odor, chlorine)", "NSF/ANSI 53 (health effects — lead, cysts)", "NSF/ANSI 58 (for PFAS-rated under-sink carbon filters)"],
-    contaminants: ["disinfection-byproducts", "pfas", "lead"],
+    contaminants: ["disinfection-byproducts", "pfas", "lead", "chlorine", "microplastics", "radon", "copper", "atrazine", "vocs", "hydrogen-sulfide", "cadmium", "mercury"],
     faqs: [
       {
         question: "Does a Brita or PUR filter remove PFAS?",
@@ -162,7 +162,7 @@ const treatmentMethods: TreatmentMethod[] = [
     maintenance: "Add water softener salt (sodium chloride or potassium chloride) to the brine tank as needed — typically every 4–6 weeks depending on water hardness and household usage. Check for salt bridges (a hardened crust that prevents brine from dissolving) annually. Resin beds last 10–20 years in most conditions.",
     costRange: "$400–$1,500 for the unit; $10–$25/month for salt depending on hardness and household size; professional installation $300–$600.",
     certifications: ["NSF/ANSI 44 (water softeners)", "WQA Gold Seal"],
-    contaminants: ["hard-water"],
+    contaminants: ["hard-water", "iron-and-manganese", "uranium", "radium", "barium"],
     faqs: [
       {
         question: "Is softened water safe to drink?",
@@ -215,7 +215,7 @@ const treatmentMethods: TreatmentMethod[] = [
     maintenance: "Replace the UV lamp annually — even if it appears to be working, UV output degrades to below effective levels. Clean the quartz sleeve (which surrounds the lamp) every 6–12 months to remove mineral deposits that reduce UV transmission. Replace the pre-sediment filter every 3–6 months.",
     costRange: "$100–$500 for the unit; $50–$100/year for replacement lamps and sleeves.",
     certifications: ["NSF/ANSI 55 (Class A for all microorganisms; Class B for general reduction)", "NSF/ANSI 244 (microbiological water purifiers)"],
-    contaminants: [],
+    contaminants: ["bacteria", "cryptosporidium"],
     faqs: [
       {
         question: "Does UV purification remove PFAS or lead?",
@@ -269,7 +269,7 @@ const treatmentMethods: TreatmentMethod[] = [
     maintenance: "Sediment pre-filter: every 3–6 months. Carbon media: every 6–12 months for standard household use. Catalytic carbon (for chloramine): every 12 months. Iron/sulfur media: backwash regularly, replace every 5–10 years. Replace on schedule — overloaded filters reduce effectiveness and can harbor bacteria.",
     costRange: "$150–$800 for the system; $100–$300/year in replacement filters depending on system type and water quality.",
     certifications: ["NSF/ANSI 42 (aesthetic effects)", "NSF/ANSI 53 (health effects)", "NSF/ANSI 61 (drinking water system components)"],
-    contaminants: ["disinfection-byproducts"],
+    contaminants: ["disinfection-byproducts", "chlorine", "microplastics", "bacteria", "iron-and-manganese", "cryptosporidium", "hydrogen-sulfide"],
     faqs: [
       {
         question: "Do I need a whole-house filter if I have an under-sink RO system?",

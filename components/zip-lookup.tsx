@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Search, ArrowRight, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { zipUtilityMatches } from "@/lib/mock-data";
+import { trackEvent } from "@/lib/analytics";
 
 interface ZipLookupProps {
   variant?: "hero" | "inline";
@@ -26,37 +27,50 @@ export default function ZipLookup({ variant = "hero", className }: ZipLookupProp
     }
 
     setError("");
+    trackEvent("zip_lookup_submitted", { zip: trimmed });
+    trackEvent("utility_search_completed", { zip: trimmed });
     router.push(`/search?zip=${trimmed}`);
+  };
+
+  const handleFocus = () => {
+    trackEvent("zip_lookup_started");
+    trackEvent("utility_search_started");
   };
 
   if (variant === "inline") {
     return (
-      <form onSubmit={handleSubmit} className={cn("flex gap-2", className)}>
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <input
-            type="text"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            maxLength={5}
-            value={zip}
-            onChange={(e) => { setZip(e.target.value); setError(""); }}
-            placeholder="Enter ZIP code"
-            className="w-full pl-9 pr-4 h-10 rounded-md border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-          />
-        </div>
-        <button
-          type="submit"
-          className="h-10 px-4 bg-primary text-primary-foreground text-sm font-medium rounded-md hover:bg-primary/90 transition-colors flex items-center gap-1.5"
-        >
-          Search <ArrowRight className="w-3.5 h-3.5" />
-        </button>
+      <div className={cn("flex flex-col gap-1.5", className)}>
+        <form onSubmit={handleSubmit} className="flex gap-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              maxLength={5}
+              value={zip}
+              onChange={(e) => { setZip(e.target.value.replace(/\D/g, "")); setError(""); }}
+              onFocus={handleFocus}
+              placeholder="Enter ZIP code"
+              className={cn(
+                "w-full pl-9 pr-4 h-10 rounded-md border bg-white text-gray-900 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-wur-teal",
+                error ? "border-red-400" : "border-gray-300"
+              )}
+            />
+          </div>
+          <button
+            type="submit"
+            className="h-10 px-4 bg-wur-teal text-white text-sm font-medium rounded-md hover:bg-wur-teal/90 transition-colors flex items-center gap-1.5 shrink-0"
+          >
+            Search <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </form>
         {error && (
-          <p className="absolute top-full mt-1.5 text-xs text-destructive flex items-center gap-1">
-            <AlertCircle className="w-3 h-3" />{error}
+          <p className="text-xs text-red-300 flex items-center gap-1.5">
+            <AlertCircle className="w-3 h-3 shrink-0" />{error}
           </p>
         )}
-      </form>
+      </div>
     );
   }
 
@@ -72,6 +86,7 @@ export default function ZipLookup({ variant = "hero", className }: ZipLookupProp
               maxLength={5}
               value={zip}
               onChange={(e) => { setZip(e.target.value.replace(/\D/g, "")); setError(""); }}
+              onFocus={handleFocus}
               placeholder="Enter your ZIP code"
               className="w-full h-14 bg-white text-wur-ink text-base px-5 focus:outline-none placeholder:text-gray-400 font-sans"
               aria-label="ZIP code"

@@ -3,7 +3,8 @@ import { DM_Serif_Display, DM_Sans, DM_Mono } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/nav";
 import Footer from "@/components/footer";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import JsonLd from "@/components/json-ld";
+import GAConditional from "@/components/ga-conditional";
 
 const dmSerifDisplay = DM_Serif_Display({
   subsets: ["latin"],
@@ -54,11 +55,23 @@ export default function RootLayout({
       className={`${dmSerifDisplay.variable} ${dmSans.variable} ${dmMono.variable}`}
     >
       <body className="font-sans min-h-screen flex flex-col antialiased">
+        <JsonLd data={{
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Water Utility Report",
+          url: "https://waterutilityreport.com",
+        }} />
+        <JsonLd data={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Water Utility Report",
+          url: "https://waterutilityreport.com",
+        }} />
         <Nav />
         <main className="flex-1">{children}</main>
         <Footer />
       </body>
-      <GoogleAnalytics gaId="G-SX34LEVQZ1" />
+      <GAConditional gaId="G-SX34LEVQZ1" />
     </html>
   );
 }

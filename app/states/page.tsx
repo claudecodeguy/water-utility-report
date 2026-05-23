@@ -1,20 +1,35 @@
-import Link from "next/link";
-import { ArrowRight, MapPin } from "lucide-react";
 import stateContent from "@/lib/content/states";
-import contaminants from "@/lib/content/contaminants";
 import { prisma } from "@/lib/prisma";
 import type { Metadata } from "next";
+import JsonLd from "@/components/json-ld";
+import StatesDirectory, { type StateRow } from "@/components/states-directory";
+import Link from "next/link";
+import { MapPin } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Browse U.S. Drinking Water by State",
-  description: "Browse water quality, utilities, and contaminant concerns by U.S. state. Currently tracking 5 states.",
+  title: "U.S. Drinking Water by State — All 50 States | Water Utility Report",
+  description:
+    "Browse drinking water quality, utility counts, PFAS records, and active violations for all 50 U.S. states. Official EPA SDWIS and UCMR 5 data.",
+};
+
+const REGION_MAP: Record<string, string> = {
+  CT: "Northeast", ME: "Northeast", MA: "Northeast", NH: "Northeast",
+  NJ: "Northeast", NY: "Northeast", PA: "Northeast", RI: "Northeast", VT: "Northeast",
+  AL: "Southeast", AR: "Southeast", DE: "Southeast", FL: "Southeast", GA: "Southeast",
+  KY: "Southeast", LA: "Southeast", MD: "Southeast", MS: "Southeast", NC: "Southeast",
+  SC: "Southeast", TN: "Southeast", VA: "Southeast", WV: "Southeast",
+  IL: "Midwest", IN: "Midwest", IA: "Midwest", KS: "Midwest", MI: "Midwest",
+  MN: "Midwest", MO: "Midwest", NE: "Midwest", ND: "Midwest", OH: "Midwest",
+  SD: "Midwest", WI: "Midwest",
+  AZ: "Southwest", NM: "Southwest", OK: "Southwest", TX: "Southwest",
+  AK: "West", CA: "West", CO: "West", HI: "West", ID: "West", MT: "West",
+  NV: "West", OR: "West", UT: "West", WA: "West", WY: "West",
 };
 
 export default async function StatesPage() {
-  // Query real utility counts per state from DB
   const dbStates = await prisma.state.findMany({
     select: { abbreviation: true, _count: { select: { utilities: true } } },
   });
@@ -26,74 +41,98 @@ export default async function StatesPage() {
 
   const totalUtilities = Object.values(utilityCountByAbbr).reduce((a, b) => a + b, 0);
 
+  const rows: StateRow[] = stateContent.map((s) => ({
+    slug: s.slug,
+    name: s.name,
+    abbreviation: s.abbreviation,
+    populationServed: s.populationServed,
+    utilityCount: utilityCountByAbbr[s.abbreviation] ?? 0,
+    topContaminants: s.topContaminants ?? [],
+    region: REGION_MAP[s.abbreviation] ?? "Other",
+  }));
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "U.S. Drinking Water by State",
+    description:
+      "Directory of drinking water quality data for all 50 U.S. states, sourced from EPA SDWIS and UCMR 5.",
+    url: "https://waterutilityreport.com/states",
+    numberOfItems: stateContent.length,
+    itemListElement: stateContent.map((s, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: `${s.name} drinking water utilities`,
+      url: `https://waterutilityreport.com/states/${s.slug}`,
+    })),
+  };
+
   return (
-    <div className="min-h-screen bg-background">
-      <div className="bg-wur-teal text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <p className="text-xs font-semibold uppercase tracking-widest text-white/50 mb-2">Directory</p>
-          <h1 className="font-display text-4xl text-white mb-3">Browse by State</h1>
-          <p className="text-white/60 max-w-xl">
-            Stage 1 coverage: 5 states, {totalUtilities > 0 ? totalUtilities.toLocaleString() : "5,000+"}+ utilities tracked.
-            More states launching in Phase 2.
-          </p>
+    <>
+      <JsonLd data={jsonLd} />
+      <div className="min-h-screen bg-background">
+        {/* Header */}
+        <div className="bg-wur-teal text-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            {/* Breadcrumb */}
+            <div className="flex items-center gap-2 text-xs text-white/50 mb-4">
+              <Link href="/" className="hover:text-white transition-colors">Home</Link>
+              <span>/</span>
+              <span className="text-white/80">States</span>
+            </div>
+            <div className="flex items-center gap-3 mb-3">
+              <MapPin className="w-6 h-6 text-white/70 shrink-0" />
+              <h1 className="font-display text-4xl text-white">U.S. Drinking Water by State</h1>
+            </div>
+            <p className="text-white/65 max-w-2xl leading-relaxed">
+              Browse drinking water quality data, utility counts, and contaminant concerns for all 50 U.S.
+              states. Data sourced from EPA SDWIS, EPA ECHO, and UCMR 5 federal monitoring records.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-x-6 gap-y-1 text-xs text-white/50 font-mono">
+              <span>{stateContent.length} states</span>
+              <span>·</span>
+              <span>{totalUtilities > 0 ? `${totalUtilities.toLocaleString()}+` : "10,000+"} utilities tracked</span>
+              <span>·</span>
+              <span>EPA SDWIS · UCMR 5 · EPA ECHO</span>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {stateContent.map((state) => {
-            const utilityCount = utilityCountByAbbr[state.abbreviation] ?? 0;
-            const stateContaminants = contaminants.filter((c) =>
-              state.topContaminants.includes(c.slug)
-            ).slice(0, 3);
-            return (
-              <Link
-                key={state.slug}
-                href={`/states/${state.slug}`}
-                className="group relative flex flex-col bg-card border border-border rounded-xl p-6 hover:border-wur-teal/50 hover:shadow-lg transition-all overflow-hidden"
+        {/* Directory */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <StatesDirectory states={rows} />
+        </div>
+
+        {/* Data note */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+          <div className="rounded-xl border border-border bg-muted/30 p-5 text-sm text-muted-foreground">
+            <p>
+              <strong className="text-foreground">Data source:</strong> Utility counts and violation data from{" "}
+              <a
+                href="https://www.epa.gov/ground-water-and-drinking-water/safe-drinking-water-information-system-sdwis-federal-reporting"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-wur-teal hover:underline"
               >
-                <div className="absolute top-0 right-0 text-[80px] font-display text-wur-teal/5 group-hover:text-wur-teal/10 transition-colors leading-none select-none">
-                  {state.abbreviation}
-                </div>
-                <div className="relative">
-                  <div className="flex items-center justify-between mb-4">
-                    <MapPin className="w-4 h-4 text-wur-teal" />
-                    <span className="text-xs font-mono text-muted-foreground">
-                      {utilityCount > 0 ? `${utilityCount.toLocaleString()} utilities` : "utilities tracked"}
-                    </span>
-                  </div>
-                  <h2 className="font-display text-2xl text-foreground group-hover:text-wur-teal transition-colors mb-1">
-                    {state.name}
-                  </h2>
-                  <p className="text-xs text-muted-foreground font-mono mb-4">
-                    {(state.populationServed / 1_000_000).toFixed(1)}M residents served
-                  </p>
-                  <p className="text-sm text-muted-foreground line-clamp-2 mb-4">{state.summary}</p>
-
-                  <div className="flex flex-wrap gap-1.5">
-                    {stateContaminants.map((c) => (
-                      <span key={c.slug} className="text-[10px] px-2 py-0.5 rounded-full bg-secondary text-muted-foreground">
-                        {c.shortName}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="flex items-center gap-1 text-xs font-medium text-wur-teal mt-4">
-                    View {state.name} <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                  </div>
-                </div>
+                EPA SDWIS
+              </a>
+              . PFAS monitoring records from{" "}
+              <a
+                href="https://www.epa.gov/dwucmr/fifth-unregulated-contaminant-monitoring-rule"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-wur-teal hover:underline"
+              >
+                EPA UCMR 5
+              </a>
+              . Data reflects community water systems only; private wells are not included.{" "}
+              <Link href="/methodology" className="text-wur-teal hover:underline">
+                Full methodology →
               </Link>
-            );
-          })}
-        </div>
-
-        <div className="mt-12 rounded-xl border border-border bg-muted/30 p-6 text-center">
-          <p className="text-sm text-muted-foreground">
-            More states are planned for Phase 2 (10–15 states) and Phase 3 (national coverage).
-            Each state requires data QA, legal review, and content validation before launch.
-          </p>
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

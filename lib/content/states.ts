@@ -505,6 +505,61 @@ const stateContent: StateContent[] = [
       "Delaware has 79 community water systems serving approximately 1.0 million residents. Primary water sources include groundwater. The most commonly reported contaminants include disinfection byproducts, nitrates. 24% of Delaware residents rely on private wells. DNREC holds primary enforcement authority under the Safe Drinking Water Act.",
     lastUpdated: "2026-04-23",
   },
+  {
+    slug: "alaska",
+    name: "Alaska",
+    abbreviation: "AK",
+    populationServed: 648964,
+    wellWaterPercent: 45,
+    topContaminants: ["nitrates","nitrates"],
+    summary:
+      "Alaska has 98 community water systems serving approximately 0.6 million residents. Primary water sources include groundwater. The most commonly reported contaminants include nitrates, nitrates. 45% of Alaska residents rely on private wells. DEC holds primary enforcement authority under the Safe Drinking Water Act.",
+    lastUpdated: "2026-04-24",
+  },
+  {
+    slug: "north-dakota",
+    name: "North Dakota",
+    abbreviation: "ND",
+    populationServed: 673824,
+    wellWaterPercent: 48,
+    topContaminants: ["disinfection-byproducts","lead"],
+    summary:
+      "North Dakota has 128 community water systems serving approximately 0.7 million residents. Primary water sources include groundwater. The most commonly reported contaminants include disinfection byproducts, lead. 48% of North Dakota residents rely on private wells. NDDoH holds primary enforcement authority under the Safe Drinking Water Act.",
+    lastUpdated: "2026-04-24",
+  },
+  {
+    slug: "south-dakota",
+    name: "South Dakota",
+    abbreviation: "SD",
+    populationServed: 822278,
+    wellWaterPercent: 45,
+    topContaminants: ["disinfection-byproducts","arsenic"],
+    summary:
+      "South Dakota has 152 community water systems serving approximately 0.8 million residents. Primary water sources include groundwater. The most commonly reported contaminants include disinfection byproducts, arsenic. 45% of South Dakota residents rely on private wells. DENR holds primary enforcement authority under the Safe Drinking Water Act.",
+    lastUpdated: "2026-04-24",
+  },
+  {
+    slug: "vermont",
+    name: "Vermont",
+    abbreviation: "VT",
+    populationServed: 420789,
+    wellWaterPercent: 50,
+    topContaminants: ["nitrates","disinfection-byproducts"],
+    summary:
+      "Vermont has 120 community water systems serving approximately 0.4 million residents. Primary water sources include groundwater. The most commonly reported contaminants include nitrates, disinfection byproducts. 50% of Vermont residents rely on private wells. DEC holds primary enforcement authority under the Safe Drinking Water Act.",
+    lastUpdated: "2026-04-24",
+  },
+  {
+    slug: "wyoming",
+    name: "Wyoming",
+    abbreviation: "WY",
+    populationServed: 495212,
+    wellWaterPercent: 45,
+    topContaminants: ["disinfection-byproducts","lead"],
+    summary:
+      "Wyoming has 95 community water systems serving approximately 0.5 million residents. Primary water sources include groundwater. The most commonly reported contaminants include disinfection byproducts, lead. 45% of Wyoming residents rely on private wells. DEQ holds primary enforcement authority under the Safe Drinking Water Act.",
+    lastUpdated: "2026-04-24",
+  },
 ];
 
 export default stateContent;

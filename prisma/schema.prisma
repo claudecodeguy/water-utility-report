@@ -119,6 +119,7 @@ model Utility {
   utility_contaminants UtilityContaminant[]
   pfas_records         PfasRecord[]
   pfas_statuses        PfasOfficialStatus[]
+  signals              OutreachSignal[]
 }
 
 // ─── SERVICE AREAS ─────────────────────────────────────────────────────────────
@@ -467,6 +468,19 @@ model LegalReviewFlag {
   @@index([entity_type, entity_id])
 }
 
+// ─── VIOLATION ALERTS ──────────────────────────────────────────────────────────
+
+model ViolationAlert {
+  id         String   @id @default(uuid())
+  email      String
+  pwsid      String
+  created_at DateTime @default(now())
+
+  @@unique([email, pwsid])
+  @@index([pwsid])
+  @@index([email])
+}
+
 // ─── CONTENT EXPERIMENTS ───────────────────────────────────────────────────────
 
 model ContentExperiment {
@@ -483,4 +497,220 @@ model ContentExperiment {
   status        String    @default("draft")
   created_at    DateTime  @default(now())
   updated_at    DateTime  @updatedAt
+}
+
+// ─── OUTREACH PIPELINE ─────────────────────────────────────────────────────────
+
+model OutreachSignal {
+  id                String   @id @default(uuid()) @db.Uuid
+  signal_type       String   // 'violation' | 'pfas_detection' | 'contaminant_exceedance' | 'news_event'
+  pwsid             String?
+  utility_id        String?
+  state             String
+  city              String?
+  contaminant       String?
+  measured_value    Decimal?
+  threshold         Decimal?
+  units             String?
+  population_served Int?
+  raw_data          Json
+  source_url        String?
+  detected_at       DateTime @default(now())
+  status            String   @default("new") // 'new' | 'scored' | 'queued' | 'skipped' | 'pitched'
+
+  utility Utility?       @relation(fields: [utility_id], references: [id])
+  story   OutreachStory?
+
+  @@index([status, detected_at(sort: Desc)])
+  @@index([state, contaminant])
+  @@map("outreach_signals")
+}
+
+model OutreachStory {
+  id                   String   @id @default(uuid()) @db.Uuid
+  signal_id            String   @unique @db.Uuid
+  newsworthiness_score Int
+  verdict              String   // 'pitch' | 'skip' | 'watchlist'
+  primary_angle        String?
+  headline_suggestion  String?
+  key_stat             String?
+  population_affected  Int?
+  target_outlet_tier   String?  // 'national' | 'state' | 'metro' | 'local'
+  comparable_context   String?
+  reasoning            String?
+  scored_at            DateTime @default(now())
+
+  signal  OutreachSignal @relation(fields: [signal_id], references: [id], onDelete: Cascade)
+  pitches OutreachPitch[]
+
+  @@index([newsworthiness_score(sort: Desc), verdict])
+  @@map("outreach_stories")
+}
+
+model OutreachJournalist {
+  id                String   @id @default(uuid()) @db.Uuid
+  name              String
+  email             String   @unique
+  outlet            String
+  outlet_url        String?
+  outlet_da         Int?
+  beat              String?
+  state             String?
+  city              String?
+  dmas              String[]
+  recent_topics     String[]
+  recent_articles   Json?
+  notes             String?
+  last_contacted_at DateTime?
+  contacted_count   Int      @default(0)
+  reply_count       Int      @default(0)
+  pickup_count      Int      @default(0)
+  status            String   @default("active") // 'active' | 'unsubscribed' | 'bounced' | 'blacklisted'
+  created_at        DateTime @default(now())
+
+  pitches OutreachPitch[]
+
+  @@index([state, beat, status])
+  @@map("outreach_journalists")
+}
+
+model OutreachPitch {
+  id                   String   @id @default(uuid()) @db.Uuid
+  story_id             String   @db.Uuid
+  journalist_id        String   @db.Uuid
+  subject              String
+  body                 String
+  personalization_note String?
+  status               String   @default("draft") // 'draft' | 'approved' | 'sent' | 'bounced' | 'replied' | 'published' | 'rejected'
+  draft_created_at     DateTime @default(now())
+  approved_at          DateTime?
+  approved_by          String?
+  sent_at              DateTime?
+  replied_at           DateTime?
+  reply_text           String?
+  reply_sentiment      String?
+  published_url        String?
+  backlink_found       Boolean  @default(false)
+  notes                String?
+
+  story      OutreachStory      @relation(fields: [story_id], references: [id], onDelete: Cascade)
+  journalist OutreachJournalist @relation(fields: [journalist_id], references: [id])
+
+  @@index([status, draft_created_at(sort: Desc)])
+  @@index([journalist_id])
+  @@map("outreach_pitches")
+}
+
+// ── Conversion / Email Capture ─────────────────────────────────────────────
+
+model EmailSubscriber {
+  id                 String   @id @default(uuid()) @db.Uuid
+  email              String   @unique
+  status             String   @default("active") // active | unsubscribed | bounced | suppressed
+  consent_text       String?
+  consent_timestamp  DateTime @default(now())
+  source_page_url    String?
+  source_cta         String?
+  source_context     String?
+  first_utility_slug String?
+  first_pwsid        String?
+  first_state        String?
+  utm_source         String?
+  utm_medium         String?
+  utm_campaign       String?
+  referrer           String?
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+
+  utility_subscriptions    UtilitySubscription[]
+  email_report_requests    EmailReportRequest[]
+  monetization_signals     MonetizationInterestSignal[]
+
+  @@map("email_subscribers")
+}
+
+model UtilitySubscription {
+  id                  String   @id @default(uuid()) @db.Uuid
+  email_subscriber_id String   @db.Uuid
+  email               String
+  utility_slug        String
+  utility_name        String?
+  pwsid               String?
+  state               String?
+  alert_preferences   Json     @default("[]")
+  status              String   @default("active")
+  source_page_url     String?
+  source_cta          String?
+  cta_location        String?
+  form_version        String?
+  experiment_variant  String?
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
+
+  subscriber EmailSubscriber @relation(fields: [email_subscriber_id], references: [id])
+
+  @@unique([email, utility_slug])
+  @@index([utility_slug])
+  @@index([email])
+  @@index([created_at(sort: Desc)])
+  @@map("utility_subscriptions")
+}
+
+model EmailReportRequest {
+  id                  String   @id @default(uuid()) @db.Uuid
+  email_subscriber_id String?  @db.Uuid
+  email               String
+  utility_slug        String?
+  utility_name        String?
+  pwsid               String?
+  state               String?
+  report_snapshot     Json?
+  delivery_status     String   @default("not_configured") // pending | sent | failed | not_configured
+  delivery_error      String?
+  source_page_url     String?
+  cta_location        String?
+  created_at          DateTime @default(now())
+
+  subscriber EmailSubscriber? @relation(fields: [email_subscriber_id], references: [id])
+
+  @@index([email])
+  @@index([utility_slug])
+  @@index([created_at(sort: Desc)])
+  @@map("email_report_requests")
+}
+
+model AdminNotificationLog {
+  id              String   @id @default(uuid()) @db.Uuid
+  recipient       String
+  conversion_type String
+  email           String
+  utility_slug    String?
+  pwsid           String?
+  source_page_url String?
+  delivery_status String   @default("pending") // sent | failed
+  error_message   String?
+  sent_at         DateTime @default(now())
+
+  @@index([sent_at(sort: Desc)])
+  @@map("admin_notification_log")
+}
+
+model MonetizationInterestSignal {
+  id                  String   @id @default(uuid()) @db.Uuid
+  email_subscriber_id String?  @db.Uuid
+  email               String
+  utility_slug        String?
+  pwsid               String?
+  state               String?
+  interest_type       String   // water_testing | PFAS_testing | lead_testing | nitrate_testing | certified_lab | treatment_guidance | filter_guidance | reverse_osmosis | activated_carbon | private_well | CCR_updates | source_data_updates
+  source_page_url     String?
+  source_cta          String?
+  created_at          DateTime @default(now())
+
+  subscriber EmailSubscriber? @relation(fields: [email_subscriber_id], references: [id])
+
+  @@index([email])
+  @@index([interest_type])
+  @@index([created_at(sort: Desc)])
+  @@map("monetization_interest_signals")
 }

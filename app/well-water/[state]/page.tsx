@@ -6,6 +6,7 @@ import contaminants from "@/lib/content/contaminants";
 import FaqSection from "@/components/faq-section";
 import RelatedPages from "@/components/related-pages";
 import SourcesBlock from "@/components/sources-block";
+import JsonLd from "@/components/json-ld";
 import type { Metadata } from "next";
 
 export async function generateStaticParams() {
@@ -46,8 +47,39 @@ export default async function WellWaterStatePage({ params }: { params: Promise<{
     { label: "CDC Well Water Safety Guidance", url: "https://www.cdc.gov/healthywater/drinking/private/wells/" },
   ];
 
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: guide.faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: { "@type": "Answer", text: faq.answer },
+    })),
+  };
+
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: `${guide.stateName} Private Well Water Guide — Testing, Risks & Labs`,
+    description: `What to test for in ${guide.stateName} private wells, common contamination risks, how often to test, and where to find certified labs.`,
+    dateModified: guide.lastUpdated,
+    publisher: { "@type": "Organization", name: "Water Utility Report", url: "https://waterutilityreport.com" },
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Well Water", item: "https://waterutilityreport.com/well-water" },
+      { "@type": "ListItem", position: 2, name: guide.stateName, item: `https://waterutilityreport.com/well-water/${stateSlug}` },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-background">
+      <JsonLd data={faqJsonLd} />
+      <JsonLd data={articleJsonLd} />
+      <JsonLd data={breadcrumbJsonLd} />
       {/* Hero */}
       <div className="bg-wur-teal text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">

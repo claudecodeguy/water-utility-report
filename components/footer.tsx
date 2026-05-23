@@ -25,11 +25,13 @@ const footerLinks = {
     { href: "/learn/questions-before-approving-ai-data-center-water-risk", label: "Data Center Checklist" },
   ],
   About: [
+    { href: "/help", label: "Help Center" },
     { href: "/methodology", label: "Our Methodology" },
     { href: "/methodology/data-sources", label: "Data Sources" },
     { href: "/methodology/legal", label: "Legal & Disclaimer" },
     { href: "/about", label: "About WUR" },
     { href: "/contact", label: "Contact" },
+    { href: "/water-charities", label: "Water Charities & Assistance" },
   ],
 };
 
@@ -92,7 +94,7 @@ export default function Footer() {
           </p>
           <div className="flex items-center gap-1.5">
             <span className="inline-block w-1.5 h-1.5 rounded-full bg-wur-aqua" />
-            <span className="text-xs text-white/30 font-mono">45 states · 6,189 utilities with PFAS records</span>
+            <span className="text-xs text-white/30 font-mono">All 50 states · 22,500+ utilities tracked</span>
           </div>
         </div>
       </div>

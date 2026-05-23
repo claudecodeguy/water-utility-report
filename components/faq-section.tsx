@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import { MessageCircle } from "lucide-react";
 import {
   Accordion,
@@ -8,6 +8,7 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
+import { trackEvent } from "@/lib/analytics";
 import type { FAQ } from "@/lib/types";
 
 interface FaqSectionProps {
@@ -16,7 +17,20 @@ interface FaqSectionProps {
 }
 
 export default function FaqSection({ faqs, title = "Frequently Asked Questions" }: FaqSectionProps) {
+  const openItemsRef = useRef<string[]>([]);
+
   if (!faqs.length) return null;
+
+  function handleValueChange(values: string[]) {
+    const newlyOpened = values.filter((v) => !openItemsRef.current.includes(v));
+    for (const v of newlyOpened) {
+      const idx = parseInt(v.replace("faq-", ""), 10);
+      if (!isNaN(idx) && faqs[idx]) {
+        trackEvent("faq_open", { question: faqs[idx].question.slice(0, 80) });
+      }
+    }
+    openItemsRef.current = values;
+  }
 
   return (
     <section className="mt-12">
@@ -24,7 +38,11 @@ export default function FaqSection({ faqs, title = "Frequently Asked Questions" 
         <MessageCircle className="w-4 h-4 text-wur-teal shrink-0" />
         <h2 className="font-display text-2xl text-foreground">{title}</h2>
       </div>
-      <Accordion type="multiple" className="divide-y divide-border border-t border-b border-border">
+      <Accordion
+        type="multiple"
+        className="divide-y divide-border border-t border-b border-border"
+        onValueChange={handleValueChange}
+      >
         {faqs.map((faq, i) => (
           <AccordionItem key={i} value={`faq-${i}`} className="border-0">
             <AccordionTrigger className="text-sm font-medium text-foreground hover:text-primary py-4 text-left">

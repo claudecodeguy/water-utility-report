@@ -36,7 +36,10 @@ export default async function CitiesPage() {
       for (const u of rows) {
         // city_served may be a comma-separated list for regional utilities
         const parts = u.city_served!.split(",").map((s) =>
-          s.trim().replace(/-\d{3,4}$/, "").trim()
+          s.trim()
+           .replace(/\s+\d{3,4}\b/g, "")  // strip NJ codes like " 1105"
+           .replace(/-\d{3,4}$/, "")
+           .trim()
         ).filter(Boolean);
 
         for (const city of parts) {
@@ -114,7 +117,7 @@ export default async function CitiesPage() {
               <p className="text-sm font-semibold text-foreground mb-1">Don't see your city?</p>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 Browse your state to find your utility directly, or use the search on the homepage.
-                We currently cover 25 states with more being added regularly.
+                We currently cover {stateContent.length} states with more being added regularly.
               </p>
             </div>
           </div>

@@ -6,6 +6,9 @@ import contaminants from "@/lib/content/contaminants";
 import FaqSection from "@/components/faq-section";
 import RelatedPages from "@/components/related-pages";
 import SourcesBlock from "@/components/sources-block";
+import JsonLd from "@/components/json-ld";
+import TestingTreatmentPath from "@/components/testing-treatment-path";
+import RelatedWaterQuestions from "@/components/related-water-questions";
 import type { Metadata } from "next";
 
 export async function generateStaticParams() {
@@ -62,8 +65,39 @@ export default async function TreatmentPage({ params }: { params: Promise<{ slug
     "both": "Point-of-Use or Whole-Home",
   };
 
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: method.faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: { "@type": "Answer", text: faq.answer },
+    })),
+  };
+
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: `${method.name} — Water Treatment Guide`,
+    description: method.summary.slice(0, 155),
+    dateModified: method.lastUpdated,
+    publisher: { "@type": "Organization", name: "Water Utility Report", url: "https://waterutilityreport.com" },
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Treatment", item: "https://waterutilityreport.com/treatment" },
+      { "@type": "ListItem", position: 2, name: method.name, item: `https://waterutilityreport.com/treatment/${slug}` },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-background">
+      <JsonLd data={faqJsonLd} />
+      <JsonLd data={articleJsonLd} />
+      <JsonLd data={breadcrumbJsonLd} />
       {/* Hero */}
       <div className="bg-wur-teal text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -202,6 +236,53 @@ export default async function TreatmentPage({ params }: { params: Promise<{ slug
             )}
 
             <FaqSection faqs={method.faqs} />
+            <TestingTreatmentPath
+              pageType="treatment"
+              treatmentSlug={method.slug}
+              contaminantSlugs={linkedContaminants.map(c => c.slug)}
+            />
+            <RelatedWaterQuestions
+              questions={[
+                {
+                  question: `What contaminants does ${method.shortName ?? method.name} remove?`,
+                  href: linkedContaminants[0] ? `/contaminants/${linkedContaminants[0].slug}` : "/contaminants/pfas",
+                  description: linkedContaminants.length > 0
+                    ? `Removes: ${linkedContaminants.slice(0, 3).map(c => c.shortName).join(", ")}`
+                    : "View contaminant removal details and EPA limits",
+                  eventName: "related_question_click",
+                  eventParams: { question: "contaminant_removal", treatment: method.slug },
+                },
+                {
+                  question: `Where can I test my water before choosing a filter?`,
+                  href: "/labs",
+                  description: "State-certified labs for PFAS, lead, nitrate, and bacteria — confirm what's in your water first",
+                  eventName: "related_question_click",
+                  eventParams: { question: "testing", treatment: method.slug },
+                },
+                {
+                  question: `Which utilities have open violations requiring treatment?`,
+                  href: "/",
+                  description: "Search for EPA compliance records by ZIP code or utility name",
+                  eventName: "related_question_click",
+                  eventParams: { question: "utility_search", treatment: method.slug },
+                },
+                {
+                  question: `Is there PFAS in my water system?`,
+                  href: "/pfas-watchlist",
+                  description: "Official EPA UCMR 5 PFAS monitoring records by utility and compound",
+                  eventName: "related_question_click",
+                  eventParams: { question: "pfas_watchlist", treatment: method.slug },
+                },
+                {
+                  question: "How is treatment effectiveness data sourced here?",
+                  href: "/methodology",
+                  description: "NSF certification, EPA treatment guides, and WQA data — sources and accuracy notes",
+                  eventName: "source_methodology_click",
+                  eventParams: { from: "treatment", treatment: method.slug },
+                },
+              ]}
+              title={`Common Questions About ${method.name}`}
+            />
             <RelatedPages pages={relatedPages} />
             <SourcesBlock sources={sources} lastUpdated={method.lastUpdated} />
           </div>

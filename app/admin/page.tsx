@@ -199,6 +199,24 @@ export default async function AdminDashboard() {
             </div>
           </div>
 
+          {/* Canary modules */}
+          <div className="rounded-xl border border-border bg-white">
+            <div className="px-5 py-3 border-b border-border bg-muted/30">
+              <h2 className="font-semibold text-sm text-foreground">Canary Modules</h2>
+            </div>
+            <div className="divide-y divide-border">
+              <div className="flex items-center justify-between px-5 py-3">
+                <div>
+                  <p className="text-sm font-medium text-foreground">Water Record Interpreter</p>
+                  <p className="text-xs text-muted-foreground">6 canary utility pages · views, clicks, conversions</p>
+                </div>
+                <Link href="/admin/interpreter" className="text-xs text-wur-teal hover:underline">
+                  View report →
+                </Link>
+              </div>
+            </div>
+          </div>
+
           {/* Quick stats */}
           <div className="grid grid-cols-3 gap-3">
             {[

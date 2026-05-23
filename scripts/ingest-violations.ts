@@ -24,15 +24,54 @@ interface SdwisViolation {
   pwsid: string;
   violation_id: string;
   contaminant_code: string | null;
-  contaminant_name: string | null;
-  violation_code_name: string | null;
-  is_health_based_ind: string | null;
-  violation_begin_date: string | null;
-  rtc_date: string | null;
-  violation_status: string | null;
-  violation_category_code: string | null;
-  rule_name: string | null;
+  violation_category_code: string | null;  // MON, MCL, TT, RPT, MRDL, PN, Other
+  is_health_based_ind: string | null;       // "Y" or "N"
+  compl_per_begin_date: string | null;      // violation start date
+  rtc_date: string | null;                  // resolution date
+  rule_code: string | null;
+  rule_group_code: string | null;
 }
+
+// Human-readable labels for violation_category_code
+const VIOLATION_TYPE_LABELS: Record<string, string> = {
+  MCL:   "MCL Violation",
+  MCLG:  "MCLG Violation",
+  MON:   "Monitoring & Reporting",
+  RPT:   "Reporting",
+  TT:    "Treatment Technique",
+  MRDL:  "Disinfectant Level",
+  PN:    "Public Notification",
+  Other: "Other",
+};
+
+// Common EPA contaminant codes → human-readable names
+const CONTAMINANT_CODE_NAMES: Record<string, string> = {
+  "1005": "Total Coliform",
+  "1040": "E. coli",
+  "1041": "Fecal Coliform",
+  "1094": "Cryptosporidium",
+  "2050": "Turbidity",
+  "2100": "pH",
+  "2456": "Total Trihalomethanes (TTHMs)",
+  "2950": "Haloacetic Acids (HAA5)",
+  "2951": "Chlorite",
+  "2977": "Bromate",
+  "3100": "Nitrate",
+  "3140": "Nitrite",
+  "4000": "Arsenic",
+  "4006": "Barium",
+  "4010": "Cadmium",
+  "4020": "Chromium",
+  "4030": "Fluoride",
+  "4040": "Mercury",
+  "4045": "Selenium",
+  "5000": "Lead",
+  "5100": "Copper",
+  "6584": "PFAS / PFOA",
+  "7000": "Nitrate",
+  "8000": "Coliform (TCR)",
+  "8001": "E. coli (RTCR)",
+};
 
 async function fetchViolations(pwsid: string): Promise<SdwisViolation[]> {
   const url = `${SDWIS_BASE}/VIOLATION/PWSID/${pwsid}/JSON`;
@@ -94,22 +133,35 @@ async function main() {
       // Upsert violations
       for (const v of violations) {
         const vid = `${util.pwsid}-${v.violation_id}`;
+        const contaminantName = v.contaminant_code
+          ? (CONTAMINANT_CODE_NAMES[v.contaminant_code] ?? null)
+          : null;
+        const violationType = v.violation_category_code
+          ? (VIOLATION_TYPE_LABELS[v.violation_category_code] ?? v.violation_category_code)
+          : null;
+        const violationDate = v.compl_per_begin_date ? new Date(v.compl_per_begin_date) : null;
+        const resolutionDate = v.rtc_date ? new Date(v.rtc_date) : null;
+
         await prisma.violation.upsert({
           where: { id: vid },
           update: {
-            resolution_date: v.rtc_date ? new Date(v.rtc_date) : null,
+            contaminant_name: contaminantName,
+            violation_type: violationType,
+            violation_date: violationDate,
+            resolution_date: resolutionDate,
+            is_health_based: v.is_health_based_ind === "Y",
+            severity: v.violation_category_code,
           },
           create: {
             id: vid,
             utility_id: util.id,
             contaminant_code: v.contaminant_code,
-            contaminant_name: v.contaminant_name,
-            violation_type: v.violation_code_name,
-            violation_date: v.violation_begin_date ? new Date(v.violation_begin_date) : null,
-            resolution_date: v.rtc_date ? new Date(v.rtc_date) : null,
+            contaminant_name: contaminantName,
+            violation_type: violationType,
+            violation_date: violationDate,
+            resolution_date: resolutionDate,
             is_health_based: v.is_health_based_ind === "Y",
             severity: v.violation_category_code,
-            description: v.rule_name,
             source_url: `${SDWIS_BASE}/VIOLATION/PWSID/${util.pwsid}/JSON`,
             ingestion_date: new Date(),
           },

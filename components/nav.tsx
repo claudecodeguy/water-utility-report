@@ -3,25 +3,24 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Droplets, Menu, X } from "lucide-react";
+import { Droplets, Menu, X, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navLinks: { href: string; label: string; highlight?: boolean }[] = [
-  { href: "/states", label: "Browse by State" },
-  { href: "/cities", label: "Browse by City" },
+  { href: "/states", label: "Browse States" },
   { href: "/contaminants", label: "Contaminants" },
   { href: "/pfas-watchlist", label: "PFAS Watchlist", highlight: true },
-  { href: "/treatment", label: "Treatment" },
-  { href: "/guides", label: "Guides" },
   { href: "/learn", label: "Learn" },
-  { href: "/well-water", label: "Well Water" },
   { href: "/labs", label: "Labs" },
-  { href: "/methodology", label: "Methodology" },
 ];
 
-const utilityLinks = [
-  { href: "/search", label: "ZIP Lookup" },
-  { href: "/admin", label: "Admin" },
+// Shown only in the mobile menu — secondary destinations
+const mobileOnlyLinks = [
+  { href: "/guides", label: "Guides" },
+  { href: "/treatment", label: "Treatment" },
+  { href: "/well-water", label: "Well Water" },
+  { href: "/cities", label: "Browse Cities" },
+  { href: "/methodology", label: "Methodology" },
 ];
 
 export default function Nav() {
@@ -62,7 +61,7 @@ export default function Nav() {
           </Link>
 
           {/* Desktop nav */}
-          <div className="hidden lg:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-0.5">
             {navLinks.map((link) => {
               const isActive = pathname.startsWith(link.href);
               return (
@@ -84,21 +83,19 @@ export default function Nav() {
                 </Link>
               );
             })}
-            <span className={cn("w-px h-4 mx-1", isHome && !scrolled ? "bg-white/20" : "bg-border")} />
-            {utilityLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  "px-3 py-1.5 rounded-md text-xs transition-colors",
-                  pathname.startsWith(link.href)
-                    ? cn("font-medium", activeColor)
-                    : cn(textColor, "opacity-60 hover:opacity-100 hover:text-primary hover:bg-secondary/50")
-                )}
-              >
-                {link.label}
-              </Link>
-            ))}
+            <span className={cn("w-px h-4 mx-2", isHome && !scrolled ? "bg-white/20" : "bg-border")} />
+            <Link
+              href="/search"
+              className={cn(
+                "inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-sm font-medium transition-colors",
+                isHome && !scrolled
+                  ? "bg-white/15 text-white hover:bg-white/25"
+                  : "bg-wur-teal text-white hover:bg-wur-teal/85"
+              )}
+            >
+              <Search className="w-3.5 h-3.5" />
+              Find My Utility
+            </Link>
           </div>
 
           {/* Mobile toggle */}
@@ -116,6 +113,12 @@ export default function Nav() {
       {open && (
         <div className="lg:hidden bg-white border-b border-border shadow-lg">
           <div className="px-4 py-3 space-y-1">
+            <Link
+              href="/search"
+              className="flex items-center gap-2 px-3 py-2.5 rounded-md text-sm font-medium bg-wur-teal text-white mb-2"
+            >
+              <Search className="w-4 h-4" /> Find My Utility
+            </Link>
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -132,13 +135,13 @@ export default function Nav() {
                 {link.label}
               </Link>
             ))}
-            <div className="border-t border-border pt-1">
-              {utilityLinks.map((link) => (
+            <div className="border-t border-border pt-1 mt-1">
+              {mobileOnlyLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   className={cn(
-                    "block px-3 py-2.5 rounded-md text-sm transition-colors",
+                    "block px-3 py-2 rounded-md text-sm transition-colors",
                     pathname.startsWith(link.href)
                       ? "font-medium text-primary bg-secondary"
                       : "text-muted-foreground hover:text-primary hover:bg-secondary/50"

@@ -20,10 +20,12 @@ export async function generateMetadata({
   const { slug } = await params;
   const article = getArticleBySlug(slug);
   if (!article) return {};
+  const canonical = `https://waterutilityreport.com/learn/${article.slug}`;
   return {
     title: article.metaTitle,
     description: article.metaDescription,
     robots: { index: true, follow: true },
+    alternates: { canonical },
     openGraph: {
       title: article.metaTitle,
       description: article.metaDescription,
@@ -71,15 +73,19 @@ export default async function LearnArticlePage({
     })),
   };
 
+  const articleCanonical = `https://waterutilityreport.com/learn/${article.slug}`;
+
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: article.title,
     description: article.metaDescription,
+    url: articleCanonical,
+    mainEntityOfPage: { "@type": "WebPage", "@id": articleCanonical },
     datePublished: article.publishDate,
     dateModified: article.lastUpdated,
     keywords: article.tags.join(", "),
-    author: { "@type": "Organization", name: "Water Utility Report" },
+    author: { "@type": "Organization", name: "Water Utility Report", url: "https://waterutilityreport.com" },
     publisher: {
       "@type": "Organization",
       name: "Water Utility Report",

@@ -1,0 +1,8 @@
+{
+  "crons": [
+    { "path": "/api/outreach/detect", "schedule": "0 6 * * *" },
+    { "path": "/api/outreach/score", "schedule": "30 6 * * *" },
+    { "path": "/api/outreach/run", "schedule": "0 7 * * *" },
+    { "path": "/api/outreach/check-backlinks", "schedule": "0 9 * * 1" }
+  ]
+}
