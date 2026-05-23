@@ -41,6 +41,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/methodology/legal`, lastModified: now, changeFrequency: "yearly", priority: 0.4 },
     { url: `${BASE}/guides`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/learn`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
+    { url: `${BASE}/data/pfas`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE}/pfas-watchlist`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/pfas-watchlist/sources`, lastModified: now, changeFrequency: "yearly", priority: 0.5 },
     { url: `${BASE}/pfas-watchlist/methodology`, lastModified: now, changeFrequency: "yearly", priority: 0.5 },

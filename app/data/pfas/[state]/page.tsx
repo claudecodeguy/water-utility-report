@@ -9,7 +9,8 @@ import {
   Download,
 } from "lucide-react";
 import { prisma } from "@/lib/prisma";
-import { getStatePfasData } from "@/lib/data/pfas-state";
+import { getStatePfasData, getStatePfasSummary } from "@/lib/data/pfas-state";
+import { getNearbyStates } from "@/lib/data/state-adjacency";
 import JsonLd from "@/components/json-ld";
 import Methodology from "./_components/Methodology";
 import UtilitiesTable from "./_components/UtilitiesTable";
@@ -102,6 +103,33 @@ export default async function StatePfasPage({
 
   const { state, summary, top_detections, analyte_breakdown, all_utilities } = data;
   const pageUrl = `${BASE}/data/pfas/${state.slug}`;
+
+  // Nearby states
+  const neighborAbbrs = getNearbyStates(state.code);
+  const nearbyStateCards: Array<{
+    name: string; slug: string; code: string;
+    utilities_tested: number; utilities_above_any_mcl: number;
+  }> = [];
+  if (neighborAbbrs.length > 0) {
+    const neighborDbStates = await prisma.state.findMany({
+      where: { abbreviation: { in: neighborAbbrs } },
+      select: { abbreviation: true, slug: true },
+    });
+    const neighborSummaries = await Promise.all(
+      neighborDbStates.map((ns) => getStatePfasSummary(ns.slug))
+    );
+    for (const ns of neighborSummaries) {
+      if (ns && ns.utilities_tested > 0) {
+        nearbyStateCards.push({
+          name: ns.state.name,
+          slug: ns.state.slug,
+          code: ns.state.code,
+          utilities_tested: ns.utilities_tested,
+          utilities_above_any_mcl: ns.utilities_above_any_mcl,
+        });
+      }
+    }
+  }
   const today = new Date().toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
@@ -495,6 +523,45 @@ export default async function StatePfasPage({
               stateSlug={state.slug}
               latestSampleDate={summary.latest_sample_date}
             />
+
+            {/* Nearby states */}
+            {nearbyStateCards.length > 0 && (
+              <div>
+                <h2 className="font-display text-xl text-foreground mb-4">Nearby states</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {nearbyStateCards.map((ns) => (
+                    <Link
+                      key={ns.slug}
+                      href={`/data/pfas/${ns.slug}`}
+                      className="rounded-lg border border-border bg-card p-5 hover:border-wur-teal/40 hover:bg-wur-teal/5 transition-colors group block"
+                    >
+                      <p className="font-display text-base text-foreground group-hover:text-wur-teal transition-colors mb-1">
+                        {ns.name}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {ns.utilities_tested.toLocaleString()} utilities tested
+                        {ns.utilities_above_any_mcl > 0 && (
+                          <>
+                            {" "}·{" "}
+                            <span className="text-amber-700 font-medium">
+                              {ns.utilities_above_any_mcl.toLocaleString()} above MCL
+                            </span>
+                          </>
+                        )}
+                      </p>
+                    </Link>
+                  ))}
+                </div>
+                <div className="mt-4">
+                  <Link
+                    href="/data/pfas"
+                    className="text-xs text-muted-foreground hover:text-wur-teal transition-colors inline-flex items-center gap-1"
+                  >
+                    ← All states
+                  </Link>
+                </div>
+              </div>
+            )}
 
             {/* Data limitations */}
             <div className="rounded-lg border border-border bg-muted/20 p-4">

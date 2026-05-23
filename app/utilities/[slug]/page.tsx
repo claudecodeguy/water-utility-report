@@ -1445,6 +1445,9 @@ export default async function UtilityPage({ params }: { params: Promise<{ slug: 
                     <Link href={`/states/${utility.state.slug}`} className="text-xs text-wur-teal hover:underline mt-1 block">
                       All {utility.state.name} utilities →
                     </Link>
+                    <Link href={`/data/pfas/${utility.state.slug}`} className="text-xs text-wur-teal hover:underline mt-1 block">
+                      See all PFAS data for {utility.state.name} →
+                    </Link>
                   </div>
                 </div>
               )}

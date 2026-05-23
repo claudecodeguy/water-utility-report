@@ -201,6 +201,29 @@ export default async function PfasStatePage({
         </div>
       </div>
 
+      {/* ── DATA PAGE CALLOUT ── */}
+      {STATES_WITH_PFAS_DATA.has(stateSlug) && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+          <div className="rounded-lg border border-wur-teal/20 bg-wur-teal/5 p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <p className="font-display text-lg text-foreground mb-1">
+                {stateContent.name} PFAS dataset — for journalists &amp; researchers
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Full state-level detection data with downloadable CSV, methodology, and citation
+                formats.
+              </p>
+            </div>
+            <Link
+              href={`/data/pfas/${stateSlug}`}
+              className="shrink-0 inline-flex items-center gap-1.5 text-sm font-medium text-wur-teal border border-wur-teal/40 rounded-md px-4 py-2 hover:bg-wur-teal/10 transition-colors whitespace-nowrap"
+            >
+              View {stateContent.name} PFAS data →
+            </Link>
+          </div>
+        </div>
+      )}
+
       {/* ── MAIN CONTENT ── */}
       <section className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

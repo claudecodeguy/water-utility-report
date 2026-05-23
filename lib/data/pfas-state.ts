@@ -367,3 +367,89 @@ export const getStatePfasData = unstable_cache(
   ["pfas-state"],
   { revalidate: 86400, tags: ["pfas-state"] }
 );
+
+// ── Lightweight summary (hub page + nearby state cards) ────────────────────────
+
+export type StatePfasSummary = {
+  state: { name: string; slug: string; code: string };
+  utilities_tested: number;
+  utilities_with_any_detection: number;
+  utilities_above_pfoa_mcl: number;
+  utilities_above_pfos_mcl: number;
+  utilities_above_any_mcl: number;
+  latest_sample_date: string | null; // ISO string
+};
+
+async function _getStatePfasSummary(stateSlug: string): Promise<StatePfasSummary | null> {
+  const dbState = await prisma.state.findUnique({
+    where: { slug: stateSlug },
+    select: { id: true, name: true, abbreviation: true, slug: true },
+  });
+  if (!dbState) return null;
+
+  const baseWhere = {
+    utility: { state_id: dbState.id },
+    validated: true,
+    suppressed: false,
+  } as const;
+  const detWhere = { ...baseWhere, raw_detection_flag: "Detected above MRL" } as const;
+
+  const [utilitiesTested, utilitiesWithDetDist, latestSample, mclDetections] = await Promise.all([
+    prisma.utility.count({
+      where: { state_id: dbState.id, pfas_records: { some: { validated: true, suppressed: false } } },
+    }),
+    prisma.pfasRecord.groupBy({
+      by: ["pwsid"],
+      where: detWhere,
+      _count: { _all: true },
+    }),
+    prisma.pfasRecord.findFirst({
+      where: baseWhere,
+      orderBy: { sample_date: "desc" },
+      select: { sample_date: true },
+    }),
+    prisma.pfasRecord.findMany({
+      where: {
+        ...detWhere,
+        analyte: { code: { in: MCL_CODES as unknown as string[] } },
+      },
+      select: {
+        pwsid: true,
+        raw_result_value: true,
+        raw_unit: true,
+        analyte: { select: { code: true } },
+      },
+    }),
+  ]);
+
+  const mclByPwsid = new Map<string, { abovePfoa: boolean; abovePfos: boolean; aboveAny: boolean }>();
+  for (const rec of mclDetections) {
+    const ngL = toNgL(rec.raw_result_value, rec.raw_unit);
+    if (ngL === null) continue;
+    const code = rec.analyte.code as MclCode;
+    const mcl = MCL_PPT[code];
+    if (ngL <= mcl) continue;
+    const entry = mclByPwsid.get(rec.pwsid) ?? { abovePfoa: false, abovePfos: false, aboveAny: false };
+    entry.aboveAny = true;
+    if (code === "PFOA") entry.abovePfoa = true;
+    if (code === "PFOS") entry.abovePfos = true;
+    mclByPwsid.set(rec.pwsid, entry);
+  }
+
+  const mclEntries = Array.from(mclByPwsid.values());
+  return {
+    state: { name: dbState.name, slug: dbState.slug, code: dbState.abbreviation },
+    utilities_tested: utilitiesTested,
+    utilities_with_any_detection: utilitiesWithDetDist.length,
+    utilities_above_pfoa_mcl: mclEntries.filter((v) => v.abovePfoa).length,
+    utilities_above_pfos_mcl: mclEntries.filter((v) => v.abovePfos).length,
+    utilities_above_any_mcl: mclEntries.filter((v) => v.aboveAny).length,
+    latest_sample_date: latestSample?.sample_date.toISOString() ?? null,
+  };
+}
+
+export const getStatePfasSummary = unstable_cache(
+  _getStatePfasSummary,
+  ["pfas-state-summary"],
+  { revalidate: 86400, tags: ["pfas-state"] }
+);

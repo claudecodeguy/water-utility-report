@@ -9,6 +9,7 @@ interface CitationBlockProps {
   stateName: string;
   stateSlug: string;
   latestSampleDate: string | null;
+  hubMode?: boolean;
 }
 
 const BASE = "https://waterutilityreport.com";
@@ -17,6 +18,7 @@ export default function CitationBlock({
   stateName,
   stateSlug,
   latestSampleDate,
+  hubMode = false,
 }: CitationBlockProps) {
   const [activeFormat, setActiveFormat] = useState<Format>("apa");
   const [copied, setCopied] = useState(false);
@@ -28,16 +30,22 @@ export default function CitationBlock({
     day: "numeric",
   });
   const accessYear = today.getFullYear();
-  const url = `${BASE}/data/pfas/${stateSlug}`;
+  const url = hubMode ? `${BASE}/data/pfas` : `${BASE}/data/pfas/${stateSlug}`;
   const dataYear = latestSampleDate
     ? new Date(latestSampleDate).getUTCFullYear()
     : "2025";
 
-  const citations: Record<Format, string> = {
-    apa: `Water Utility Report. (${accessYear}). PFAS in ${stateName} drinking water: EPA UCMR 5 monitoring records (${dataYear}). Retrieved ${accessDate}, from ${url}`,
-    mla: `"PFAS in ${stateName} Drinking Water: EPA UCMR 5 Monitoring Records." Water Utility Report, ${accessYear}, ${url}. Accessed ${accessDate}.`,
-    chicago: `Water Utility Report. "PFAS in ${stateName} Drinking Water: EPA UCMR 5 Monitoring Records." Accessed ${accessDate}. ${url}.`,
-  };
+  const citations: Record<Format, string> = hubMode
+    ? {
+        apa: `Water Utility Report. (${accessYear}). PFAS in U.S. drinking water: State-by-state data. Retrieved ${accessDate}, from ${url}`,
+        mla: `"PFAS in U.S. Drinking Water: State-by-State Data." Water Utility Report, ${accessYear}, ${url}. Accessed ${accessDate}.`,
+        chicago: `Water Utility Report. "PFAS in U.S. Drinking Water: State-by-State Data." Accessed ${accessDate}. ${url}.`,
+      }
+    : {
+        apa: `Water Utility Report. (${accessYear}). PFAS in ${stateName} drinking water: EPA UCMR 5 monitoring records (${dataYear}). Retrieved ${accessDate}, from ${url}`,
+        mla: `"PFAS in ${stateName} Drinking Water: EPA UCMR 5 Monitoring Records." Water Utility Report, ${accessYear}, ${url}. Accessed ${accessDate}.`,
+        chicago: `Water Utility Report. "PFAS in ${stateName} Drinking Water: EPA UCMR 5 Monitoring Records." Accessed ${accessDate}. ${url}.`,
+      };
 
   const handleCopy = () => {
     navigator.clipboard.writeText(citations[activeFormat]).then(() => {
