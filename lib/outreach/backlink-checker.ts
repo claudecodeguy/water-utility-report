@@ -29,6 +29,98 @@ async function confirmBacklink(pageUrl: string): Promise<boolean> {
   }
 }
 
+export async function checkOrgBacklinks(): Promise<{ checked: number; found: number }> {
+  const apiKey = process.env.BING_SEARCH_API_KEY;
+  if (!apiKey) {
+    console.log("[backlink-checker] TODO: set BING_SEARCH_API_KEY to enable org backlink checking");
+    return { checked: 0, found: 0 };
+  }
+
+  const cutoff90d = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
+
+  const pitches = await prisma.outreachOrgPitch.findMany({
+    where: {
+      status: "sent",
+      sent_at: { gte: cutoff90d },
+      backlink_found: false,
+    },
+    include: { organization: true },
+    orderBy: { sent_at: "desc" },
+  });
+
+  // Group by org website domain
+  const domainMap = new Map<string, typeof pitches>();
+  for (const pitch of pitches) {
+    const url = pitch.organization.website;
+    if (!url) continue;
+    const domain = extractDomain(url);
+    if (!domain) continue;
+    if (!domainMap.has(domain)) domainMap.set(domain, []);
+    domainMap.get(domain)!.push(pitch);
+  }
+
+  let checked = 0;
+  let found = 0;
+
+  for (const [domain, domainPitches] of domainMap.entries()) {
+    checked++;
+
+    try {
+      const query = encodeURIComponent(`site:${domain} "waterutilityreport.com"`);
+      const res = await fetch(
+        `https://api.bing.microsoft.com/v7.0/search?q=${query}&count=10`,
+        { headers: { "Ocp-Apim-Subscription-Key": apiKey } }
+      );
+
+      if (!res.ok) {
+        console.error(`[backlink-checker] Bing error for org domain ${domain}:`, res.status);
+        await sleep(3000);
+        continue;
+      }
+
+      const data = await res.json() as {
+        webPages?: { value?: { url: string }[] };
+      };
+
+      const results = data.webPages?.value ?? [];
+
+      for (const result of results) {
+        const confirmed = await confirmBacklink(result.url);
+        if (!confirmed) continue;
+
+        const match = domainPitches.sort(
+          (a, b) =>
+            (b.sent_at?.getTime() ?? 0) - (a.sent_at?.getTime() ?? 0)
+        )[0];
+
+        if (match) {
+          await prisma.outreachOrgPitch.update({
+            where: { id: match.id },
+            data: {
+              status: "published",
+              published_url: result.url,
+              backlink_found: true,
+            },
+          });
+          await prisma.outreachOrganization.update({
+            where: { id: match.organization_id },
+            data: { pickup_count: { increment: 1 } },
+          });
+          found++;
+          console.log(`[backlink-checker] confirmed org backlink on ${result.url}`);
+          break;
+        }
+      }
+    } catch (err) {
+      console.error(`[backlink-checker] error for org domain ${domain}:`, err);
+    }
+
+    await sleep(3000);
+  }
+
+  return { checked, found };
+}
+
 export async function checkBacklinks(): Promise<{ checked: number; found: number }> {
   const apiKey = process.env.BING_SEARCH_API_KEY;
   if (!apiKey) {

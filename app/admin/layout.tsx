@@ -15,6 +15,8 @@ import {
   LogOut,
   Newspaper,
   Send,
+  Users,
+  Inbox,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -26,6 +28,8 @@ const navItems = [
   { href: "/admin/states", label: "States", icon: MapPin },
   { href: "/admin/outreach", label: "Outreach", icon: Send, exact: true },
   { href: "/admin/outreach/journalists", label: "Journalists", icon: Newspaper },
+  { href: "/admin/outreach/orgs/queue", label: "Org pitches", icon: Inbox },
+  { href: "/admin/outreach/orgs", label: "Organizations", icon: Users, exact: true },
   { href: "/admin/flags", label: "Review Flags", icon: Flag },
   { href: "/admin/sources", label: "Data Sources", icon: Database },
   { href: "/admin/settings", label: "Settings", icon: Settings },

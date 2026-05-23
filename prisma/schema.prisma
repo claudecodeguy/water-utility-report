@@ -714,3 +714,59 @@ model MonetizationInterestSignal {
   @@index([created_at(sort: Desc)])
   @@map("monetization_interest_signals")
 }
+
+model OutreachOrganization {
+  id                  String   @id @default(uuid()) @db.Uuid
+  name                String
+  email               String   @unique
+  contact_name        String?
+  organization_type   String?  // 'nonprofit' | 'extension' | 'health_dept' | 'research' | 'advocacy' | 'other'
+  website             String?
+  focus_areas         String[] // AI-enriched or manually entered: e.g. ["water quality","environmental health","PFAS"]
+  recent_topics       String[] // AI-inferred from website
+  states_served       String[] // state abbreviations: ["TX","OK","LA"] for regional orgs, or single ["TX"], or empty for national
+  is_national         Boolean  @default(false)
+  enrichment_status   String   @default("pending") // 'pending' | 'enriched' | 'failed' | 'manual'
+  enrichment_data     Json?    // raw scrape + LLM output for audit
+  notes               String?
+  last_contacted_at   DateTime?
+  contacted_count     Int      @default(0)
+  reply_count         Int      @default(0)
+  pickup_count        Int      @default(0)
+  status              String   @default("active") // 'active' | 'unsubscribed' | 'bounced' | 'blacklisted'
+  created_at          DateTime @default(now())
+  pitches             OutreachOrgPitch[]
+
+  @@index([organization_type, status])
+  @@index([is_national, status])
+  @@map("outreach_organizations")
+}
+
+model OutreachOrgPitch {
+  id                    String   @id @default(uuid()) @db.Uuid
+  organization_id       String   @db.Uuid
+  page_url              String   // full URL of the WUR page being shared
+  page_type             String   // 'state' | 'hub'
+  state_abbreviation    String?  // null for hub pitches
+  state_name            String?
+  subject               String
+  body                  String
+  personalization_note  String?
+  status                String   @default("draft") // 'draft' | 'approved' | 'sent' | 'bounced' | 'replied' | 'published' | 'rejected'
+  draft_created_at      DateTime @default(now())
+  approved_at           DateTime?
+  approved_by           String?
+  sent_at               DateTime?
+  replied_at            DateTime?
+  reply_text            String?
+  reply_sentiment       String?
+  published_url         String?
+  backlink_found        Boolean  @default(false)
+  notes                 String?
+  organization          OutreachOrganization @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+
+  @@index([status, draft_created_at(sort: Desc)])
+  @@index([organization_id])
+  @@unique([organization_id, page_url])
+  @@map("outreach_org_pitches")
+}

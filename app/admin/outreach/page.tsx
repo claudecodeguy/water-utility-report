@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import AdminPitchCard from "@/components/admin-pitch-card";
 import AdminPipelineRunner from "@/components/admin-pipeline-runner";
+import OutreachTabNav from "@/components/outreach-tab-nav";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -76,6 +77,7 @@ export default async function AdminOutreachPage() {
         </div>
         <AdminPipelineRunner />
       </div>
+      <OutreachTabNav />
 
       {/* Stat strip */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">

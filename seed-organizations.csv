@@ -1,0 +1,31 @@
+name,email,contact_name,organization_type,website,states_served,focus_areas_override,notes
+Sierra Club National,info@sierraclub.org,,nonprofit,https://www.sierraclub.org,,,verify email before sending
+Natural Resources Defense Council,info@nrdc.org,,,https://www.nrdc.org,,,verify email before sending
+Clean Water Action,cwa@cleanwater.org,,nonprofit,https://www.cleanwateraction.org,,,verify email before sending
+Environmental Working Group,info@ewg.org,,,https://www.ewg.org,,,verify email before sending
+Waterkeeper Alliance,info@waterkeeper.org,,nonprofit,https://www.waterkeeper.org,,,verify email before sending
+Hudson Riverkeeper,info@riverkeeper.org,,,https://www.riverkeeper.org,NY,,verify email before sending
+Inland Empire Waterkeeper,info@inlandempirewaterkeeper.org,,nonprofit,https://www.inlandempirewaterkeeper.org,,,verify email before sending
+Charles River Watershed Association,info@crwa.org,,,https://www.crwa.org,MA,,verify email before sending
+Galveston Bay Foundation,info@galvbay.org,,nonprofit,https://www.galvbay.org,TX,,verify email before sending
+Tualatin Riverkeepers,info@tualatinriverkeepers.org,,,https://www.tualatinriverkeepers.org,,,verify email before sending
+Friends of the Chicago River,info@chicagoriver.org,,nonprofit,https://www.chicagoriver.org,IL,,verify email before sending
+Save the Sound,info@savethesound.org,,,https://www.savethesound.org,"CT;NY",,verify email before sending
+Texas A&M AgriLife Extension,agrilife-info@tamu.edu,,extension,https://agrilifeextension.tamu.edu,TX,,verify email before sending
+Penn State Extension,info@psu.edu,,,https://extension.psu.edu,PA,,verify email before sending
+UC Cooperative Extension,info@ucanr.edu,,extension,https://ucanr.edu,,,verify email before sending
+Cornell Cooperative Extension,info@cce.cornell.edu,,,https://cce.cornell.edu,,,verify email before sending
+University of Minnesota Extension,extension@umn.edu,,extension,https://extension.umn.edu,,,verify email before sending
+Michigan State University Extension,info@msu.edu,,,https://www.canr.msu.edu/outreach,,,verify email before sending
+Purdue Extension,purduecountyext@purdue.edu,,extension,https://extension.purdue.edu,,,verify email before sending
+University of Georgia Extension,info@uga.edu,,,https://www.extension.uga.edu,,,verify email before sending
+Iowa State University Extension,info@iastate.edu,,extension,https://www.extension.iastate.edu,,,verify email before sending
+University of Florida IFAS Extension,info@ifas.ufl.edu,,,https://sfyl.ifas.ufl.edu,,,verify email before sending
+California Department of Public Health Drinking Water Program,info@cdph.ca.gov,,health_dept,https://www.cdph.ca.gov,CA,,verify email before sending
+Texas Commission on Environmental Quality - Drinking Water,info@tceq.texas.gov,,,https://www.tceq.texas.gov,TX,,verify email before sending
+New York State Department of Health Drinking Water,info@health.ny.gov,,health_dept,https://www.health.ny.gov,,,verify email before sending
+Florida Department of Health Drinking Water Program,info@flhealth.gov,,,https://www.floridahealth.gov,,,verify email before sending
+Pennsylvania DEP Drinking Water,info@dep.pa.gov,,health_dept,https://www.dep.pa.gov,PA,,verify email before sending
+Illinois EPA Drinking Water,info@illinois.gov,,,https://epa.illinois.gov,,,verify email before sending
+Massachusetts DEP Drinking Water Program,info@mass.gov,,health_dept,https://www.mass.gov,,,verify email before sending
+North Carolina DEQ Public Water Supply Section,info@ncdenr.gov,,,https://deq.nc.gov,,,verify email before sending

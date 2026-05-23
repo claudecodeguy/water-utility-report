@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import AdminJournalistsTable from "@/components/admin-journalists-table";
 import AdminJournalistsImport from "@/components/admin-journalists-import";
 import AdminJournalistsDiscover from "@/components/admin-journalists-discover";
+import OutreachTabNav from "@/components/outreach-tab-nav";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -65,6 +66,7 @@ export default async function AdminJournalistsPage() {
           <AdminJournalistsImport />
         </div>
       </div>
+      <OutreachTabNav />
 
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
