@@ -6,6 +6,7 @@
     { "path": "/api/outreach/check-backlinks", "schedule": "0 9 * * 1" },
     { "path": "/api/outreach/orgs/enrich", "schedule": "0 8 * * *" },
     { "path": "/api/outreach/orgs/run", "schedule": "0 10 * * *" },
-    { "path": "/api/outreach/orgs/check-backlinks", "schedule": "30 11 * * 1" }
+    { "path": "/api/outreach/orgs/check-backlinks", "schedule": "30 11 * * 1" },
+    { "path": "/api/outreach/orgs/health", "schedule": "0 12 * * *" }
   ]
 }
