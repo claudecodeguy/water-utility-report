@@ -3,45 +3,155 @@
 import { useState } from "react";
 import AdminOrgPitchCard, { type OrgPitchCardData } from "./admin-org-pitch-card";
 
-const TYPE_OPTIONS = ["all", "nonprofit", "extension", "health_dept", "research", "advocacy", "other"] as const;
+export type CohortStat = {
+  cohort: string;
+  sent: number;
+  replied: number;
+  draft: number;
+  approved: number;
+};
+
+const COHORT_OPTIONS = ["all", "extension", "nonprofit", "health_dept", "research", "advocacy", "other"] as const;
 const PAGE_OPTIONS = ["all", "state", "hub"] as const;
 
+function replyRateLabel(sent: number, replied: number) {
+  if (sent === 0) return "—";
+  return `${((replied / sent) * 100).toFixed(1)}%`;
+}
+
+function phaseLabel(sent: number) {
+  if (sent < 30) return { label: `${sent}/30 collecting`, color: "text-muted-foreground" };
+  if (sent < 75) return { label: `${sent}/75 preliminary`, color: "text-amber-600" };
+  if (sent < 150) return { label: `${sent}/150 decision`, color: "text-blue-600" };
+  return { label: `${sent} ✓ significant`, color: "text-emerald-600" };
+}
+
+function CohortStatsBar({ stats }: { stats: CohortStat[] }) {
+  if (stats.length === 0) return null;
+  const active = stats.filter((s) => s.sent > 0 || s.draft > 0 || s.approved > 0);
+  if (active.length === 0) return null;
+
+  return (
+    <div className="rounded-xl border border-border bg-white p-4 space-y-2">
+      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Cohort performance</p>
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="text-xs text-muted-foreground border-b border-border">
+            <th className="text-left pb-1.5 font-medium">Cohort</th>
+            <th className="text-right pb-1.5 font-medium">Sent</th>
+            <th className="text-right pb-1.5 font-medium">Replied</th>
+            <th className="text-right pb-1.5 font-medium">Reply rate</th>
+            <th className="text-right pb-1.5 font-medium">Draft</th>
+            <th className="text-right pb-1.5 font-medium">Approved</th>
+            <th className="text-right pb-1.5 font-medium">Phase</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-border/50">
+          {active.map((s) => {
+            const phase = phaseLabel(s.sent);
+            return (
+              <tr key={s.cohort}>
+                <td className="py-1.5 font-medium capitalize">{s.cohort.replace("_", " ")}</td>
+                <td className="py-1.5 text-right tabular-nums">{s.sent}</td>
+                <td className="py-1.5 text-right tabular-nums">{s.replied}</td>
+                <td className="py-1.5 text-right tabular-nums font-medium">{replyRateLabel(s.sent, s.replied)}</td>
+                <td className="py-1.5 text-right tabular-nums text-muted-foreground">{s.draft}</td>
+                <td className="py-1.5 text-right tabular-nums text-amber-600">{s.approved}</td>
+                <td className={`py-1.5 text-right text-xs ${phase.color}`}>{phase.label}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+      <p className="text-xs text-muted-foreground">
+        Decision points: 30 sent (directional) → 75 (pause underperformers) → 150 (statistical significance, p≈0.05)
+      </p>
+    </div>
+  );
+}
+
 export default function AdminOrgPitchQueue({
-  initialPitches,
+  draftPitches,
+  approvedPitches,
+  cohortStats,
   dailyBudgetRemaining,
 }: {
-  initialPitches: OrgPitchCardData[];
+  draftPitches: OrgPitchCardData[];
+  approvedPitches: OrgPitchCardData[];
+  cohortStats: CohortStat[];
   dailyBudgetRemaining: number;
 }) {
-  const [pitches, setPitches] = useState(initialPitches);
-  const [typeFilter, setTypeFilter] = useState<string>("all");
-  const [stateFilter, setStateFilter] = useState<string>("all");
+  const [drafts, setDrafts] = useState(draftPitches);
+  const [approved, setApproved] = useState(approvedPitches);
+  const [activeTab, setActiveTab] = useState<"draft" | "approved">("draft");
+  const [cohortFilter, setCohortFilter] = useState<string>("all");
   const [pageTypeFilter, setPageTypeFilter] = useState<string>("all");
-  const [autocorrectedOnly, setAutocorrectedOnly] = useState(false);
   const [search, setSearch] = useState("");
-  const [showBulkConfirm, setShowBulkConfirm] = useState(false);
+  const [bulkApproveConfirm, setBulkApproveConfirm] = useState(false);
+  const [bulkSendConfirm, setBulkSendConfirm] = useState(false);
   const [bulkLoading, setBulkLoading] = useState(false);
 
-  const filtered = pitches.filter((p) => {
-    if (typeFilter !== "all" && p.organization.organization_type !== typeFilter) return false;
-    if (pageTypeFilter !== "all" && p.page_type !== pageTypeFilter) return false;
-    if (stateFilter === "national" && p.state_abbreviation !== null) return false;
-    if (stateFilter !== "all" && stateFilter !== "national" && p.state_abbreviation !== stateFilter) return false;
-    if (autocorrectedOnly && !(p.personalization_note?.startsWith("[") ?? false)) return false;
-    if (search) {
-      const q = search.toLowerCase();
-      if (!p.organization.name.toLowerCase().includes(q) && !p.organization.email.toLowerCase().includes(q)) return false;
-    }
-    return true;
-  });
+  function filterPitches(pitches: OrgPitchCardData[]) {
+    return pitches.filter((p) => {
+      if (cohortFilter !== "all" && p.organization.organization_type !== cohortFilter) return false;
+      if (pageTypeFilter !== "all" && p.page_type !== pageTypeFilter) return false;
+      if (search) {
+        const q = search.toLowerCase();
+        if (!p.organization.name.toLowerCase().includes(q) && !p.organization.email.toLowerCase().includes(q)) return false;
+      }
+      return true;
+    });
+  }
 
-  function removePitch(id: string) {
-    setPitches((prev) => prev.filter((p) => p.id !== id));
+  const filteredDrafts = filterPitches(drafts);
+  const filteredApproved = filterPitches(approved);
+  const activePitches = activeTab === "draft" ? filteredDrafts : filteredApproved;
+
+  function removeDraft(id: string) {
+    setDrafts((prev) => prev.filter((p) => p.id !== id));
+  }
+
+  function moveToApproved(id: string) {
+    const pitch = drafts.find((p) => p.id === id);
+    if (pitch) {
+      setDrafts((prev) => prev.filter((p) => p.id !== id));
+      setApproved((prev) => [...prev, { ...pitch, status: "approved" }]);
+    }
+  }
+
+  function removeApproved(id: string) {
+    setApproved((prev) => prev.filter((p) => p.id !== id));
+  }
+
+  async function handleBulkApprove() {
+    setBulkLoading(true);
+    const ids = filteredDrafts.map((p) => p.id);
+    try {
+      const res = await fetch("/api/outreach/orgs/pitches/bulk-approve", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pitchIds: ids }),
+        credentials: "include",
+      });
+      const j = await res.json();
+      if (j.ok) {
+        const approvedIds = new Set(ids);
+        const nowApproved = drafts.filter((p) => approvedIds.has(p.id)).map((p) => ({ ...p, status: "approved" }));
+        setDrafts((prev) => prev.filter((p) => !approvedIds.has(p.id)));
+        setApproved((prev) => [...prev, ...nowApproved]);
+        setActiveTab("approved");
+      } else {
+        alert(`Bulk approve failed: ${j.error}`);
+      }
+    } finally {
+      setBulkLoading(false);
+      setBulkApproveConfirm(false);
+    }
   }
 
   async function handleBulkSend() {
     setBulkLoading(true);
-    const ids = filtered.map((p) => p.id);
+    const ids = filteredApproved.map((p) => p.id);
     try {
       const res = await fetch("/api/outreach/orgs/pitches/bulk-send", {
         method: "POST",
@@ -51,8 +161,8 @@ export default function AdminOrgPitchQueue({
       });
       const j = await res.json();
       if (j.ok) {
-        const sentIds = new Set(ids.filter((id) => !j.failed?.find((f: { pitchId: string }) => f.pitchId === id)));
-        setPitches((prev) => prev.filter((p) => !sentIds.has(p.id)));
+        const sentIds = new Set<string>(ids.filter((id) => !j.failed?.find((f: { pitchId: string }) => f.pitchId === id)));
+        setApproved((prev) => prev.filter((p) => !sentIds.has(p.id)));
         if (j.failed?.length > 0) {
           alert(`${j.sent} sent. ${j.failed.length} failed — check console.`);
         }
@@ -61,38 +171,51 @@ export default function AdminOrgPitchQueue({
       }
     } finally {
       setBulkLoading(false);
-      setShowBulkConfirm(false);
+      setBulkSendConfirm(false);
     }
   }
 
-  // Collect unique states for filter dropdown
-  const allStates = Array.from(
-    new Set(pitches.map((p) => p.state_abbreviation).filter(Boolean))
-  ).sort() as string[];
-
   return (
     <div className="space-y-4">
-      {/* Filter bar */}
+      {/* Cohort stats */}
+      <CohortStatsBar stats={cohortStats} />
+
+      {/* Tabs */}
+      <div className="flex items-center gap-1 border-b border-border">
+        {(["draft", "approved"] as const).map((tab) => {
+          const count = tab === "draft" ? drafts.length : approved.length;
+          return (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors -mb-px ${
+                activeTab === tab
+                  ? "border-wur-teal text-wur-teal"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {tab === "draft" ? "Needs Review" : "Approved"}
+              {count > 0 && (
+                <span className={`ml-1.5 text-xs px-1.5 py-0.5 rounded-full ${
+                  activeTab === tab ? "bg-wur-teal/15 text-wur-teal" : "bg-muted text-muted-foreground"
+                }`}>
+                  {count}
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Filters */}
       <div className="flex flex-wrap gap-3 items-center">
         <select
           className="text-sm border border-border rounded-lg px-3 py-1.5 bg-white"
-          value={typeFilter}
-          onChange={(e) => setTypeFilter(e.target.value)}
+          value={cohortFilter}
+          onChange={(e) => setCohortFilter(e.target.value)}
         >
-          {TYPE_OPTIONS.map((o) => (
-            <option key={o} value={o}>{o === "all" ? "All types" : o}</option>
-          ))}
-        </select>
-
-        <select
-          className="text-sm border border-border rounded-lg px-3 py-1.5 bg-white"
-          value={stateFilter}
-          onChange={(e) => setStateFilter(e.target.value)}
-        >
-          <option value="all">All states</option>
-          <option value="national">National</option>
-          {allStates.map((s) => (
-            <option key={s} value={s}>{s}</option>
+          {COHORT_OPTIONS.map((o) => (
+            <option key={o} value={o}>{o === "all" ? "All cohorts" : o.replace("_", " ")}</option>
           ))}
         </select>
 
@@ -106,16 +229,6 @@ export default function AdminOrgPitchQueue({
           ))}
         </select>
 
-        <label className="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer">
-          <input
-            type="checkbox"
-            checked={autocorrectedOnly}
-            onChange={(e) => setAutocorrectedOnly(e.target.checked)}
-            className="rounded"
-          />
-          Auto-corrected only
-        </label>
-
         <input
           className="text-sm border border-border rounded-lg px-3 py-1.5 bg-white w-52"
           placeholder="Search org name or email…"
@@ -124,52 +237,86 @@ export default function AdminOrgPitchQueue({
         />
 
         <span className="text-xs text-muted-foreground ml-auto">
-          {filtered.length} of {pitches.length} · budget remaining: {dailyBudgetRemaining}
+          {activePitches.length} shown · daily budget remaining: {dailyBudgetRemaining}
         </span>
       </div>
 
       {/* Bulk actions */}
-      {filtered.length > 0 && (
+      {activeTab === "draft" && filteredDrafts.length > 0 && (
         <div className="flex items-center gap-3">
-          {showBulkConfirm ? (
+          {bulkApproveConfirm ? (
             <>
               <span className="text-sm text-foreground">
-                Send {filtered.length} pitches now?
+                Approve {filteredDrafts.length} pitches? They&apos;ll queue for the daily cron send.
               </span>
               <button
-                onClick={handleBulkSend}
+                onClick={handleBulkApprove}
                 disabled={bulkLoading}
                 className="text-sm px-4 py-1.5 rounded-lg bg-wur-teal text-white font-medium hover:bg-wur-teal/90 disabled:opacity-50"
               >
-                {bulkLoading ? "Sending…" : "Yes, send all"}
+                {bulkLoading ? "Approving…" : "Yes, approve all"}
               </button>
-              <button
-                onClick={() => setShowBulkConfirm(false)}
-                className="text-sm text-muted-foreground hover:text-foreground"
-              >
+              <button onClick={() => setBulkApproveConfirm(false)} className="text-sm text-muted-foreground hover:text-foreground">
                 Cancel
               </button>
             </>
           ) : (
             <button
-              onClick={() => setShowBulkConfirm(true)}
+              onClick={() => setBulkApproveConfirm(true)}
               className="text-sm px-4 py-1.5 rounded-lg bg-wur-teal text-white font-medium hover:bg-wur-teal/90"
             >
-              Bulk approve &amp; send ({filtered.length})
+              Bulk approve ({filteredDrafts.length})
+            </button>
+          )}
+        </div>
+      )}
+
+      {activeTab === "approved" && filteredApproved.length > 0 && (
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-muted-foreground">
+            Approved pitches send automatically via daily cron (up to daily limit). Or:
+          </span>
+          {bulkSendConfirm ? (
+            <>
+              <span className="text-sm text-foreground">Send {filteredApproved.length} now?</span>
+              <button
+                onClick={handleBulkSend}
+                disabled={bulkLoading}
+                className="text-sm px-4 py-1.5 rounded-lg bg-wur-teal text-white font-medium hover:bg-wur-teal/90 disabled:opacity-50"
+              >
+                {bulkLoading ? "Sending…" : "Yes, send now"}
+              </button>
+              <button onClick={() => setBulkSendConfirm(false)} className="text-sm text-muted-foreground hover:text-foreground">
+                Cancel
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={() => setBulkSendConfirm(true)}
+              className="text-sm px-4 py-1.5 rounded-lg border border-border text-foreground hover:bg-muted font-medium"
+            >
+              Send all now ({filteredApproved.length})
             </button>
           )}
         </div>
       )}
 
       {/* Pitch cards */}
-      {filtered.length === 0 ? (
+      {activePitches.length === 0 ? (
         <div className="rounded-xl border border-border bg-white p-12 text-center text-sm text-muted-foreground">
-          No drafts match the current filters.
+          {activeTab === "draft"
+            ? "No drafts to review. The orchestrator runs daily at 10am UTC."
+            : "No approved pitches. Approve drafts from the Needs Review tab."}
         </div>
       ) : (
         <div className="space-y-4">
-          {filtered.map((pitch) => (
-            <AdminOrgPitchCard key={pitch.id} pitch={pitch} onRemove={removePitch} />
+          {activePitches.map((pitch) => (
+            <AdminOrgPitchCard
+              key={pitch.id}
+              pitch={pitch}
+              onRemove={activeTab === "draft" ? removeDraft : removeApproved}
+              onApprove={activeTab === "draft" ? moveToApproved : undefined}
+            />
           ))}
         </div>
       )}

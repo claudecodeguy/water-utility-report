@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { draftOrgPitch } from "./drafter";
+import { sendOrgPitch } from "./sender";
 import stateContent from "@/lib/content/states";
 
 // ─── STATE HELPERS ─────────────────────────────────────────────────────────────
@@ -46,6 +47,7 @@ function scoreCandidate(org: {
 
 export async function runOrgPipeline(): Promise<{
   drafts_created: number;
+  sent: number;
   errors: number;
   skipped: number;
   daily_budget_used: number;
@@ -55,18 +57,52 @@ export async function runOrgPipeline(): Promise<{
   const todayStart = new Date();
   todayStart.setUTCHours(0, 0, 0, 0);
 
-  const alreadyInPipeline = await prisma.outreachOrgPitch.count({
-    where: {
-      OR: [
-        { status: "draft" },
-        { status: "sent", sent_at: { gte: todayStart } },
-      ],
-    },
+  const sentToday = await prisma.outreachOrgPitch.count({
+    where: { status: "sent", sent_at: { gte: todayStart } },
   });
 
-  const targetDrafts = dailyLimit - alreadyInPipeline;
+  let sendBudget = dailyLimit - sentToday;
+
+  // ── Step 1: Auto-send approved pitches (up to send budget) ────────────────
+  let sent = 0;
+  let sendErrors = 0;
+
+  if (sendBudget > 0) {
+    const approvedPitches = await prisma.outreachOrgPitch.findMany({
+      where: { status: "approved" },
+      orderBy: { approved_at: "asc" },
+      take: sendBudget,
+      select: { id: true },
+    });
+
+    const pLimit = (await import("p-limit")).default;
+    const limit2 = pLimit(2);
+
+    await Promise.all(
+      approvedPitches.map((p) =>
+        limit2(async () => {
+          try {
+            await sendOrgPitch(p.id, "cron");
+            sent++;
+          } catch (err) {
+            sendErrors++;
+            console.error(`[org-orchestrator] send error pitch=${p.id}:`, err);
+          }
+        })
+      )
+    );
+
+    sendBudget -= sent;
+  }
+
+  // ── Step 2: Draft new pitches for remaining budget ─────────────────────────
+  const alreadyInPipeline = sentToday + sent + (await prisma.outreachOrgPitch.count({
+    where: { status: { in: ["draft", "approved"] } },
+  }));
+
+  const targetDrafts = Math.max(0, dailyLimit - alreadyInPipeline);
   if (targetDrafts <= 0) {
-    return { drafts_created: 0, errors: 0, skipped: 0, daily_budget_used: alreadyInPipeline };
+    return { drafts_created: 0, sent, errors: sendErrors, skipped: 0, daily_budget_used: alreadyInPipeline };
   }
 
   // ── Load eligible orgs ─────────────────────────────────────────────────────
@@ -147,12 +183,48 @@ export async function runOrgPipeline(): Promise<{
   // Sort by score descending; dedupe so only one candidate per org enters the queue today
   candidates.sort((a, b) => b.score - a.score);
 
-  const queue: Candidate[] = [];
+  const dedupedCandidates: Candidate[] = [];
   for (const c of candidates) {
     if (seenOrgsInBatch.has(c.orgId)) continue;
     seenOrgsInBatch.add(c.orgId);
-    queue.push(c);
-    if (queue.length >= targetDrafts) break;
+    dedupedCandidates.push(c);
+  }
+
+  // ── Cohort-balanced selection ──────────────────────────────────────────────
+  // Group candidates by org cohort (organization_type), then round-robin fill
+  // the queue so each cohort gets an equal share of draft slots.
+  const orgTypes = await prisma.outreachOrganization.findMany({
+    where: { id: { in: dedupedCandidates.map((c) => c.orgId) } },
+    select: { id: true, organization_type: true },
+  });
+  const typeByOrg = new Map(orgTypes.map((o) => [o.id, o.organization_type ?? "other"]));
+
+  const byType: Map<string, Candidate[]> = new Map();
+  for (const c of dedupedCandidates) {
+    const t = typeByOrg.get(c.orgId) ?? "other";
+    if (!byType.has(t)) byType.set(t, []);
+    byType.get(t)!.push(c);
+  }
+
+  // Round-robin across cohorts until we hit targetDrafts
+  const queue: Candidate[] = [];
+  const typeQueues = Array.from(byType.values());
+  const indices = typeQueues.map(() => 0);
+  let round = 0;
+  while (queue.length < targetDrafts) {
+    let added = false;
+    for (let i = 0; i < typeQueues.length; i++) {
+      if (queue.length >= targetDrafts) break;
+      const tq = typeQueues[i];
+      if (indices[i] < tq.length) {
+        queue.push(tq[indices[i]]);
+        indices[i]++;
+        added = true;
+      }
+    }
+    if (!added) break; // all cohorts exhausted
+    round++;
+    void round; // suppress unused warning
   }
 
   // ── Generate drafts ────────────────────────────────────────────────────────
@@ -185,7 +257,8 @@ export async function runOrgPipeline(): Promise<{
 
   return {
     drafts_created,
-    errors,
+    sent,
+    errors: errors + sendErrors,
     skipped,
     daily_budget_used: drafts_created + alreadyInPipeline,
   };

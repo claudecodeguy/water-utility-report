@@ -1,0 +1,83 @@
+name,email,organization_type,website,states_served,notes
+Iowa State University Extension,info@iastate.edu,extension,https://www.extension.iastate.edu,IA,University cooperative extension
+Purdue Extension,extension@purdue.edu,extension,https://extension.purdue.edu,IN,University cooperative extension
+Cornell Cooperative Extension,info@cce.cornell.edu,extension,https://cce.cornell.edu,NY,University cooperative extension
+Penn State Extension,extension@psu.edu,extension,https://extension.psu.edu,PA,University cooperative extension
+Michigan State University Extension,msue@msu.edu,extension,https://www.canr.msu.edu/outreach,MI,University cooperative extension
+University of Minnesota Extension,extension@umn.edu,extension,https://extension.umn.edu,MN,University cooperative extension
+Texas A&M AgriLife Extension,agrilife@tamu.edu,extension,https://agrilifeextension.tamu.edu,TX,University cooperative extension
+University of Florida IFAS Extension,ifas@ufl.edu,extension,https://sfyl.ifas.ufl.edu,FL,University cooperative extension
+University of Georgia Extension,caes@uga.edu,extension,https://extension.uga.edu,GA,University cooperative extension
+Ohio State University Extension,extension@osu.edu,extension,https://extension.osu.edu,OH,University cooperative extension
+NC State Extension,ces@ncsu.edu,extension,https://content.ces.ncsu.edu,NC,University cooperative extension
+Virginia Cooperative Extension,ext@vt.edu,extension,https://ext.vt.edu,VA,University cooperative extension
+University of Wisconsin Extension,extension@wisc.edu,extension,https://extension.wisc.edu,WI,University cooperative extension
+Utah State University Extension,extension@usu.edu,extension,https://extension.usu.edu,UT,University cooperative extension
+University of Nebraska Extension,extension@unl.edu,extension,https://extension.unl.edu,NE,University cooperative extension
+Auburn University Extension,aces@auburn.edu,extension,https://www.aces.edu,AL,University cooperative extension
+Clemson Cooperative Extension,clemsonext@clemson.edu,extension,https://www.clemson.edu/extension,SC,University cooperative extension
+University of Missouri Extension,mupublications@missouri.edu,extension,https://extension.missouri.edu,MO,University cooperative extension
+Washington State University Extension,cahe@wsu.edu,extension,https://extension.wsu.edu,WA,University cooperative extension
+Mississippi State Extension,extension@msstate.edu,extension,https://www.extension.msstate.edu,MS,University cooperative extension
+Colorado State University Extension,extension@colostate.edu,extension,https://extension.colostate.edu,CO,University cooperative extension
+University of Kentucky Extension,ca@uky.edu,extension,https://extension.ca.uky.edu,KY,University cooperative extension
+Rutgers Cooperative Extension,rutgerscoopext@njaes.rutgers.edu,extension,https://njaes.rutgers.edu/cooperative-extension,NJ,University cooperative extension
+University of Maryland Extension,extension@umd.edu,extension,https://extension.umd.edu,MD,University cooperative extension
+University of Connecticut Extension,extension@uconn.edu,extension,https://extension.uconn.edu,CT,University cooperative extension
+University of Arkansas Extension,uaex@uada.edu,extension,https://www.uaex.uada.edu,AR,University cooperative extension
+Kansas State University Extension,ksre@ksu.edu,extension,https://www.ksre.k-state.edu,KS,University cooperative extension
+Louisiana State University AgCenter,agcenter@lsu.edu,extension,https://www.lsuagcenter.com,LA,University cooperative extension
+University of Tennessee Extension,utextension@utk.edu,extension,https://extension.tennessee.edu,TN,University cooperative extension
+Oregon State University Extension,osuemail@oregonstate.edu,extension,https://extension.oregonstate.edu,OR,University cooperative extension
+Environmental Working Group,info@ewg.org,nonprofit,https://www.ewg.org,,National environmental health nonprofit; published PFAS tap water studies
+American Rivers,outreach@americanrivers.org,nonprofit,https://www.americanrivers.org,,National river conservation nonprofit
+Waterkeeper Alliance,info@waterkeeper.org,nonprofit,https://www.waterkeeper.org,,Global network of waterway advocates
+Clean Water Action,info@cleanwateraction.org,nonprofit,https://www.cleanwateraction.org,,Drinking water policy advocacy
+Earthjustice,action@earthjustice.org,nonprofit,https://earthjustice.org,,Environmental law nonprofit; PFAS litigation
+Natural Resources Defense Council,nrdcinfo@nrdc.org,nonprofit,https://www.nrdc.org,,Major environmental nonprofit; drinking water program
+Environment America,info@environmentamerica.org,nonprofit,https://environmentamerica.org,,State-level environmental advocacy network
+Food & Water Watch,info@fwwatch.org,nonprofit,https://www.foodandwaterwatch.org,,Policy nonprofit focused on water infrastructure
+Clean Water Fund,info@cleanwaterfund.org,nonprofit,https://cleanwaterfund.org,,Drinking water quality nonprofit
+Environmental Defense Fund,members@edf.org,nonprofit,https://www.edf.org,,Science-based environmental nonprofit
+Chesapeake Bay Foundation,cbf@cbf.org,nonprofit,https://www.cbf.org,MD;VA;PA,Regional water quality nonprofit
+River Network,info@rivernetwork.org,nonprofit,https://www.rivernetwork.org,,National river and drinking water advocacy
+Pacific Institute,info@pacinst.org,nonprofit,https://pacinst.org,,Water sustainability think tank
+Freshwater Future,info@freshwaterfuture.org,nonprofit,https://www.freshwaterfuture.org,MI;WI;MN;OH;IN;IL;PA;NY,Great Lakes drinking water advocacy
+WaterNow Alliance,info@waternowall.org,nonprofit,https://waternowall.org,,Urban water sustainability nonprofit
+Izaak Walton League,info@iwla.org,nonprofit,https://www.iwla.org,,Conservation nonprofit with water quality program
+Potomac Riverkeeper Network,info@potomacriverkeeper.org,nonprofit,https://potomacriverkeeper.org,MD;VA;WV;DC,Regional waterway advocacy
+Great Lakes Environmental Law Center,info@glelc.org,nonprofit,https://glelc.org,MI;OH;IN;IL;WI;MN,Great Lakes water protection
+Environmental Integrity Project,info@environmentalintegrity.org,nonprofit,https://environmentalintegrity.org,,Pollution watchdog nonprofit
+Breast Cancer Prevention Partners,info@bcpp.org,nonprofit,https://www.bcpp.org,,Environmental health nonprofit; PFAS exposure focus
+Clean Air Task Force,info@catf.us,nonprofit,https://www.catf.us,,Environmental health policy nonprofit
+Safer Chemicals Healthy Families,info@saferchemicals.org,nonprofit,https://saferchemicals.org,,PFAS and chemical policy advocacy coalition
+Coming Clean,info@comingcleaninc.org,nonprofit,https://comingcleaninc.org,,Environmental health and justice nonprofit
+Healthy Building Network,info@healthybuilding.net,nonprofit,https://healthybuilding.net,,Building materials and chemical safety nonprofit
+Green Science Policy Institute,info@greensciencepolicy.org,nonprofit,https://greensciencepolicy.org,,PFAS science and policy nonprofit
+BlueGreen Alliance,info@bluegreenalliance.org,nonprofit,https://www.bluegreenalliance.org,,Environmental and labor nonprofit
+Center for Environmental Health,info@ceh.org,nonprofit,https://www.ceh.org,,Chemical exposure and public health nonprofit
+Safer States,info@saferstates.org,nonprofit,https://www.saferstates.org,,State-level chemical policy nonprofit coalition
+Toxic-Free Future,info@toxicfreefuture.org,nonprofit,https://toxicfreefuture.org,WA,PFAS and toxic chemical policy nonprofit
+Environmental Health Strategy Center,info@preventharm.org,nonprofit,https://preventharm.org,ME,State and national chemical policy nonprofit
+Trust for America's Health,info@tfah.org,health_dept,https://www.tfah.org,,Public health policy nonprofit
+National Environmental Health Association,neha@neha.org,health_dept,https://www.neha.org,,Environmental health professionals association
+American Public Health Association,apha@apha.org,health_dept,https://www.apha.org,,National public health professional association
+Center for Science in the Public Interest,cspi@cspinet.org,health_dept,https://www.cspinet.org,,Food and water safety policy nonprofit
+Environmental Health News,editor@ehn.org,health_dept,https://www.ehn.org,,Environmental health journalism and advocacy nonprofit
+Physicians for Social Responsibility,psrnatl@psr.org,health_dept,https://www.psr.org,,Physicians advocacy organization; environmental health program
+Center for Health Environment & Justice,chej@chej.org,health_dept,https://chej.org,,Environmental justice and public health nonprofit
+Green & Healthy Homes Initiative,info@ghhi.org,health_dept,https://www.ghhi.org,,Healthy housing and water quality nonprofit
+National Center for Healthy Housing,info@nchh.org,health_dept,https://nchh.org,,Housing and drinking water health nonprofit
+Environmental Health Sciences,info@ehs.sph.brown.edu,health_dept,https://www.ehs.sph.brown.edu,,Environmental health research and education
+Collaborative on Health and the Environment,info@healthandenvironment.org,health_dept,https://www.healthandenvironment.org,,Science and health policy collaborative
+Endocrine Society,endostaff@endocrine.org,health_dept,https://www.endocrine.org,,Medical society; PFAS endocrine disruption research
+Environmental Health Alliance,info@envhealthalliance.org,health_dept,https://envhealthalliance.org,,Public health environmental advocacy
+Health and Environment Alliance,info@env-health.org,health_dept,https://env-health.org,,European and US health-environment policy
+Asthma and Allergy Foundation of America,info@aafa.org,health_dept,https://www.aafa.org,,Respiratory health nonprofit with environmental focus
+American Academy of Pediatrics,aap@aap.org,health_dept,https://www.aap.org,,Pediatrics organization; PFAS and child health
+Association of State Drinking Water Administrators,info@asdwa.org,health_dept,https://www.asdwa.org,,Drinking water regulators association
+Water Research Foundation,waterrf@waterrf.org,health_dept,https://www.waterrf.org,,Drinking water utility research nonprofit
+Association of Metropolitan Water Agencies,amwa@amwa.net,health_dept,https://www.amwa.net,,Urban water utility association
+National Rural Water Association,nrwa@nrwa.org,health_dept,https://www.nrwa.org,,Rural water system advocacy association
+Clean Water Services Foundation,info@cleanwaterservices.org,health_dept,https://www.cleanwaterservices.org,OR,Municipal water utility with public education focus
+The Pew Charitable Trusts,info@pewtrusts.org,health_dept,https://www.pewtrusts.org,,Policy nonprofit; drinking water and environmental health program

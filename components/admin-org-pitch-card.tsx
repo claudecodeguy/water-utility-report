@@ -10,6 +10,7 @@ export type OrgPitchCardData = {
   page_url: string;
   page_type: string;
   state_abbreviation: string | null;
+  status: string;
   score: number;
   organization: {
     id: string;
@@ -49,9 +50,11 @@ function Chip({ label, className }: { label: string; className?: string }) {
 export default function AdminOrgPitchCard({
   pitch,
   onRemove,
+  onApprove,
 }: {
   pitch: OrgPitchCardData;
   onRemove: (id: string) => void;
+  onApprove?: (id: string) => void;
 }) {
   const [subject, setSubject] = useState(pitch.subject);
   const [body, setBody] = useState(pitch.body);
@@ -80,7 +83,24 @@ export default function AdminOrgPitchCard({
     });
   }
 
-  function handleSend() {
+  function handleApprove() {
+    startTransition(async () => {
+      const res = await fetch("/api/outreach/orgs/pitches/bulk-approve", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pitchIds: [pitch.id] }),
+        credentials: "include",
+      });
+      if (res.ok) {
+        onApprove?.(pitch.id);
+      } else {
+        const j = await res.json();
+        alert(`Approve failed: ${j.error ?? "unknown error"}`);
+      }
+    });
+  }
+
+  function handleSendNow() {
     startTransition(async () => {
       const res = await fetch(`/api/outreach/orgs/pitches/${pitch.id}/send`, {
         method: "POST",
@@ -208,12 +228,21 @@ export default function AdminOrgPitchCard({
 
       {/* Footer actions */}
       <div className="flex items-center gap-3 pt-1">
-        <button
-          onClick={handleSend}
-          className="text-sm px-4 py-2 rounded-lg bg-wur-teal text-white font-medium hover:bg-wur-teal/90"
-        >
-          Approve &amp; send
-        </button>
+        {pitch.status === "approved" ? (
+          <button
+            onClick={handleSendNow}
+            className="text-sm px-4 py-2 rounded-lg bg-wur-teal text-white font-medium hover:bg-wur-teal/90"
+          >
+            Send now
+          </button>
+        ) : (
+          <button
+            onClick={handleApprove}
+            className="text-sm px-4 py-2 rounded-lg bg-wur-teal text-white font-medium hover:bg-wur-teal/90"
+          >
+            Approve
+          </button>
+        )}
         <button
           onClick={handleSave}
           className="text-sm px-4 py-2 rounded-lg border border-border text-foreground hover:bg-muted"
