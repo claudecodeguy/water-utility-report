@@ -141,14 +141,14 @@ async function callOrgDrafterWithWordCheck(
   const result = await callOrgDrafter(input, orgId);
   const wordCount = result.output.body.trim().split(/\s+/).length;
 
-  if (wordCount <= 130) return result;
+  if (wordCount <= 145) return result;
 
   // ── Over limit — retry once with explicit reminder ───────────────────────────
   console.warn(`[org-drafter] Draft exceeded word limit (${wordCount} words) for org ${orgId}, page ${input.page_url}. Regenerating once with stricter prompt.`);
 
   const retryInput = {
     ...input,
-    _strict_length_reminder: `STRICT LENGTH REQUIREMENT: previous draft was ${wordCount} words. Keep this draft under 100 words total.`,
+    _strict_length_reminder: `STRICT LENGTH REQUIREMENT: previous draft was ${wordCount} words. Keep this draft under 110 words total.`,
   };
 
   // Pass the reminder as a suffix to the user message — we stringify the whole object
@@ -161,7 +161,7 @@ async function callOrgDrafterWithWordCheck(
         role: "user",
         content:
           JSON.stringify(input, null, 2) +
-          `\n\nSTRICT LENGTH REQUIREMENT: previous draft was ${wordCount} words. Keep this draft under 100 words total. Count before responding.`,
+          `\n\nSTRICT LENGTH REQUIREMENT: previous draft was ${wordCount} words. Keep this draft under 110 words total. Count before responding.`,
       },
     ],
   });
@@ -182,7 +182,7 @@ async function callOrgDrafterWithWordCheck(
   }
 
   const retryWordCount = retryParsed.body.trim().split(/\s+/).length;
-  if (retryWordCount > 130) {
+  if (retryWordCount > 145) {
     // Retry also over limit — accept but flag
     return {
       ...result,

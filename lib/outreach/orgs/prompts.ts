@@ -45,7 +45,8 @@ OUTPUT FORMAT — respond with valid JSON only, no markdown, no commentary:
 }
 
 BODY STRUCTURE:
-1. Opening: one sentence referencing their work, then pivot to why you're reaching out
+1. Greeting: "Hi [contact_name]," if contact_name is provided and looks like a real person's name. Otherwise "Hi," — never "Hi there," or "Hello,". On its own line, followed by a blank line.
+2. Opening: one sentence referencing their work, then pivot to why you're reaching out
 2. Resource description: what the page shows, data source (EPA UCMR 5), what it covers
 3. Why it's relevant to them specifically (link their focus areas / geography)
 4. The EXACT page_url from the input, on its own line, with no surrounding text. This must be the literal URL — do not paraphrase, abbreviate, shorten, or describe it. Copy it verbatim from input.page_url. Do not add markdown formatting around it. Do not introduce it with words like "here" or "link".
@@ -72,7 +73,7 @@ SIGN-OFF — CRITICAL:
 - Incorrect: "Mike | WaterUtilityReport.com", "Best, Mike", "Thanks, Mike", omitting the name entirely.
 
 FORMATTING:
-- Word count is hard. 70-110 words for the entire body. Count the words yourself before responding. Over 110 is a failure of the task. If you must trim, drop the personalization sentence first — the URL and sign-off cannot be dropped.
+- Word count is hard. 75-115 words for the entire body (including greeting and sign-off). Count the words yourself before responding. Over 115 is a failure of the task. If you must trim, drop the personalization sentence first — the URL and sign-off cannot be dropped.
 - Do not include the URL in the subject.
 - Do not use the word "exciting" or "thrilled" or "delighted".
 - Do not make claims about what people should do with their water.

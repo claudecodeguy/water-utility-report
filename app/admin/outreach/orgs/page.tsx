@@ -5,7 +5,6 @@ import AdminOrgsImport from "@/components/admin-orgs-import";
 import AdminOrgsEnrich from "@/components/admin-orgs-enrich";
 import AdminOrgsAdd from "@/components/admin-orgs-add";
 import AdminOrgsFilters from "@/components/admin-orgs-filters";
-import OutreachTabNav from "@/components/outreach-tab-nav";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -110,8 +109,6 @@ export default async function AdminOrgsPage({
           <AdminOrgsImport />
         </div>
       </div>
-      <OutreachTabNav />
-
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
         {stats.map(({ label, value, highlight }) => (
