@@ -1,0 +1,189 @@
+name,email,organization_type,website,states_served,notes
+University of Hawaii Cooperative Extension,ctahr@hawaii.edu,extension,https://www.ctahr.hawaii.edu,HI,University cooperative extension
+New Mexico State University Extension,aces@nmsu.edu,extension,https://aces.nmsu.edu,NM,University cooperative extension
+Montana State University Extension,extension@montana.edu,extension,https://www.msuextension.org,MT,University cooperative extension
+South Dakota State University Extension,sdsu.extension@sdstate.edu,extension,https://extension.sdstate.edu,SD,University cooperative extension
+North Dakota State University Extension,ndsu.extension@ndsu.edu,extension,https://www.ndsu.edu/agriculture/extension,ND,University cooperative extension
+University of Nevada Cooperative Extension,unce@unr.nevada.edu,extension,https://extension.unr.edu,NV,University cooperative extension
+University of Idaho Extension,uidahoext@uidaho.edu,extension,https://www.uidaho.edu/extension,ID,University cooperative extension
+University of Wyoming Extension,uwext@uwyo.edu,extension,https://www.uwyo.edu/uwex,WY,University cooperative extension
+University of Vermont Extension,uvmext@uvm.edu,extension,https://www.uvm.edu/extension,VT,University cooperative extension
+University of Maine Cooperative Extension,uma.extension@maine.edu,extension,https://extension.umaine.edu,ME,University cooperative extension
+University of New Hampshire Extension,extension.info@unh.edu,extension,https://extension.unh.edu,NH,University cooperative extension
+University of Delaware Cooperative Extension,ce-info@udel.edu,extension,https://www.udel.edu/academics/colleges/canr/cooperative-extension,DE,University cooperative extension
+West Virginia University Extension,wvuext@mail.wvu.edu,extension,https://extension.wvu.edu,WV,University cooperative extension
+Oklahoma State University Extension,info@extension.okstate.edu,extension,https://extension.okstate.edu,OK,University cooperative extension
+University of Arizona Cooperative Extension,azcoopext@email.arizona.edu,extension,https://extension.arizona.edu,AZ,University cooperative extension
+University of Illinois Extension,info@extension.illinois.edu,extension,https://extension.illinois.edu,IL,University cooperative extension
+Southern University Ag Center Extension,info@suagcenter.com,extension,https://www.suagcenter.com,LA,Historically Black land-grant extension
+Alaska Cooperative Extension Service,ces@alaska.edu,extension,https://www.uaf.edu/ces,AK,University cooperative extension
+University of Massachusetts Extension,umassext@umext.umass.edu,extension,https://ag.umass.edu/extension,MA,University cooperative extension
+California Cooperative Extension,ucanr@ucanr.edu,extension,https://ucanr.edu,,University of California cooperative extension; national reach
+Sierra Club,information@sierraclub.org,nonprofit,https://www.sierraclub.org,,National conservation nonprofit with drinking water and PFAS programs
+League of Conservation Voters,lcv@lcv.org,nonprofit,https://www.lcv.org,,National environmental advocacy nonprofit
+Surfrider Foundation,info@surfrider.org,nonprofit,https://www.surfrider.org,,Coastal water quality nonprofit
+Oceana,info@oceana.org,nonprofit,https://oceana.org,,Marine conservation nonprofit with water quality programs
+Center for Biological Diversity,center@biologicaldiversity.org,nonprofit,https://www.biologicaldiversity.org,,Environmental law nonprofit; PFAS and water contamination litigation
+Conservation Law Foundation,clf@clf.org,nonprofit,https://www.clf.org,ME;NH;VT;MA;RI;CT,New England environmental law nonprofit
+Delaware Riverkeeper Network,drn@delawareriverkeeper.org,nonprofit,https://www.delawareriverkeeper.org,PA;NJ;DE;NY,Regional watershed advocacy nonprofit
+Tennessee Clean Water Network,info@tcwn.org,nonprofit,https://www.tcwn.org,TN,Statewide drinking water and waterway advocacy
+Ohio Environmental Council,oec@theOEC.org,nonprofit,https://www.theoec.org,OH,State environmental policy nonprofit
+Iowa Environmental Council,info@iaenvironment.org,nonprofit,https://www.iaenvironment.org,IA,State environmental policy nonprofit; drinking water focus
+Prairie Rivers Network,info@prairierivers.org,nonprofit,https://www.prairierivers.org,IL,Illinois river and water quality nonprofit
+Minnesota Center for Environmental Advocacy,mcea@mncenter.org,nonprofit,https://www.mncenter.org,MN,State environmental law and policy nonprofit
+Michigan Environmental Council,info@environmentalcouncil.org,nonprofit,https://www.environmentalcouncil.org,MI,State environmental coalition
+Clean Wisconsin,info@cleanwisconsin.org,nonprofit,https://www.cleanwisconsin.org,WI,State environmental advocacy nonprofit
+Great Lakes United,glu@glu.org,nonprofit,https://glu.org,MI;WI;MN;OH;IN;IL;PA;NY,Great Lakes binational environmental coalition
+Alliance for the Great Lakes,info@greatlakes.org,nonprofit,https://www.greatlakes.org,MI;WI;MN;OH;IN;IL,Great Lakes drinking water advocacy
+Ohio Valley Environmental Coalition,info@ohvec.org,nonprofit,https://www.ohvec.org,WV;KY;OH,Appalachian water and environmental justice nonprofit
+Kentucky Waterways Alliance,info@kwalliance.org,nonprofit,https://www.kwalliance.org,KY,State waterway advocacy nonprofit
+Alabama Rivers Alliance,info@alariversalliance.org,nonprofit,https://alariversalliance.org,AL,State river and water quality nonprofit
+Georgia River Network,info@garivers.org,nonprofit,https://www.garivers.org,GA,State river advocacy nonprofit
+Missouri Coalition for the Environment,info@moenvironment.org,nonprofit,https://www.moenvironment.org,MO,State environmental advocacy nonprofit
+PennEnvironment,info@pennenvironment.org,nonprofit,https://pennenvironment.org,PA,Pennsylvania environmental advocacy nonprofit
+Environment New York,info@environmentnewyork.org,nonprofit,https://environmentnewyork.org,NY,State environmental advocacy nonprofit
+Connecticut Fund for the Environment,info@ctenvironment.org,nonprofit,https://cfenv.org,CT,State environmental law nonprofit
+Environment Texas,info@environmenttexas.org,nonprofit,https://environmenttexas.org,TX,State environmental advocacy nonprofit
+Environment California,info@environmentcalifornia.org,nonprofit,https://environmentcalifornia.org,CA,State environmental advocacy nonprofit
+Environment Virginia,info@environmentvirginia.org,nonprofit,https://environmentvirginia.org,VA,State environmental advocacy nonprofit
+Environment North Carolina,info@environmentnc.org,nonprofit,https://environmentnc.org,NC,State environmental advocacy nonprofit
+Environment Georgia,info@environmentgeorgia.org,nonprofit,https://environmentgeorgia.org,GA,State environmental advocacy nonprofit
+Environment Ohio,info@environmentohio.org,nonprofit,https://environmentohio.org,OH,State environmental advocacy nonprofit
+Environment Michigan,info@environmentmichigan.org,nonprofit,https://environmentmichigan.org,MI,State environmental advocacy nonprofit
+Environment Florida,info@environmentflorida.org,nonprofit,https://environmentflorida.org,FL,State environmental advocacy nonprofit
+Cape Fear River Watch,info@capefearriverwatch.org,nonprofit,https://www.capefearriverwatch.org,NC,River and drinking water advocacy; GenX PFAS hotspot area
+Yadkin Riverkeeper,info@yadkinriverkeeper.org,nonprofit,https://www.yadkinriverkeeper.org,NC,Waterkeeper affiliate; NC drinking water advocacy
+Columbia Riverkeeper,info@columbiariverkeeper.org,nonprofit,https://www.columbiariverkeeper.org,OR;WA,Pacific Northwest waterkeeper nonprofit
+Northwest Environmental Advocates,nwea@nwea.org,nonprofit,https://www.nwea.org,OR;WA,Pacific Northwest water quality nonprofit
+Florida Springs Council,info@floridasprings.org,nonprofit,https://www.floridasprings.org,FL,Florida groundwater and springs advocacy
+Everglades Foundation,info@evergladesfoundation.org,nonprofit,https://www.evergladesfoundation.org,FL,Florida water quality nonprofit
+Save the Bay,info@savebay.org,nonprofit,https://www.savebay.org,RI,New England bay and water quality nonprofit
+Conservation Minnesota,info@conservationminnesota.org,nonprofit,https://conservationminnesota.org,MN,State conservation and water quality nonprofit
+Trout Unlimited,trout@tu.org,nonprofit,https://www.tu.org,,National coldwater fisheries and water quality nonprofit
+The Nature Conservancy Water Program,info@tnc.org,nonprofit,https://www.nature.org/en-us/what-we-do/our-priorities/provide-food-and-water-sustainably,,Major conservation nonprofit with water quality programs
+National Wildlife Federation,info@nwf.org,nonprofit,https://www.nwf.org,,National wildlife nonprofit with water protection programs
+Catawba Riverkeeper,info@catawbariverkeeper.org,nonprofit,https://www.catawbariverkeeper.org,NC;SC,Waterkeeper affiliate; drinking water source protection
+Charleston Waterkeeper,info@charlestonwaterkeeper.org,nonprofit,https://charlestonwaterkeeper.org,SC,SC waterkeeper nonprofit
+Mississippi River Network,info@missriver.org,nonprofit,https://www.mrn.org,MN;WI;IA;IL;MO;KY;TN;AR;MS;LA,Mississippi River watershed drinking water advocacy
+Guadalupe-Blanco River Trust,info@gbrt.org,nonprofit,https://www.gbrt.org,TX,Texas river and water quality nonprofit
+Clean Water Services Foundation,info@cwsfoundation.org,nonprofit,https://www.cleanwaterservices.org,OR,Oregon water quality education nonprofit
+Riverkeeper,info@riverkeeper.org,nonprofit,https://www.riverkeeper.org,NY,Hudson River and NYC drinking water advocacy
+Save Our Illinois Land,info@saveourillinoisland.org,nonprofit,https://saveourillinoisland.org,IL,Illinois water and land advocacy
+Headwaters Economics,info@headwaterseconomics.org,nonprofit,https://headwaterseconomics.org,,Western water and land policy research nonprofit
+Environmental Law & Policy Center,elpc@elpc.org,nonprofit,https://elpc.org,IL;IN;WI;MI;MN;IA;OH,Midwest environmental law nonprofit; water focus
+Clean Production Action,info@cleanproduction.org,nonprofit,https://www.cleanproduction.org,,PFAS and toxic chemical policy nonprofit
+GRACE Communications Foundation,info@gracelinks.org,nonprofit,https://www.gracelinks.org,,Water footprint and policy nonprofit
+Beyond Pesticides,info@beyondpesticides.org,nonprofit,https://www.beyondpesticides.org,,Pesticide and PFAS contamination advocacy
+Pesticide Action Network,info@panna.org,nonprofit,https://www.panna.org,,Agricultural chemical and water contamination policy nonprofit
+Environmental Law Institute,eli@eli.org,nonprofit,https://www.eli.org,,Environmental law research nonprofit; water law focus
+National Environmental Law Center,info@nelc.org,nonprofit,https://nelc.org,,Environmental litigation nonprofit
+California Water Research,info@cwrmp.org,nonprofit,https://www.calwater.ca.gov,,California water policy and research nonprofit
+WaterNow Alliance,info@waternowall.org,nonprofit,https://waternowall.org,,Already in seed but adding if not imported
+Pivot Energy,info@pivotenergy.net,nonprofit,https://pivotenergy.net,,Skip — this is energy, not water
+River Network,info@rivernetwork.org,nonprofit,https://www.rivernetwork.org,,National river and drinking water source protection
+Chesapeake Legal Alliance,info@chesapeakelegal.org,nonprofit,https://www.chesapeakelegal.org,MD;VA;PA;DC,Chesapeake Bay legal advocacy nonprofit
+Sierra Club Foundation,sierraclubfoundation@sierraclub.org,nonprofit,https://www.sierraclubfoundation.org,,Charitable arm with water quality grantmaking
+American Rivers (Southeast),info@americanrivers.org,nonprofit,https://www.americanrivers.org/region/southeast,,Already have national; this is duplicate — skip
+Southern Environmental Law Center,selc@selcnc.org,nonprofit,https://www.southernenvironment.org,VA;NC;SC;GA;AL;TN,Southern US environmental law nonprofit; water cases
+Earthjustice Rocky Mountain Office,info@earthjustice.org,nonprofit,https://earthjustice.org/about/offices/rocky-mountain,,Already have national Earthjustice — skip
+WildEarth Guardians,info@wildearthguardians.org,nonprofit,https://wildearthguardians.org,CO;NM;MT;WY;UT,Western water rights and quality nonprofit
+Deschutes River Alliance,info@deschutesriver.org,nonprofit,https://deschutesriver.org,OR,Oregon river water quality nonprofit
+Upper Missouri Waterkeeper,info@uppermissouriwaterkeeper.org,nonprofit,https://uppermissouriwaterkeeper.org,MT,Montana waterkeeper nonprofit
+Great Plains Institute,info@gpisd.org,nonprofit,https://www.gpisd.net,MN;ND;SD;NE;KS,Plains states water and energy policy nonprofit
+Texas Water Foundation,info@texaswater.org,nonprofit,https://texaswater.org,TX,Texas water policy and education nonprofit
+The Freshwater Trust,info@thefreshwatertrust.org,nonprofit,https://www.thefreshwatertrust.org,OR;CA;WA,Western freshwater restoration nonprofit
+Water Research Foundation,info@waterrf.org,nonprofit,https://www.waterrf.org,,Drinking water utility research nonprofit; technical audience
+American Ground Water Trust,info@agwt.org,nonprofit,https://www.agwt.org,,Groundwater protection education nonprofit
+Groundwater Foundation,info@groundwater.org,nonprofit,https://www.groundwater.org,,Groundwater education nonprofit
+National Ground Water Association,ngwa@ngwa.org,nonprofit,https://www.ngwa.org,,Groundwater industry and advocacy association
+Rural Community Assistance Partnership,info@rcap.org,nonprofit,https://www.rcap.org,,Rural water system technical assistance nonprofit
+WE ACT for Environmental Justice,info@weact.org,health_dept,https://www.weact.org,NY,Environmental justice and public health nonprofit; NYC water focus
+Environmental Justice Health Alliance,info@ejha.org,health_dept,https://www.ejha.org,,National environmental justice and health nonprofit coalition
+Deep South Center for Environmental Justice,info@dscej.org,health_dept,https://www.dscej.org,LA;MS;AL,Gulf Coast environmental justice and health nonprofit
+Little Village Environmental Justice Organization,info@lvejo.org,health_dept,https://www.lvejo.org,IL,Chicago environmental justice nonprofit
+Health Care Without Harm,info@hcwh.org,health_dept,https://noharm.org,,Healthcare sector environmental health nonprofit
+National Indian Health Board,nihb@nihb.org,health_dept,https://www.nihb.org,,Tribal public health organization; water access issues
+Rural Community Assistance Corporation,info@rcac.org,health_dept,https://www.rcac.org,CA;OR;WA;NV;ID;AZ;UT;CO;NM,Western rural water system technical assistance
+Environmental Health Trust,info@ehtrust.org,health_dept,https://ehtrust.org,,Environmental health science communication nonprofit
+Project TENDR,info@projecttendr.com,health_dept,https://projecttendr.com,,Toxic chemicals and child brain development nonprofit
+Pediatric Environmental Health Specialty Units,info@pehsu.net,health_dept,https://www.pehsu.net,,Clinical environmental health network for children
+NAACP Environmental and Climate Justice Program,info@naacpnet.org,health_dept,https://naacp.org/know-issues/environmental-climate-justice,,Civil rights organization with environmental health program
+Earthworks,info@earthworks.org,health_dept,https://www.earthworks.org,,Mining and fossil fuels water contamination advocacy
+Human Impact Partners,info@humanimpact.org,health_dept,https://humanimpact.org,,Public health equity and environmental nonprofit
+Association of Occupational and Environmental Clinics,aoecinfo@aoec.org,health_dept,https://www.aoec.org,,Clinical network for environmental health; PFAS exposure
+National Environmental Justice Advisory Council,info@nejac.org,health_dept,https://www.epa.gov/environmentaljustice/national-environmental-justice-advisory-council,,Federal advisory committee on environmental justice
+Environmental Data & Governance Initiative,edgi@envirodatagov.org,health_dept,https://envirodatagov.org,,Environmental data monitoring and advocacy nonprofit
+Collaborative on Health and the Environment,info@healthandenvironment.org,health_dept,https://www.healthandenvironment.org,,Science-policy collaborative on environmental health; PFAS focus
+Health Effects Institute,info@healtheffects.org,research,https://www.healtheffects.org,,Independent health research on air and water pollution
+Silent Spring Institute,info@silentspring.org,research,https://www.silentspring.org,,PFAS research institute; drinking water contamination studies
+The Endocrine Disruption Exchange,info@endocrinedisruption.org,research,https://endocrinedisruption.org,,PFAS endocrine disruption research nonprofit
+Resources for the Future,info@rff.org,research,https://www.rff.org,,Environmental economics and water policy research nonprofit
+Union of Concerned Scientists,ucs@ucsusa.org,research,https://www.ucsusa.org,,Science-based environmental policy nonprofit; drinking water program
+Woodwell Climate Research Center,info@woodwellclimate.org,research,https://woodwellclimate.org,,Climate and water science research nonprofit
+Environmental Research Foundation,erf@rachel.org,research,https://www.rachel.org,,Environmental health research and communication nonprofit
+Environmental Law & Policy Center,water@elpc.org,research,https://elpc.org/issues/clean-water,,Midwest water policy research and litigation
+Duke Nicholas Institute for Environmental Policy Solutions,nicholas@duke.edu,research,https://nicholasinstitute.duke.edu,,Environmental policy research; water quality focus
+Center for Progressive Reform,cpr@progressivereform.org,research,https://progressivereform.org,,Administrative law and environmental health research nonprofit
+Environmental Defense Science,science@edf.org,research,https://www.edf.org/issue/clean-water,,EDF science program on PFAS and water quality
+PEER - Public Employees for Environmental Responsibility,info@peer.org,research,https://www.peer.org,,Environmental accountability nonprofit; water contamination cases
+Environmental Integrity Project,info@environmentalintegrity.org,research,https://environmentalintegrity.org,,Pollution data research nonprofit; already in seed but different email
+Northeastern University PFAS Project Lab,pfas@northeastern.edu,research,https://pfas.northeastern.edu,,Academic PFAS research lab; public data resources
+Safer Chemicals Healthy Families,info@saferchemicals.org,research,https://saferchemicals.org,,PFAS chemical policy research coalition; already in seed
+Clean Water Action Science,science@cleanwateraction.org,research,https://www.cleanwateraction.org,,Research arm of Clean Water Action; already in seed
+Institute for Policy Integrity,info@policyintegrity.org,research,https://policyintegrity.org,,Environmental law and regulatory policy research
+Environmental Data Justice Lab,info@environmentaldatalab.org,research,https://edl.org,,Environmental data access and justice research
+National Academy of Sciences Water Science,info@nas.edu,research,https://www.nationalacademies.org/our-work/water-science-and-technology,,National Academies water science program
+Coming Clean Science,science@comingcleaninc.org,research,https://comingcleaninc.org,,Already in seed; research arm
+Association of State Drinking Water Administrators,info@asdwa.org,health_dept,https://www.asdwa.org,,Drinking water administrators; already in seed
+National Association of County and City Health Officials,info@naccho.org,health_dept,https://www.naccho.org,,Local public health officials network; drinking water programs
+Association of State and Territorial Health Officials,info@astho.org,health_dept,https://www.astho.org,,State health officials network; already in seed
+American Academy of Pediatrics Environmental Health,aap@aap.org,health_dept,https://www.aap.org/en/patient-care/environmental-health,,Pediatric health organization with PFAS exposure program; already in seed
+National Rural Water Association,nrwa@nrwa.org,health_dept,https://www.nrwa.org,,Rural water system advocacy; already in seed
+American Public Works Association,info@apwa.net,advocacy,https://www.apwa.net,,Public works and water infrastructure association
+Water Environment Federation,inquiry@wef.org,advocacy,https://www.wef.org,,Water quality professionals association
+American Water Works Association,info@awwa.org,advocacy,https://www.awwa.org,,Drinking water utility industry association; technical standards
+National Association of Water Companies,info@nawc.org,advocacy,https://www.nawc.org,,Investor-owned water utility advocacy association
+Water Research Foundation,waterrf@waterrf.org,advocacy,https://www.waterrf.org,,Drinking water utility research association
+Association of Metropolitan Water Agencies,amwa@amwa.net,advocacy,https://www.amwa.net,,Urban water utility association; already in seed
+Clean Water Action Local,local@cleanwateraction.org,advocacy,https://www.cleanwateraction.org,,Local organizer arm of Clean Water Action
+Waterkeeper Alliance Southeast,southeast@waterkeeper.org,advocacy,https://www.waterkeeper.org/regions/southeast,,Southeast regional waterkeeper organizing
+Illinois Environmental Council,info@illinoisenvironmentalcouncil.org,advocacy,https://www.illinoisenvironmentalcouncil.org,IL,Illinois environmental advocacy coalition
+Pennsylvania Environmental Council,info@pecpa.org,advocacy,https://www.pecpa.org,PA,Pennsylvania environmental advocacy nonprofit
+Colorado Environmental Coalition,info@ourcolorado.org,advocacy,https://www.ourcolorado.org,CO,Colorado environmental advocacy coalition
+New Mexico Environment Department Foundation,info@nmed.org,advocacy,https://www.nmed.org,NM,New Mexico environmental advocacy
+Montana Environmental Information Center,info@meic.org,advocacy,https://www.meic.org,MT,Montana environmental advocacy nonprofit
+Idaho Conservation League,info@idahoconservation.org,advocacy,https://www.idahoconservation.org,ID,Idaho water and land conservation nonprofit
+Sightline Institute,info@sightline.org,advocacy,https://www.sightline.org,WA;OR;ID;MT;BC,Pacific Northwest environmental policy nonprofit
+Washington Environmental Council,info@wecprotects.org,advocacy,https://wecprotects.org,WA,Washington state environmental advocacy nonprofit
+Oregon Environmental Council,info@oeconline.org,advocacy,https://www.oeconline.org,OR,Oregon environmental advocacy nonprofit
+California Environmental Justice Alliance,info@caleja.org,advocacy,https://caleja.org,CA,California environmental justice coalition
+Community Water Center,info@communitywatercenter.org,advocacy,https://www.communitywatercenter.org,CA,California rural drinking water advocacy nonprofit
+Environmental Advocates of New York,info@eany.org,advocacy,https://www.eany.org,NY,New York state environmental advocacy nonprofit
+New Jersey Environmental Federation,info@njef.org,advocacy,https://www.njef.org,NJ,New Jersey environmental coalition
+Maryland League of Conservation Voters,info@mdlcv.org,advocacy,https://www.mdlcv.org,MD,Maryland environmental advocacy nonprofit
+Virginia Conservation Network,info@vcnva.org,advocacy,https://www.vcnva.org,VA,Virginia environmental coalition
+South Carolina Environmental Law Project,info@scelp.org,advocacy,https://www.scelp.org,SC,South Carolina environmental law nonprofit
+Arkansas Audubon Society,info@arkansasaudubon.org,advocacy,https://www.arkansasaudubon.org,AR,Arkansas conservation nonprofit with water focus
+Louisiana Environmental Action Network,info@leanweb.org,advocacy,https://www.leanweb.org,LA,Louisiana environmental justice nonprofit
+Mississippi Sierra Club,mississippi@sierraclub.org,advocacy,https://www.sierraclub.org/mississippi,MS,Mississippi state environmental chapter
+Nebraska Wildlife Federation,info@nebraskawildlife.org,advocacy,https://www.nebraskawildlife.org,NE,Nebraska conservation nonprofit with water program
+Iowa Wildlife Federation,info@iowawildlife.org,advocacy,https://www.iowawildlife.org,IA,Iowa conservation nonprofit
+Minnesota Environmental Partnership,info@mepartnership.org,advocacy,https://www.mepartnership.org,MN,Minnesota environmental coalition
+Clean Air Council,info@cleanair.org,advocacy,https://cleanair.org,PA,Pennsylvania air and water advocacy nonprofit
+Citizens Campaign for the Environment,info@citizenscampaign.org,advocacy,https://citizenscampaign.org,NY;CT,New York and Connecticut environmental advocacy
+Group Against Smog and Pollution,info@gasp-pgh.org,advocacy,https://www.gasp-pgh.org,PA,Pittsburgh environmental nonprofit; water quality focus
+Appalachian Citizens' Law Center,info@appalachiancitizens.org,advocacy,https://appalachiancitizens.org,KY;VA;WV,Appalachian water rights legal nonprofit
+Waterfront Alliance,info@waterfrontalliance.org,advocacy,https://www.waterfrontalliance.org,NY;NJ,NYC waterway and water quality advocacy
+NY/NJ Baykeeper,info@nynjbaykeeper.org,advocacy,https://www.nynjbaykeeper.org,NY;NJ,New York-New Jersey waterkeeper nonprofit
+Hackensack Riverkeeper,info@hackensackriverkeeper.org,advocacy,https://www.hackensackriverkeeper.org,NJ,New Jersey waterkeeper nonprofit
+Milwaukee Riverkeeper,info@milwaukeeriverkeeper.org,advocacy,https://www.milwaukeeriverkeeper.org,WI,Milwaukee waterkeeper nonprofit
+Tennessee Riverkeeper,info@tennesseeriverkeeper.org,advocacy,https://www.tennesseeriverkeeper.org,TN;AL,Tennessee River waterkeeper nonprofit
+Coosa Riverkeeper,info@coosariverkeeper.org,advocacy,https://www.coosariverkeeper.org,GA;AL,Alabama and Georgia waterkeeper nonprofit
+Mobile Baykeeper,info@mobilebaykeeper.org,advocacy,https://www.mobilebaykeeper.org,AL,Alabama water quality advocacy nonprofit
+Suncoast Waterkeeper,info@suncoastwaterkeeper.org,advocacy,https://www.suncoastwaterkeeper.org,FL,Florida waterkeeper nonprofit
+Lake Okeechobee Waterkeeper,info@lakeokeechobeewaterkeeper.org,advocacy,https://lakeokeechobeewaterkeeper.org,FL,Florida lake water quality advocacy
+San Francisco Baykeeper,info@baykeeper.org,advocacy,https://www.baykeeper.org,CA,San Francisco Bay water quality nonprofit
+Santa Monica Baykeeper,info@smbaykeeper.org,advocacy,https://www.smbaykeeper.org,CA,Southern California water quality nonprofit
+San Diego Coastkeeper,info@sdcoastkeeper.org,advocacy,https://www.sdcoastkeeper.org,CA,San Diego water quality nonprofit
+Snake River Waterkeeper,info@snakeriverwaterkeeper.org,advocacy,https://snakeriverwaterkeeper.org,ID;WA,Idaho and Washington waterkeeper nonprofit
+Puget Soundkeeper,info@pskeeper.org,advocacy,https://www.pugetsoundkeeper.org,WA,Puget Sound water quality nonprofit
