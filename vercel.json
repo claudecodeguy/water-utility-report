@@ -1,4 +1,8 @@
 {
+  "functions": {
+    "app/api/outreach/orgs/enrich/route.ts": { "maxDuration": 300 },
+    "app/api/outreach/orgs/run/route.ts":    { "maxDuration": 300 }
+  },
   "crons": [
     { "path": "/api/outreach/orgs/enrich",         "schedule": "0 6 * * *" },
     { "path": "/api/outreach/orgs/run",             "schedule": "0 15 * * 2-4" },
