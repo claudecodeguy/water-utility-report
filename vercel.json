@@ -1,12 +1,12 @@
 {
   "crons": [
-    { "path": "/api/outreach/detect", "schedule": "0 6 * * *" },
-    { "path": "/api/outreach/score", "schedule": "30 6 * * *" },
-    { "path": "/api/outreach/run", "schedule": "0 7 * * *" },
-    { "path": "/api/outreach/check-backlinks", "schedule": "0 9 * * 1" },
-    { "path": "/api/outreach/orgs/enrich", "schedule": "0 8 * * *" },
-    { "path": "/api/outreach/orgs/run", "schedule": "0 10 * * *" },
-    { "path": "/api/outreach/orgs/check-backlinks", "schedule": "30 11 * * 1" },
-    { "path": "/api/outreach/orgs/health", "schedule": "0 12 * * *" }
+    { "path": "/api/outreach/orgs/enrich",         "schedule": "0 6 * * *" },
+    { "path": "/api/outreach/orgs/run",             "schedule": "0 7 * * *" },
+    { "path": "/api/outreach/orgs/health",          "schedule": "0 8 * * *" },
+    { "path": "/api/outreach/orgs/check-backlinks", "schedule": "30 8 * * 1" },
+    { "path": "/api/outreach/detect",               "schedule": "0 6 * * *" },
+    { "path": "/api/outreach/score",                "schedule": "30 6 * * *" },
+    { "path": "/api/outreach/run",                  "schedule": "0 7 * * *" },
+    { "path": "/api/outreach/check-backlinks",      "schedule": "0 9 * * 1" }
   ]
 }
