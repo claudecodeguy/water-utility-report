@@ -52,6 +52,10 @@ export const OrgDrafterInputSchema = z.object({
   state_name: z.string().optional(),
   state_abbreviation: z.string().optional(),
   sender_first_name: z.string().min(1),
+  page_stats: z.object({
+    utilities_tested: z.number(),
+    utilities_above_mcl: z.number(),
+  }).optional(),
 });
 
 export type OrgDrafterInput = z.infer<typeof OrgDrafterInputSchema>;

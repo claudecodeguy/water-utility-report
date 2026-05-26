@@ -256,6 +256,23 @@ export async function draftOrgPitch(
 
   const senderFirstName = process.env.OUTREACH_SENDER_FIRST_NAME || "Mike";
 
+  // Fetch state-level PFAS stats for stat-specific subject lines
+  let page_stats: { utilities_tested: number; utilities_above_mcl: number } | undefined;
+  if (pageType === "state" && stateInfo?.slug) {
+    try {
+      const { getStatePfasSummary } = await import("@/lib/data/pfas-state");
+      const summary = await getStatePfasSummary(stateInfo.slug);
+      if (summary && summary.utilities_tested > 0) {
+        page_stats = {
+          utilities_tested: summary.utilities_tested,
+          utilities_above_mcl: summary.utilities_above_any_mcl,
+        };
+      }
+    } catch {
+      // Non-fatal — subject line falls back to generic
+    }
+  }
+
   const input: OrgDrafterInput = {
     organization_name: org.name,
     organization_type: org.organization_type ?? "other",
@@ -268,6 +285,7 @@ export async function draftOrgPitch(
     state_name: state_name ?? undefined,
     state_abbreviation: stateAbbreviation ?? undefined,
     sender_first_name: senderFirstName,
+    page_stats,
   };
 
   const { output } = await callOrgDrafterWithWordCheck(input, orgId);
