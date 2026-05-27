@@ -122,6 +122,11 @@ async function main() {
   );
   console.log(`Loaded ${dbAnalytes.length} analytes from DB.`);
 
+  // Build PWSID allowlist — only ingest records for utilities already in the utility table
+  const dbUtilities = await prisma.utility.findMany({ select: { pwsid: true } });
+  const pwsidSet = new Set<string>(dbUtilities.map((u) => u.pwsid.toUpperCase()));
+  console.log(`Loaded ${pwsidSet.size.toLocaleString()} utility PWSIDs from DB.`);
+
   // Read file (force latin1 to handle Windows-1252 special chars like µ)
   const raw = fs.readFileSync(resolvedPath, "latin1");
   const lines = raw.split(/\r?\n/);
@@ -200,7 +205,7 @@ async function main() {
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : String(e);
       failed += batch.length;
-      if (errors.length < 5) errors.push(`Batch DB error: ${msg.slice(0, 120)}`);
+      if (errors.length < 5) errors.push(`Batch DB error: ${msg.slice(0, 2000)}`);
     }
     batch = [];
   };
@@ -219,6 +224,8 @@ async function main() {
     // Skip non-PFAS (lithium is also in UCMR5)
     if (contaminantRaw.toLowerCase() === "lithium") { skipped++; continue; }
     if (!pwsid || pwsid.length < 7) { skipped++; continue; }
+    // Skip utilities not in our DB (avoids FK violations)
+    if (!pwsidSet.has(pwsid)) { skipped++; continue; }
 
     processed++;
 
