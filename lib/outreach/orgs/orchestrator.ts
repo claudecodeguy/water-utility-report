@@ -53,6 +53,9 @@ export async function runOrgPipeline(): Promise<{
   daily_budget_used: number;
 }> {
   const dailyLimit = parseInt(process.env.OUTREACH_ORG_DAILY_LIMIT || "30", 10);
+  // When OUTREACH_ORG_AUTO_APPROVE=true, newly drafted pitches are immediately
+  // approved so the cron can send them in the same run without manual review.
+  const autoApprove = process.env.OUTREACH_ORG_AUTO_APPROVE === "true";
 
   const todayStart = new Date();
   todayStart.setUTCHours(0, 0, 0, 0);
@@ -242,8 +245,15 @@ export async function runOrgPipeline(): Promise<{
     queue.map((c) =>
       limit3(async () => {
         try {
-          await draftOrgPitch(c.orgId, c.pageUrl, c.pageType, c.stateAbbr, c.abVariant);
+          const pitch = await draftOrgPitch(c.orgId, c.pageUrl, c.pageType, c.stateAbbr, c.abVariant);
           drafts_created++;
+
+          if (autoApprove) {
+            await prisma.outreachOrgPitch.update({
+              where: { id: pitch.id },
+              data: { status: "approved", approved_at: new Date(), approved_by: "auto" },
+            });
+          }
         } catch (err) {
           const msg = err instanceof Error ? err.message : String(err);
           if (msg.startsWith("already pitched:")) {
@@ -257,6 +267,37 @@ export async function runOrgPipeline(): Promise<{
       })
     )
   );
+
+  // ── Step 3 (auto-approve mode only): send the just-approved drafts ───────────
+  // Drafts created in step 2 were immediately approved above. Run a second send
+  // pass so they go out in the same cron invocation rather than waiting until tomorrow.
+  if (autoApprove && drafts_created > 0) {
+    const newlyApproved = await prisma.outreachOrgPitch.findMany({
+      where: {
+        status: "approved",
+        approved_by: "auto",
+        approved_at: { gte: todayStart },
+      },
+      select: { id: true },
+    });
+
+    const pLimit2 = (await import("p-limit")).default;
+    const limitSend2 = pLimit2(2);
+
+    await Promise.all(
+      newlyApproved.map((p) =>
+        limitSend2(async () => {
+          try {
+            await sendOrgPitch(p.id, "cron-auto");
+            sent++;
+          } catch (err) {
+            sendErrors++;
+            console.error(`[org-orchestrator] auto-send error pitch=${p.id}:`, err);
+          }
+        })
+      )
+    );
+  }
 
   return {
     drafts_created,

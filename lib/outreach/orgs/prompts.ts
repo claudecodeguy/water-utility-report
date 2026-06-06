@@ -51,7 +51,7 @@ SUBJECT LINE:
 - Never include a URL in the subject. Never use clickbait. Keep it factual and specific.
 
 BODY STRUCTURE:
-1. Greeting: "Hi [contact_name]," if contact_name looks like a real person's first name. Otherwise "Hi," — never "Hi there," or "Hello,". On its own line, followed by a blank line.
+1. Greeting: if contact_name is provided it is ALREADY a verified first name — use it as "Hi [contact_name],". If contact_name is null or absent use "Hi," with no name. Never "Hi there," or "Hello,". On its own line, followed by a blank line.
 2. One sentence: reference their specific work (use focus_areas), then pivot immediately to what you have. Lead with the value, not the sender. Do not start with "I" or "We".
 3. One to two sentences: describe the resource. What it is, where the data comes from (EPA UCMR 5), what it covers. Citable, free, searchable. Keep it plain.
 4. [VARIANT-SPECIFIC CTA — see below]
@@ -176,7 +176,7 @@ SUBJECT LINE:
 - Never include a URL in the subject. Never use clickbait. Keep it factual and specific.
 
 BODY STRUCTURE:
-1. Greeting: "Hi [contact_name]," if contact_name looks like a real person's first name. Otherwise "Hi," — never "Hi there," or "Hello,". On its own line, followed by a blank line.
+1. Greeting: if contact_name is provided it is ALREADY a verified first name — use it as "Hi [contact_name],". If contact_name is null or absent use "Hi," with no name. Never "Hi there," or "Hello,". On its own line, followed by a blank line.
 2. One sentence: reference their specific work (use focus_areas), then pivot immediately to what you have. Lead with the value, not the sender. Do not start with "I" or "We".
 3. One to two sentences: describe the resource. What it is, where the data comes from (EPA UCMR 5), what it covers. Citable, free, searchable. Keep it plain.
 4. One sentence: why it fits their work specifically. Name their geography or a focus area. End with a low-friction action: "worth bookmarking or linking from your resources page" or "worth passing to your audience" or "might be useful for your communications". Do not ask them to do anything — phrase it as an observation.

@@ -5,6 +5,42 @@ import { ORG_DRAFTER_PROMPT, ORG_DRAFTER_PROMPT_A, ORG_DRAFTER_PROMPT_B } from "
 import { getStateContentByAbbr } from "@/lib/content/states";
 import type { OutreachOrgPitchModel } from "@/lib/generated/prisma/models";
 
+// ─── FIRST-NAME EXTRACTION ────────────────────────────────────────────────────
+// Preprocesses contact_name server-side so the AI always receives a clean first
+// name or undefined — never a full name, title, role word, or email address.
+
+const STRIP_TITLES = /^(dr\.?|mr\.?|mrs\.?|ms\.?|miss|prof\.?|rev\.?|hon\.?|sir|mx\.?)\s+/i;
+const STRIP_SUFFIXES = /[,\s]+(jr\.?|sr\.?|ii|iii|iv|ph\.?d\.?|m\.?d\.?|esq\.?)$/i;
+const ROLE_WORDS = /\b(director|manager|coordinator|officer|executive|president|chair(man|woman|person)?|founder|co-founder|admin(istrator)?|staff|team|department|dept|program|lead|head|senior|junior|associate|assistant|communications?|outreach|policy|advocacy|water|quality|environmental|public|health|science|research|education)\b/i;
+const LOOKS_LIKE_NAME = /^[A-Z][a-zA-Z''-]{1,29}$/;
+
+export function extractFirstName(raw: string | null | undefined): string | undefined {
+  if (!raw) return undefined;
+  const trimmed = raw.trim();
+  if (!trimmed) return undefined;
+
+  // Reject emails
+  if (trimmed.includes("@")) return undefined;
+
+  // Strip trailing suffixes before anything else
+  let name = trimmed.replace(STRIP_SUFFIXES, "").trim();
+
+  // Strip leading titles
+  name = name.replace(STRIP_TITLES, "").trim();
+
+  // Reject if the whole string (after stripping) looks like a role/generic phrase
+  if (ROLE_WORDS.test(name)) return undefined;
+
+  // Take the first word only
+  const first = name.split(/[\s,]+/)[0];
+
+  // Must look like a proper name: starts uppercase, only letters/hyphens/apostrophes, 2-30 chars
+  if (!LOOKS_LIKE_NAME.test(first)) return undefined;
+
+  // Normalize to title case in case enricher stored it ALL CAPS or all lowercase
+  return first.charAt(0).toUpperCase() + first.slice(1).toLowerCase();
+}
+
 export interface OrgDraftResult {
   output: OrgDrafterOutput;
   url_auto_corrected: boolean;
@@ -280,7 +316,7 @@ export async function draftOrgPitch(
   const input: OrgDrafterInput = {
     organization_name: org.name,
     organization_type: org.organization_type ?? "other",
-    contact_name: org.contact_name ?? undefined,
+    contact_name: extractFirstName(org.contact_name),
     focus_areas: org.focus_areas,
     states_served: org.states_served,
     is_national: org.is_national,
