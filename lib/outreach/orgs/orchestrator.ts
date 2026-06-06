@@ -146,6 +146,7 @@ export async function runOrgPipeline(): Promise<{
     pageType: "state" | "hub";
     stateAbbr: string | null;
     score: number;
+    abVariant: "A" | "B";
   };
 
   const candidates: Candidate[] = [];
@@ -153,7 +154,7 @@ export async function runOrgPipeline(): Promise<{
 
   for (const org of orgs) {
     const baseScore = scoreCandidate(org);
-    const orgCandidates: Omit<Candidate, "score">[] = [];
+    const orgCandidates: Omit<Candidate, "score" | "abVariant">[] = [];
 
     if (org.is_national) {
       orgCandidates.push({ orgId: org.id, pageUrl: HUB_URL, pageType: "hub", stateAbbr: null });
@@ -176,7 +177,9 @@ export async function runOrgPipeline(): Promise<{
 
     for (const c of orgCandidates) {
       if (pitchedSet.has(`${c.orgId}::${c.pageUrl}`)) continue;
-      candidates.push({ ...c, score: baseScore });
+      // Assign variant at candidate-build time so the split is random across the full pool
+      const abVariant: "A" | "B" = Math.random() < 0.5 ? "A" : "B";
+      candidates.push({ ...c, score: baseScore, abVariant });
     }
   }
 
@@ -239,7 +242,7 @@ export async function runOrgPipeline(): Promise<{
     queue.map((c) =>
       limit3(async () => {
         try {
-          await draftOrgPitch(c.orgId, c.pageUrl, c.pageType, c.stateAbbr);
+          await draftOrgPitch(c.orgId, c.pageUrl, c.pageType, c.stateAbbr, c.abVariant);
           drafts_created++;
         } catch (err) {
           const msg = err instanceof Error ? err.message : String(err);

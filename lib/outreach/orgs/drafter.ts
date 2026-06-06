@@ -1,7 +1,7 @@
 import { anthropic, MODELS } from "../anthropic";
 import { prisma } from "@/lib/prisma";
 import { OrgDrafterOutputSchema, type OrgDrafterInput, type OrgDrafterOutput } from "./types";
-import { ORG_DRAFTER_PROMPT } from "./prompts";
+import { ORG_DRAFTER_PROMPT, ORG_DRAFTER_PROMPT_A, ORG_DRAFTER_PROMPT_B } from "./prompts";
 import { getStateContentByAbbr } from "@/lib/content/states";
 import type { OutreachOrgPitchModel } from "@/lib/generated/prisma/models";
 
@@ -74,14 +74,21 @@ function buildNote(original: string, urlFixed: boolean, signOffFixed: boolean): 
   return prefixes.length > 0 ? `${prefixes.join(" ")} ${base}` : base;
 }
 
+function selectPrompt(abVariant: "A" | "B" | null): string {
+  if (abVariant === "A") return ORG_DRAFTER_PROMPT_A;
+  if (abVariant === "B") return ORG_DRAFTER_PROMPT_B;
+  return ORG_DRAFTER_PROMPT;
+}
+
 async function callOrgDrafter(
   input: OrgDrafterInput,
-  orgId: string
+  orgId: string,
+  abVariant: "A" | "B" | null = null
 ): Promise<OrgDraftResult> {
   const msg = await anthropic.messages.create({
     model: MODELS.drafter,
     max_tokens: 1024,
-    system: ORG_DRAFTER_PROMPT,
+    system: selectPrompt(abVariant),
     messages: [{ role: "user", content: JSON.stringify(input, null, 2) }],
   });
 
@@ -136,9 +143,10 @@ async function callOrgDrafter(
 
 async function callOrgDrafterWithWordCheck(
   input: OrgDrafterInput,
-  orgId: string
+  orgId: string,
+  abVariant: "A" | "B" | null = null
 ): Promise<OrgDraftResult> {
-  const result = await callOrgDrafter(input, orgId);
+  const result = await callOrgDrafter(input, orgId, abVariant);
   const wordCount = result.output.body.trim().split(/\s+/).length;
 
   if (wordCount <= 145) return result;
@@ -146,16 +154,10 @@ async function callOrgDrafterWithWordCheck(
   // ── Over limit — retry once with explicit reminder ───────────────────────────
   console.warn(`[org-drafter] Draft exceeded word limit (${wordCount} words) for org ${orgId}, page ${input.page_url}. Regenerating once with stricter prompt.`);
 
-  const retryInput = {
-    ...input,
-    _strict_length_reminder: `STRICT LENGTH REQUIREMENT: previous draft was ${wordCount} words. Keep this draft under 110 words total.`,
-  };
-
-  // Pass the reminder as a suffix to the user message — we stringify the whole object
   const retryMsg = await anthropic.messages.create({
     model: MODELS.drafter,
     max_tokens: 1024,
-    system: ORG_DRAFTER_PROMPT,
+    system: selectPrompt(abVariant),
     messages: [
       {
         role: "user",
@@ -220,9 +222,10 @@ async function callOrgDrafterWithWordCheck(
 // Exported for test scripts — takes OrgDrafterInput directly, bypasses DB
 export async function draftOrgPitchFromInput(
   input: OrgDrafterInput,
-  orgId: string
+  orgId: string,
+  abVariant: "A" | "B" | null = null
 ): Promise<OrgDraftResult> {
-  return callOrgDrafterWithWordCheck(input, orgId);
+  return callOrgDrafterWithWordCheck(input, orgId, abVariant);
 }
 
 // ─── HIGH-LEVEL PIPELINE ENTRY ────────────────────────────────────────────────
@@ -231,7 +234,8 @@ export async function draftOrgPitch(
   orgId: string,
   pageUrl: string,
   pageType: "state" | "hub",
-  stateAbbreviation: string | null
+  stateAbbreviation: string | null,
+  abVariant: "A" | "B" = "A"
 ): Promise<OutreachOrgPitchModel> {
   const org = await prisma.outreachOrganization.findUniqueOrThrow({ where: { id: orgId } });
 
@@ -288,7 +292,7 @@ export async function draftOrgPitch(
     page_stats,
   };
 
-  const { output } = await callOrgDrafterWithWordCheck(input, orgId);
+  const { output } = await callOrgDrafterWithWordCheck(input, orgId, abVariant);
 
   const pitch = await prisma.outreachOrgPitch.create({
     data: {
@@ -301,6 +305,7 @@ export async function draftOrgPitch(
       body: output.body,
       personalization_note: output.personalization_note,
       status: "draft",
+      ab_variant: abVariant,
     },
   });
 

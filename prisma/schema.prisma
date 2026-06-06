@@ -753,6 +753,7 @@ model OutreachOrgPitch {
   body                  String
   personalization_note  String?
   status                String   @default("draft") // 'draft' | 'approved' | 'sent' | 'bounced' | 'replied' | 'published' | 'rejected'
+  ab_variant            String?  // 'A' (explicit resource-page ask) | 'B' (peer-share soft ask) | null (pre-AB legacy)
   draft_created_at      DateTime @default(now())
   approved_at           DateTime?
   approved_by           String?
@@ -767,6 +768,7 @@ model OutreachOrgPitch {
 
   @@index([status, draft_created_at(sort: Desc)])
   @@index([organization_id])
+  @@index([ab_variant, status])
   @@unique([organization_id, page_url])
   @@map("outreach_org_pitches")
 }
