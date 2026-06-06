@@ -1,5 +1,6 @@
 import { requireAdmin, requireCronSecret } from "@/lib/outreach/auth";
 import { runOrgPipeline } from "@/lib/outreach/orgs/orchestrator";
+import { sendRunSummary } from "@/lib/outreach/orgs/run-summary";
 
 export async function POST(request: Request) {
   if (!requireAdmin(request) && !requireCronSecret(request)) {
@@ -12,6 +13,8 @@ export async function POST(request: Request) {
 
   try {
     const result = await runOrgPipeline();
+    // Fire-and-forget — summary email failure must not affect the cron response
+    sendRunSummary(result).catch((e) => console.error("[org-run] summary email failed:", e));
     return Response.json({ ok: true, ...result });
   } catch (err) {
     console.error("[org-run] error:", err);
