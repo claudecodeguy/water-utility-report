@@ -16,6 +16,8 @@ import {
   Users,
   Inbox,
   BarChart2,
+  TrendingUp,
+  Zap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -28,6 +30,8 @@ const navItems = [
   { href: "/admin/outreach/orgs/queue", label: "Pitch Queue", icon: Inbox },
   { href: "/admin/outreach/orgs/ab-report", label: "A/B Report", icon: BarChart2 },
   { href: "/admin/outreach/orgs", label: "Organizations", icon: Users, exact: true },
+  { href: "/admin/seo/momentum-opportunities", label: "SEO Canary", icon: TrendingUp },
+  { href: "/admin/seo/ai-citation-momentum", label: "AI Citations", icon: Zap },
   { href: "/admin/flags", label: "Review Flags", icon: Flag },
   { href: "/admin/sources", label: "Data Sources", icon: Database },
   { href: "/admin/settings", label: "Settings", icon: Settings },

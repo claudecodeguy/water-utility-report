@@ -17,6 +17,8 @@ import { normalizeName } from "@/lib/normalize-name";
 import PageIntroBox from "@/components/page-intro-box";
 import DataLimitationsNote from "@/components/data-limitations-note";
 import JsonLd from "@/components/json-ld";
+import { PFAS_WATCHLIST_CANARY_OVERRIDES } from "@/lib/canary/seo-overrides";
+import CanaryAnswerModule from "@/components/canary-answer-module";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -41,9 +43,22 @@ export async function generateMetadata({
   if (!utility && recordCount === 0) return {};
   const displayName = utility ? normalizeName(utility.name) : uppercasePwsid;
   const stateAbbr = utility?.state?.abbreviation ? ` (${utility.state.abbreviation})` : "";
+  const url = `https://waterutilityreport.com/pfas-watchlist/utility/${uppercasePwsid}`;
+
+  // Canary: gated override for specific PWSIDs only
+  const canary = PFAS_WATCHLIST_CANARY_OVERRIDES[uppercasePwsid];
+  if (canary) {
+    return {
+      title: canary.title,
+      description: canary.description,
+      alternates: { canonical: url },
+      openGraph: { title: canary.title, description: canary.description, url },
+      robots: "index, follow",
+    };
+  }
+
   const title = `${displayName}${stateAbbr} PFAS & PFOA Testing Records: EPA UCMR 5 Data`;
   const description = `Official EPA UCMR 5 PFAS monitoring records for ${displayName}, including PFOA, PFOS, and other perfluoroalkyl substances. Analytes, detection levels, sample dates, and source data.`;
-  const url = `https://waterutilityreport.com/pfas-watchlist/utility/${uppercasePwsid}`;
   return {
     title,
     description,
@@ -213,6 +228,13 @@ export default async function PfasUtilityPage({
           </div>
         </div>
       </div>
+
+      {/* ── CANARY: Official Records Preview (gated to specific PWSIDs only) ── */}
+      {PFAS_WATCHLIST_CANARY_OVERRIDES[pwsid] && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-0">
+          <CanaryAnswerModule override={PFAS_WATCHLIST_CANARY_OVERRIDES[pwsid]} />
+        </div>
+      )}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-0">
         <PageIntroBox
