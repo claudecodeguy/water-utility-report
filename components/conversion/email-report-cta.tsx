@@ -37,8 +37,8 @@ export default function EmailReportCTA({
     state,
     cta_location: ctaLocation,
     conversion_type: "email_report",
-    has_pfas_records: hasPfasRecords,
-    has_violation_records: hasViolationRecords,
+    has_pfas_records: hasPfasRecords ? "1" : "0",
+    has_violation_records: hasViolationRecords ? "1" : "0",
     page_type: "utility",
   };
 
