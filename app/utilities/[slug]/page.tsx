@@ -1345,18 +1345,15 @@ export default async function UtilityPage({ params }: { params: Promise<{ slug: 
               questions={utilityWaterQuestions}
               title="Common Questions About This Water System"
             />
-            {/* ── CANARY: email report CTA (bottom of main column) ── */}
-            {canary?.conversionCanary && (
-              <EmailReportCTA
-                pwsid={utility.pwsid}
-                utilitySlug={utility.slug}
-                utilityName={displayName}
-                state={utility.state.abbreviation}
-                ctaLocation="main_bottom"
-                hasPfasRecords={pfasRecordCount > 0}
-                hasViolationRecords={utility.violations.length > 0}
-              />
-            )}
+            <EmailReportCTA
+              pwsid={utility.pwsid}
+              utilitySlug={utility.slug}
+              utilityName={displayName}
+              state={utility.state.abbreviation}
+              ctaLocation="main_bottom"
+              hasPfasRecords={pfasRecordCount > 0}
+              hasViolationRecords={utility.violations.length > 0}
+            />
 
             <DataLimitationsNote />
             <RelatedPages pages={relatedPages} title="Related Pages" />
@@ -1369,21 +1366,17 @@ export default async function UtilityPage({ params }: { params: Promise<{ slug: 
           {/* Sidebar */}
           <div className="space-y-5">
             <div className="sticky top-20 space-y-5">
-              {canary?.conversionCanary ? (
-                <SaveUtilityCTA
-                  pwsid={utility.pwsid}
-                  utilitySlug={utility.slug}
-                  utilityName={displayName}
-                  state={utility.state.abbreviation}
-                  ctaVariant={canary.ctaVariant}
-                  ctaLocation="sidebar"
-                  hasPfasRecords={pfasRecordCount > 0}
-                  hasViolationRecords={utility.violations.length > 0}
-                  formVersion="v1"
-                />
-              ) : (
-                <ViolationAlertForm pwsid={utility.pwsid} utilityName={displayName} />
-              )}
+              <SaveUtilityCTA
+                pwsid={utility.pwsid}
+                utilitySlug={utility.slug}
+                utilityName={displayName}
+                state={utility.state.abbreviation}
+                ctaVariant={canary?.ctaVariant ?? "save_utility"}
+                ctaLocation="sidebar"
+                hasPfasRecords={pfasRecordCount > 0}
+                hasViolationRecords={utility.violations.length > 0}
+                formVersion="v1"
+              />
 
               <div className="rounded-xl border border-border bg-card p-5">
                 <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">At a Glance</p>
