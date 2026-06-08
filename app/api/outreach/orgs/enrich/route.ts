@@ -1,6 +1,8 @@
 import { requireAdmin, requireCronSecret } from "@/lib/outreach/auth";
 import { enrichOrganization, enrichAllPending } from "@/lib/outreach/orgs/enricher";
 
+export async function GET(request: Request) { return POST(request); }
+
 export async function POST(request: Request) {
   if (!requireAdmin(request) && !requireCronSecret(request)) {
     return Response.json({ ok: false, error: "Unauthorized" }, { status: 401 });

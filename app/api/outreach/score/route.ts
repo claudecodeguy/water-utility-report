@@ -1,6 +1,8 @@
 import { requireAdminOrCron } from "@/lib/outreach/auth";
 import { scoreSignal, scoreAllNewSignals } from "@/lib/outreach/scorer";
 
+export async function GET(request: Request) { return POST(request); }
+
 export async function POST(request: Request) {
   if (!requireAdminOrCron(request)) {
     return Response.json({ ok: false, error: "Unauthorized" }, { status: 401 });

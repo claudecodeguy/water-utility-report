@@ -2,6 +2,11 @@ import { requireAdmin, requireCronSecret } from "@/lib/outreach/auth";
 import { runOrgPipeline } from "@/lib/outreach/orgs/orchestrator";
 import { sendRunSummary } from "@/lib/outreach/orgs/run-summary";
 
+// Vercel cron jobs send GET requests — handle both GET and POST
+export async function GET(request: Request) {
+  return POST(request);
+}
+
 export async function POST(request: Request) {
   if (!requireAdmin(request) && !requireCronSecret(request)) {
     return Response.json({ ok: false, error: "Unauthorized" }, { status: 401 });

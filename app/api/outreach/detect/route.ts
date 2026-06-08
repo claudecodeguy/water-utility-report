@@ -1,6 +1,8 @@
 import { requireCronSecret } from "@/lib/outreach/auth";
 import { detectNewSignals } from "@/lib/outreach/detector";
 
+export async function GET(request: Request) { return POST(request); }
+
 export async function POST(request: Request) {
   if (!requireCronSecret(request)) {
     return Response.json({ ok: false, error: "Unauthorized" }, { status: 401 });
