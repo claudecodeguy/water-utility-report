@@ -66,6 +66,15 @@ export async function runOrgPipeline(): Promise<{
 
   let sendBudget = dailyLimit - sentToday;
 
+  // ── Pre-step: Expire pitches stuck in approved for >2 days ────────────────
+  // Repeated Resend failures leave pitches in approved indefinitely. Mark them
+  // rejected so they stop consuming the send queue and daily budget.
+  const twoDaysAgo = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
+  await prisma.outreachOrgPitch.updateMany({
+    where: { status: "approved", approved_at: { lt: twoDaysAgo } },
+    data: { status: "rejected", notes: "auto-expired: approved >2 days without successful send" },
+  });
+
   // ── Step 1: Auto-send approved pitches (up to send budget) ────────────────
   let sent = 0;
   let sendErrors = 0;
@@ -99,8 +108,16 @@ export async function runOrgPipeline(): Promise<{
   }
 
   // ── Step 2: Draft new pitches for remaining budget ─────────────────────────
+  // Only count approved pitches from TODAY — pitches approved on previous days
+  // that haven't sent are "stuck" (repeated Resend failures) and must not consume
+  // the daily draft budget or the queue permanently fills up.
   const alreadyInPipeline = sentToday + sent + (await prisma.outreachOrgPitch.count({
-    where: { status: { in: ["draft", "approved"] } },
+    where: {
+      OR: [
+        { status: "draft" },
+        { status: "approved", approved_at: { gte: todayStart } },
+      ],
+    },
   }));
 
   const targetDrafts = Math.max(0, dailyLimit - alreadyInPipeline);
