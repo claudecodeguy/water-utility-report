@@ -1,11 +1,14 @@
 {
   "functions": {
-    "app/api/outreach/orgs/enrich/route.ts": { "maxDuration": 300 },
-    "app/api/outreach/orgs/run/route.ts":    { "maxDuration": 300 }
+    "app/api/outreach/orgs/enrich/route.ts":            { "maxDuration": 300 },
+    "app/api/outreach/orgs/run/route.ts":               { "maxDuration": 300 },
+    "app/api/outreach/orgs/ensure-daily-cap/route.ts":  { "maxDuration": 300 }
   },
   "crons": [
-    { "path": "/api/outreach/orgs/enrich",         "schedule": "0 6 * * *" },
-    { "path": "/api/outreach/orgs/run",             "schedule": "0 15 * * 1-5" },
+    { "path": "/api/outreach/orgs/enrich",            "schedule": "0 6 * * *" },
+    { "path": "/api/outreach/orgs/ensure-daily-cap", "schedule": "0 15 * * 1-5" },
+    { "path": "/api/outreach/orgs/ensure-daily-cap", "schedule": "0 16 * * 1-5" },
+    { "path": "/api/outreach/orgs/ensure-daily-cap", "schedule": "0 17 * * 1-5" },
     { "path": "/api/outreach/orgs/health",          "schedule": "0 8 * * *" },
     { "path": "/api/outreach/orgs/check-backlinks", "schedule": "30 8 * * 1" },
     { "path": "/api/outreach/detect",               "schedule": "0 6 * * *" },
