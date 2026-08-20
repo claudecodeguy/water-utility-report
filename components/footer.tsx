@@ -32,6 +32,8 @@ const footerLinks = {
     { href: "/about", label: "About WUR" },
     { href: "/contact", label: "Contact" },
     { href: "/water-charities", label: "Water Charities & Assistance" },
+    { href: "/privacy", label: "Privacy Policy" },
+    { href: "/terms", label: "Terms of Service" },
   ],
 };
 
@@ -92,9 +94,17 @@ export default function Footer() {
           <p className="text-xs text-white/30">
             © 2025 Water Utility Report. Data sourced from EPA SDWIS, ECHO, and public Water Quality Portal datasets.
           </p>
-          <div className="flex items-center gap-1.5">
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-wur-aqua" />
-            <span className="text-xs text-white/30 font-mono">All 50 states · 22,500+ utilities tracked</span>
+          <div className="flex items-center gap-5">
+            <Link href="/privacy" className="text-xs text-white/40 hover:text-white/70 transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="text-xs text-white/40 hover:text-white/70 transition-colors">
+              Terms of Service
+            </Link>
+            <div className="flex items-center gap-1.5">
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-wur-aqua" />
+              <span className="text-xs text-white/30 font-mono">All 50 states · 22,500+ utilities tracked</span>
+            </div>
           </div>
         </div>
       </div>
