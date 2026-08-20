@@ -4,6 +4,8 @@ const nextConfig: NextConfig = {
   experimental: {},
   async redirects() {
     return [
+      // Mediavine ads.txt — keeps their partner list current without manual updates
+      { source: "/ads.txt", destination: "https://adstxt.journeymv.com/sites/b73bf976-a222-4fbc-8faf-6f8ba13db7d8/ads.txt", permanent: true },
       // Utility slug fixes — redirects from alternate slug formats to the canonical DB slug
       { source: "/utilities/eagar-town-of", destination: "/utilities/town-of-eagar", permanent: true },
       { source: "/utilities/st-johns-city-of", destination: "/utilities/city-of-st-johns", permanent: true },
