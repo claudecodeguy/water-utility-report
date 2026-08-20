@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Serif_Display, DM_Sans, DM_Mono } from "next/font/google";
 import "./globals.css";
+import Script from "next/script";
 import Nav from "@/components/nav";
 import Footer from "@/components/footer";
 import JsonLd from "@/components/json-ld";
@@ -70,6 +71,12 @@ export default function RootLayout({
         <Nav />
         <main className="flex-1">{children}</main>
         <Footer />
+        <Script
+          src="//scripts.scriptwrapper.com/tags/b73bf976-a222-4fbc-8faf-6f8ba13db7d8.js"
+          strategy="afterInteractive"
+          data-noptimize="1"
+          data-cfasync="false"
+        />
       </body>
       <GAConditional gaId="G-SX34LEVQZ1" />
     </html>
