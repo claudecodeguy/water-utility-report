@@ -18,7 +18,12 @@ import JsonLd from "@/components/json-ld";
 import type { RiskLevel } from "@/lib/types";
 import { riskConfig } from "@/lib/types";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 86400;
+// Render each page on its first request, then cache it (ISR) instead of
+// hitting the database on every visit. Empty list = nothing pre-built at deploy.
+export async function generateStaticParams() {
+  return [];
+}
 
 type Props = {
   params: Promise<{ slugA: string; slugB: string }>;

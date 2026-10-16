@@ -21,7 +21,11 @@ import { PFAS_WATCHLIST_CANARY_OVERRIDES } from "@/lib/canary/seo-overrides";
 import CanaryAnswerModule from "@/components/canary-answer-module";
 import type { Metadata } from "next";
 
-export const dynamic = "force-dynamic";
+// Render each page on its first request, then cache it (ISR) instead of
+// hitting the database on every visit. Empty list = nothing pre-built at deploy.
+export async function generateStaticParams() {
+  return [];
+}
 export const revalidate = 3600;
 
 export async function generateMetadata({
