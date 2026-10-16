@@ -12,7 +12,6 @@ import treatmentMethods from "@/lib/content/treatments";
 import { prisma } from "@/lib/prisma";
 import type { Metadata } from "next";
 
-export const dynamic = "force-dynamic";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
