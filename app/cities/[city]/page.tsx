@@ -16,7 +16,12 @@ import DataLimitationsNote from "@/components/data-limitations-note";
 import JsonLd from "@/components/json-ld";
 import type { Metadata } from "next";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 86400;
+// Render each page on its first request, then cache it (ISR) instead of
+// hitting the database on every visit. Empty list = nothing pre-built at deploy.
+export async function generateStaticParams() {
+  return [];
+}
 
 // ─── Slug helpers ──────────────────────────────────────────────────────────────
 
