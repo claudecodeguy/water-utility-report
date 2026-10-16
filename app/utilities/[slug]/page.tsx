@@ -120,8 +120,12 @@ const DIRECT_TO_TREATMENTS: Record<string, string[]> = {
 // ISR — render on first request, cache 24h
 export const revalidate = 86400;
 
-// Don't pre-build 5700 pages at deploy time
-export const dynamic = "force-dynamic";
+// Don't pre-build 5700 pages at deploy time: an empty list means each page
+// renders on its first request and is then cached for `revalidate` seconds.
+// (force-dynamic was disabling that cache, so every visit hit the database.)
+export async function generateStaticParams() {
+  return [];
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
