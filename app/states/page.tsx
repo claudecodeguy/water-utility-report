@@ -6,7 +6,6 @@ import StatesDirectory, { type StateRow } from "@/components/states-directory";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
 
-export const dynamic = "force-dynamic";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
