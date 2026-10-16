@@ -16,7 +16,11 @@ import FaqSection from "@/components/faq-section";
 import DataLimitationsNote from "@/components/data-limitations-note";
 import SourcesBlock from "@/components/sources-block";
 
-export const dynamic = "force-dynamic";
+// Render each page on its first request, then cache it (ISR) instead of
+// hitting the database on every visit. Empty list = nothing pre-built at deploy.
+export async function generateStaticParams() {
+  return [];
+}
 export const revalidate = 86400;
 
 function slugifyCounty(raw: string): string {
