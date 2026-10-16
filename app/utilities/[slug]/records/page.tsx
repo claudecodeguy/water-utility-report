@@ -21,7 +21,11 @@ import TrackedLink from "@/components/tracked-link";
 import FaqSection from "@/components/faq-section";
 import type { FAQ } from "@/lib/types";
 
-export const dynamic = "force-dynamic";
+// Render each page on its first request, then cache it (ISR) instead of
+// hitting the database on every visit. Empty list = nothing pre-built at deploy.
+export async function generateStaticParams() {
+  return [];
+}
 export const revalidate = 86400;
 
 const CONTAMINANT_CODE_NAMES: Record<string, string> = {
