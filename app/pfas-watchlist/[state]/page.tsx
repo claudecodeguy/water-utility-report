@@ -7,7 +7,11 @@ import { normalizeName } from "@/lib/normalize-name";
 import JsonLd from "@/components/json-ld";
 import type { Metadata } from "next";
 
-export const dynamic = "force-dynamic";
+// Render each page on its first request, then cache it (ISR) instead of
+// hitting the database on every visit. Empty list = nothing pre-built at deploy.
+export async function generateStaticParams() {
+  return [];
+}
 export const revalidate = 3600;
 
 // States confirmed to have records in the EPA UCMR 5 dataset
