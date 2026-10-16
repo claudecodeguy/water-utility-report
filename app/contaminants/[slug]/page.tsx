@@ -14,7 +14,6 @@ import ContaminantToAction from "@/components/contaminant-to-action";
 import RelatedWaterQuestions from "@/components/related-water-questions";
 import type { Metadata } from "next";
 
-export const dynamic = "force-dynamic";
 export const revalidate = 86400;
 
 // Contaminant-specific guide links shown in sidebar
