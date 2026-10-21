@@ -114,7 +114,9 @@ export async function GET(
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
       "Content-Disposition": `attachment; filename="${filename}"`,
-      "Cache-Control": "no-store",
+      // Cache at Vercel's CDN: every download (incl. dataset crawlers following the
+      // JSON-LD contentUrl) used to stream the whole state from Postgres.
+      "Cache-Control": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800",
     },
   });
 }
