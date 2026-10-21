@@ -7,12 +7,61 @@ import ZipLookup from "@/components/zip-lookup";
 import ViolationAlertForm from "@/components/violation-alert-form";
 import SearchResultsClient from "@/components/search-results-client";
 import { prisma } from "@/lib/prisma";
+import { unstable_cache } from "next/cache";
 import { normalizeName } from "@/lib/normalize-name";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const zipcodes = require("zipcodes");
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+// Data Cache wrappers: this page is dynamic (?zip=), so cache the DB reads
+// themselves to keep repeat/bot traffic off Postgres.
+const getFeaturedUtilities = unstable_cache(
+  async () =>
+    prisma.utility.findMany({
+      where: { publish_status: "published" },
+      select: {
+        slug: true, pwsid: true, name: true, population_served: true, risk_level: true, city_served: true,
+        state: { select: { abbreviation: true, slug: true, name: true } },
+      },
+      orderBy: { population_served: "desc" },
+      take: 5,
+    }),
+  ["search-featured-v1"],
+  { revalidate: 86400, tags: ["db"] }
+);
+
+const getZipUtilities = unstable_cache(
+  async (zipState: string, zipCity: string) => {
+    const stateRecord = await prisma.state.findFirst({
+      where: { abbreviation: zipState },
+      select: { id: true, slug: true, name: true },
+    });
+    if (!stateRecord) return null;
+    const utilities = await prisma.utility.findMany({
+      where: {
+        publish_status: "published",
+        state_id: stateRecord.id,
+        ownership_type: { notIn: ["Federal", "State"] },
+        population_served: { gte: 1000 },
+        OR: [
+          { city_served: { contains: zipCity, mode: "insensitive" } },
+          { name: { contains: zipCity, mode: "insensitive" } },
+        ],
+      },
+      select: {
+        slug: true, pwsid: true, name: true, population_served: true, risk_level: true, city_served: true,
+        state: { select: { abbreviation: true, slug: true, name: true } },
+      },
+      orderBy: { population_served: "desc" },
+      take: 10,
+    });
+    return { stateRecord, utilities };
+  },
+  ["search-zip-v1"],
+  { revalidate: 86400, tags: ["db"] }
+);
 
 export const metadata: Metadata = {
   title: "Search Water Quality by ZIP Code — Water Utility Report",
@@ -76,33 +125,11 @@ async function SearchPageContent({
   let stateName: string | null = null;
 
   if (isValidZip && zipCity && zipState) {
-    const stateRecord = await prisma.state.findFirst({
-      where: { abbreviation: zipState },
-      select: { id: true, slug: true, name: true },
-    });
-
-    if (stateRecord) {
-      stateSlug = stateRecord.slug;
-      stateName = stateRecord.name;
-
-      zipUtilities = await prisma.utility.findMany({
-        where: {
-          publish_status: "published",
-          state_id: stateRecord.id,
-          ownership_type: { notIn: ["Federal", "State"] },
-          population_served: { gte: 1000 },
-          OR: [
-            { city_served: { contains: zipCity, mode: "insensitive" } },
-            { name: { contains: zipCity, mode: "insensitive" } },
-          ],
-        },
-        select: {
-          slug: true, pwsid: true, name: true, population_served: true, risk_level: true, city_served: true,
-          state: { select: { abbreviation: true, slug: true, name: true } },
-        },
-        orderBy: { population_served: "desc" },
-        take: 10,
-      });
+    const found = await getZipUtilities(zipState, zipCity);
+    if (found) {
+      stateSlug = found.stateRecord.slug;
+      stateName = found.stateRecord.name;
+      zipUtilities = found.utilities;
     } else {
       cityNotCovered = true;
     }
@@ -129,15 +156,7 @@ async function SearchPageContent({
 
   // Top utilities for sidebar when no ZIP searched
   const featuredUtilities = !isValidZip
-    ? await prisma.utility.findMany({
-        where: { publish_status: "published" },
-        select: {
-          slug: true, pwsid: true, name: true, population_served: true, risk_level: true, city_served: true,
-          state: { select: { abbreviation: true, slug: true, name: true } },
-        },
-        orderBy: { population_served: "desc" },
-        take: 5,
-      })
+    ? await getFeaturedUtilities()
     : [];
 
   return (
