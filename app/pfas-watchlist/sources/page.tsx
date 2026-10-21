@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: "Every official government data source used by the PFAS Watchlist, with retrieval dates, URLs, and publication cadence.",
 };
 
-export const revalidate = 3600;
+export const revalidate = 86400; // daily (was hourly) to cut Supabase egress
 
 const STATIC_SOURCES = [
   {
