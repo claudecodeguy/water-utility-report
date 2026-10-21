@@ -5,6 +5,7 @@ import { getStateContentBySlug } from "@/lib/content/states";
 import stateContent from "@/lib/content/states";
 import contaminants from "@/lib/content/contaminants";
 import { prisma } from "@/lib/prisma";
+import { unstable_cache } from "next/cache";
 import { normalizeName } from "@/lib/normalize-name";
 import FaqSection from "@/components/faq-section";
 import JsonLd from "@/components/json-ld";
@@ -43,58 +44,32 @@ const riskBgs: Record<string, string> = {
 
 const PAGE_SIZE = 25;
 
-export default async function StatePage({
-  params,
-  searchParams,
-}: {
-  params: Promise<{ state: string }>;
-  searchParams: Promise<{ page?: string }>;
-}) {
-  const [{ state: rawSlug }, { page: pageParam }] = await Promise.all([params, searchParams]);
-  // Redirect space-encoded slugs (e.g. "rhode island") to canonical hyphenated form
-  const stateSlug = rawSlug.includes(" ") ? rawSlug.replace(/\s+/g, "-") : rawSlug;
-  if (stateSlug !== rawSlug) redirect(`/states/${stateSlug}`);
-  const state = getStateContentBySlug(stateSlug);
-  if (!state) notFound();
-
-  const page = Math.max(1, parseInt(pageParam ?? "1", 10) || 1);
-
-  const dbState = await prisma.state.findUnique({ where: { abbreviation: state.abbreviation } });
-
-  const [dbUtilities, dbUtilityCount, topCityUtilities, openViolationsUtilityCount, pfasUtilityCount, highRiskUtilities, safestUtilities, openViolationUtilities] = dbState
-    ? await Promise.all([
+// Cached in Vercel's Data Cache (shared across renders and deployments) so the
+// heavy per-state queries hit Postgres once per state per day instead of on
+// every request. This route is dynamic (it reads ?page=), so without this every
+// crawler hit re-ran all eight queries, including the full open-violations list.
+const getStateSummary = unstable_cache(
+  async (abbreviation: string) => {
+    const dbState = await prisma.state.findUnique({ where: { abbreviation }, select: { id: true } });
+    if (!dbState) return null;
+    const stateId = dbState.id;
+    const [dbUtilityCount, topCityUtilities, openViolationsUtilityCount, pfasUtilityCount, highRiskUtilities, safestUtilities, openViolationUtilities] = await Promise.all([        prisma.utility.count({ where: { state_id: stateId, publish_status: "published" } }),
         prisma.utility.findMany({
-          where: { state_id: dbState.id, publish_status: "published" },
-          orderBy: { population_served: "desc" },
-          skip: (page - 1) * PAGE_SIZE,
-          take: PAGE_SIZE,
-          select: {
-            slug: true,
-            name: true,
-            pwsid: true,
-            population_served: true,
-            risk_level: true,
-            service_type: true,
-            ownership_type: true,
-          },
-        }),
-        prisma.utility.count({ where: { state_id: dbState.id, publish_status: "published" } }),
-        prisma.utility.findMany({
-          where: { state_id: dbState.id, publish_status: "published", city_served: { not: null } },
+          where: { state_id: stateId, publish_status: "published", city_served: { not: null } },
           select: { city_served: true },
           orderBy: { population_served: "desc" },
           take: 100,
         }),
         prisma.utility.count({
           where: {
-            state_id: dbState.id,
+            state_id: stateId,
             publish_status: "published",
             violations: { some: { is_health_based: true, resolution_date: null } },
           },
         }),
         prisma.utility.count({
           where: {
-            state_id: dbState.id,
+            state_id: stateId,
             publish_status: "published",
             pfas_records: { some: { suppressed: false, validated: true } },
           },
@@ -103,7 +78,7 @@ export default async function StatePage({
         // Query 6: Highest-risk utilities (open health violations, ordered by risk then population)
         prisma.utility.findMany({
           where: {
-            state_id: dbState.id,
+            state_id: stateId,
             publish_status: "published",
             violations: { some: { is_health_based: true, resolution_date: null } },
           },
@@ -122,7 +97,7 @@ export default async function StatePage({
         // Query 7: Safest large utilities (no open health violations, largest population)
         prisma.utility.findMany({
           where: {
-            state_id: dbState.id,
+            state_id: stateId,
             publish_status: "published",
             risk_level: { in: ["safe", "low"] },
             population_served: { gte: 10000 },
@@ -138,7 +113,7 @@ export default async function StatePage({
         // Query 8: All utilities with open health-based violations + violation details
         prisma.utility.findMany({
           where: {
-            state_id: dbState.id,
+            state_id: stateId,
             publish_status: "published",
             violations: { some: { is_health_based: true, resolution_date: null } },
           },
@@ -158,8 +133,59 @@ export default async function StatePage({
           },
           orderBy: [{ risk_level: "desc" }, { population_served: "desc" }],
         }),
-      ])
-    : [[], 0, [], 0, 0, [], [], []];
+      ]);
+    return { stateId, dbUtilityCount, topCityUtilities, openViolationsUtilityCount, pfasUtilityCount, highRiskUtilities, safestUtilities, openViolationUtilities };
+  },
+  ["state-page-summary-v1"],
+  { revalidate: 86400, tags: ["db", "state-page"] }
+);
+
+const getStateUtilitiesPage = unstable_cache(
+  async (stateId: string, page: number) =>
+
+        prisma.utility.findMany({
+          where: { state_id: stateId, publish_status: "published" },
+          orderBy: { population_served: "desc" },
+          skip: (page - 1) * PAGE_SIZE,
+          take: PAGE_SIZE,
+          select: {
+            slug: true,
+            name: true,
+            pwsid: true,
+            population_served: true,
+            risk_level: true,
+            service_type: true,
+            ownership_type: true,
+          },
+        }),
+  ["state-page-utilities-v1"],
+  { revalidate: 86400, tags: ["db", "state-page"] }
+);
+
+export default async function StatePage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ state: string }>;
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const [{ state: rawSlug }, { page: pageParam }] = await Promise.all([params, searchParams]);
+  // Redirect space-encoded slugs (e.g. "rhode island") to canonical hyphenated form
+  const stateSlug = rawSlug.includes(" ") ? rawSlug.replace(/\s+/g, "-") : rawSlug;
+  if (stateSlug !== rawSlug) redirect(`/states/${stateSlug}`);
+  const state = getStateContentBySlug(stateSlug);
+  if (!state) notFound();
+
+  const page = Math.max(1, parseInt(pageParam ?? "1", 10) || 1);
+
+  const summary = await getStateSummary(state.abbreviation);
+  const totalPagesForState = summary ? Math.max(1, Math.ceil(summary.dbUtilityCount / PAGE_SIZE)) : 1;
+  // Out-of-range ?page= values would otherwise each create a new cache entry
+  if (page > totalPagesForState) notFound();
+
+  const dbUtilities = summary ? await getStateUtilitiesPage(summary.stateId, page) : [];
+  const { dbUtilityCount, topCityUtilities, openViolationsUtilityCount, pfasUtilityCount, highRiskUtilities, safestUtilities, openViolationUtilities } =
+    summary ?? { dbUtilityCount: 0, topCityUtilities: [], openViolationsUtilityCount: 0, pfasUtilityCount: 0, highRiskUtilities: [], safestUtilities: [], openViolationUtilities: [] };
 
   // Build deduplicated city list sorted by population (take order)
   const topCities = Array.from(
