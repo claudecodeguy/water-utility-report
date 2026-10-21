@@ -6,6 +6,7 @@ import {
 import ExploreArea from "@/components/explore-area";
 import RelatedWaterQuestions, { type WaterQuestion } from "@/components/related-water-questions";
 import { prisma } from "@/lib/prisma";
+import { getStateCityIndex } from "@/lib/cached-queries";
 import { normalizeName } from "@/lib/normalize-name";
 import RiskMeter from "@/components/risk-meter";
 import FaqSection from "@/components/faq-section";
@@ -131,14 +132,7 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
   const parsed = parseSlug(slugParam);
   if (!parsed) return {};
 
-  const utilities = await prisma.utility.findMany({
-    where: {
-      state: { abbreviation: parsed.stateAbbr },
-      city_served: { not: null },
-      publish_status: "published",
-    },
-    select: { city_served: true, state: { select: { abbreviation: true, name: true } } },
-  });
+  const utilities = await getStateCityIndex(parsed.stateAbbr);
 
   const match = utilities.find(u =>
     parseCityNames(u.city_served!).some(n => slugifyCity(n) === parsed.citySlug)
@@ -188,32 +182,33 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
 
   const { citySlug, stateAbbr } = parsed;
 
-  // Fetch all published utilities in the state with city data + their violations
-  const allUtilities = await prisma.utility.findMany({
-    where: {
-      state: { abbreviation: stateAbbr },
-      city_served: { not: null },
-      publish_status: "published",
-    },
-    select: {
-      id: true, name: true, slug: true, pwsid: true,
-      risk_level: true, population_served: true, city_served: true,
-      state: { select: { name: true, slug: true, abbreviation: true } },
-      violations: {
-        where: { is_health_based: true },
+  // Lightweight per-state index (shared Data Cache, one DB read per state per day).
+  // Previously this pulled every utility in the state *with all of its
+  // violations* on every city page render, which was the main source of
+  // Supabase egress.
+  const allUtilities = await getStateCityIndex(stateAbbr);
+
+  // Find utilities that include this city in their (possibly comma-separated) city_served
+  const matchedUtilities = allUtilities.filter(u =>
+    parseCityNames(u.city_served!).some(n => slugifyCity(n) === citySlug)
+  );
+
+  // Violations only for the utilities that actually serve this city
+  const cityViolations = matchedUtilities.length > 0
+    ? await prisma.violation.findMany({
+        where: { utility_id: { in: matchedUtilities.map(u => u.id) }, is_health_based: true },
         orderBy: { violation_date: "desc" },
         select: {
+          utility_id: true,
           contaminant_name: true, contaminant_code: true,
           resolution_date: true, violation_type: true, violation_date: true,
         },
-      },
-    },
-  });
-
-  // Find utilities that include this city in their (possibly comma-separated) city_served
-  const utilities = allUtilities.filter(u =>
-    parseCityNames(u.city_served!).some(n => slugifyCity(n) === citySlug)
-  );
+      })
+    : [];
+  const utilities = matchedUtilities.map(u => ({
+    ...u,
+    violations: cityViolations.filter(v => v.utility_id === u.id),
+  }));
 
   if (utilities.length === 0) {
     // Fallback 1: trailing numeric code in slug (e.g. mount-olive-twp-1427 → mount-olive-twp)
@@ -241,19 +236,13 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
   }
 
   const pwsids = utilities.map(u => u.pwsid);
-  const [pfasHits, allStateCityUtilities] = await Promise.all([
-    prisma.pfasRecord.findMany({
-      where: { pwsid: { in: pwsids }, suppressed: false, validated: true },
-      select: { pwsid: true },
-      distinct: ["pwsid"],
-    }),
-    prisma.utility.findMany({
-      where: { state: { abbreviation: stateAbbr }, city_served: { not: null }, publish_status: "published" },
-      select: { city_served: true },
-      orderBy: { population_served: "desc" },
-      take: 80,
-    }),
-  ]);
+  const pfasHits = await prisma.pfasRecord.findMany({
+    where: { pwsid: { in: pwsids }, suppressed: false, validated: true },
+    select: { pwsid: true },
+    distinct: ["pwsid"],
+  });
+  // Index is already sorted by population desc
+  const allStateCityUtilities = allUtilities.slice(0, 80);
 
   const pfasPwsidSet = new Set(pfasHits.map(r => r.pwsid));
   const utilitiesWithPfas = utilities.filter(u => pfasPwsidSet.has(u.pwsid));
