@@ -26,7 +26,7 @@ import type { Metadata } from "next";
 export async function generateStaticParams() {
   return [];
 }
-export const revalidate = 3600;
+export const revalidate = 86400; // daily (was hourly) to cut Supabase egress
 
 export async function generateMetadata({
   params,
