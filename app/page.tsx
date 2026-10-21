@@ -12,8 +12,8 @@ import treatmentMethods from "@/lib/content/treatments";
 import { prisma } from "@/lib/prisma";
 import type { Metadata } from "next";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 3600;
+// ISR: rendered at most once a day instead of on every request (Supabase egress).
+export const revalidate = 86400;
 
 export const metadata: Metadata = {
   title: "Check Your Water Utility, PFAS Records & Violations | Water Utility Report",
