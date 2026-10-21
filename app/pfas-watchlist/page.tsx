@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     "Search official EPA UCMR 5 PFAS monitoring records for U.S. public water systems. Every record links to a government source. No inferred risk scores.",
 };
 
-export const revalidate = 3600;
+export const revalidate = 86400; // daily (was hourly) to cut Supabase egress
 
 const UCMR5_SOURCE_URL = "https://www.epa.gov/dwucmr/occurrence-data-unregulated-contaminant-monitoring-rule#5";
 

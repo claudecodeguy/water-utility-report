@@ -11,8 +11,8 @@ import { prisma } from "@/lib/prisma";
 
 const BASE = "https://waterutilityreport.com";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 3600;
+// ISR: rendered at most once a day instead of on every request (Supabase egress).
+export const revalidate = 86400;
 
 function slugifyCity(city: string): string {
   return city.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");

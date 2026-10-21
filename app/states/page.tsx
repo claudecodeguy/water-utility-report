@@ -6,8 +6,8 @@ import StatesDirectory, { type StateRow } from "@/components/states-directory";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 3600;
+// ISR: rendered at most once a day instead of on every request (Supabase egress).
+export const revalidate = 86400;
 
 export const metadata: Metadata = {
   title: "U.S. Drinking Water by State — All 50 States | Water Utility Report",

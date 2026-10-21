@@ -12,7 +12,7 @@ import type { Metadata } from "next";
 export async function generateStaticParams() {
   return [];
 }
-export const revalidate = 3600;
+export const revalidate = 86400; // daily (was hourly) to cut Supabase egress
 
 // States confirmed to have records in the EPA UCMR 5 dataset
 const STATES_WITH_PFAS_DATA = new Set([
