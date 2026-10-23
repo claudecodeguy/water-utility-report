@@ -2,6 +2,21 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   experimental: {},
+  // Public pages read the database through a 7-day cache (lib/prisma-cached.ts)
+  // to keep Supabase egress low. Instead of changing ~30 page imports, swap
+  // "@/lib/prisma" for "@/lib/prisma-public" for files under app/, except
+  // app/admin and app/api, which must always read fresh data.
+  webpack(config, { webpack }) {
+    config.plugins.push(
+      new webpack.NormalModuleReplacementPlugin(/^@\/lib\/prisma$/, (resource: { context?: string; request: string }) => {
+        const ctx = (resource.context ?? "").replace(/\\/g, "/");
+        if (/\/app(\/|$)/.test(ctx) && !/\/app\/(admin|api)(\/|$)/.test(ctx)) {
+          resource.request = "@/lib/prisma-public";
+        }
+      })
+    );
+    return config;
+  },
   async redirects() {
     return [
       // Mediavine ads.txt — keeps their partner list current without manual updates
