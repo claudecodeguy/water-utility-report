@@ -110,6 +110,17 @@ export default function KindWaterProductCard({ recommendation }: Props) {
             ))}
           </ul>
         </div>
+        <TrackedAnchor
+          href={product.affiliateUrl}
+          target="_blank"
+          rel="sponsored nofollow noopener noreferrer"
+          eventName="kind_affiliate_click"
+          eventParams={{ ...eventParams, destination: "kindwater" }}
+          className="mb-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-wur-teal px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-wur-teal/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+        >
+          View system on Kind Water
+          <ExternalLink className="h-3.5 w-3.5 opacity-70" aria-hidden="true" />
+        </TrackedAnchor>
         <ul className="mb-5 space-y-2">
           {product.benefits.map((benefit) => (
             <li key={benefit} className="flex items-start gap-2 text-sm leading-relaxed text-foreground">
@@ -118,17 +129,6 @@ export default function KindWaterProductCard({ recommendation }: Props) {
             </li>
           ))}
         </ul>
-        <TrackedAnchor
-          href={product.affiliateUrl}
-          target="_blank"
-          rel="sponsored nofollow noopener noreferrer"
-          eventName="kind_affiliate_click"
-          eventParams={{ ...eventParams, destination: "kindwater" }}
-          className="mt-auto inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-wur-teal px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-wur-teal/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-        >
-          View system on Kind Water
-          <ExternalLink className="h-3.5 w-3.5 opacity-70" aria-hidden="true" />
-        </TrackedAnchor>
       </div>
     </article>
   );
