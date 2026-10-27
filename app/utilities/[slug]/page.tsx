@@ -29,6 +29,9 @@ import { Badge } from "@/components/ui/badge";
 import ExploreSystem from "@/components/explore-system";
 import RelatedWaterQuestions, { type WaterQuestion } from "@/components/related-water-questions";
 import WaterRecordInterpreter from "@/components/interpreter/water-record-interpreter";
+import KindWaterRecommendations from "@/components/kind-water-recommendations";
+import type { KindContaminantDetection } from "@/lib/affiliate/kind/kind-recommendations";
+import { KIND_WATER_AFFILIATE_ENABLED } from "@/lib/affiliate/kind/kind-products";
 import type { Metadata } from "next";
 
 // Expand raw EPA violation type codes to human-readable labels
@@ -226,7 +229,7 @@ export default async function UtilityPage({ params }: { params: Promise<{ slug: 
     .map(v => v.contaminant_name as string)
     .slice(0, 3);
 
-  const [nearbyUtilities, pfasRecordCount, similarViolationUtilities] = await Promise.all([
+  const [nearbyUtilities, pfasRecordCount, similarViolationUtilities, pfasDetection] = await Promise.all([
     prisma.utility.findMany({
       where: {
         publish_status: "published",
@@ -264,6 +267,15 @@ export default async function UtilityPage({ params }: { params: Promise<{ slug: 
           take: 5,
         })
       : Promise.resolve([]),
+    KIND_WATER_AFFILIATE_ENABLED ? prisma.pfasRecord.findFirst({
+      where: {
+        pwsid: utility.pwsid,
+        suppressed: false,
+        validated: true,
+        raw_detection_flag: "Detected above MRL",
+      },
+      select: { id: true },
+    }) : Promise.resolve(null),
   ]);
 
   const displayName = normalizeName(utility.name);
@@ -336,6 +348,14 @@ export default async function UtilityPage({ params }: { params: Promise<{ slug: 
   const recommendedTreatments = treatmentMethods.filter((t) =>
     recommendedTreatmentSlugs.has(t.slug)
   );
+
+  const kindDetections: KindContaminantDetection[] = utility.utility_contaminants.map((item) => ({
+    key: item.contaminant.slug,
+    name: item.contaminant.name,
+    detected: item.detected,
+    level: item.level,
+    unit: item.unit,
+  }));
 
   const hasPfas = utility.violations.some(
     (v) => v.contaminant_name?.toLowerCase().includes("pfas") ||
@@ -992,6 +1012,15 @@ export default async function UtilityPage({ params }: { params: Promise<{ slug: 
                 </div>
               )}
             </section>
+
+            <KindWaterRecommendations
+              context={{
+                pageType: "utility-report",
+                pageIdentifier: utility.slug,
+                detections: kindDetections,
+                pfasDetected: pfasDetection !== null,
+              }}
+            />
 
             {/* Violations */}
             {utility.violations.length > 0 && (

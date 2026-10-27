@@ -19,6 +19,7 @@ import DataLimitationsNote from "@/components/data-limitations-note";
 import JsonLd from "@/components/json-ld";
 import { PFAS_WATCHLIST_CANARY_OVERRIDES } from "@/lib/canary/seo-overrides";
 import CanaryAnswerModule from "@/components/canary-answer-module";
+import KindWaterRecommendations from "@/components/kind-water-recommendations";
 import type { Metadata } from "next";
 
 // Render each page on its first request, then cache it (ISR) instead of
@@ -391,6 +392,14 @@ export default async function PfasUtilityPage({
                 </div>
               </div>
             )}
+
+            <KindWaterRecommendations
+              context={{
+                pageType: "pfas-utility",
+                pageIdentifier: pwsid,
+                pfasDetected: detections.length > 0,
+              }}
+            />
 
             {/* Official status records */}
             {officialStatuses.length > 0 && (
