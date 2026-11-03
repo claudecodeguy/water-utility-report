@@ -21,7 +21,7 @@ import SourcesBlock from "@/components/sources-block";
 export async function generateStaticParams() {
   return [];
 }
-export const revalidate = 86400;
+export const revalidate = 604800; // 7 days: fewer ISR writes from crawler re-renders (Vercel cost)
 
 function slugifyCounty(raw: string): string {
   return raw

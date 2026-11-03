@@ -121,7 +121,7 @@ const DIRECT_TO_TREATMENTS: Record<string, string[]> = {
 };
 
 // ISR — render on first request, cache 24h
-export const revalidate = 86400;
+export const revalidate = 604800; // 7 days: fewer ISR writes from crawler re-renders (Vercel cost)
 
 // Don't pre-build 5700 pages at deploy time: an empty list means each page
 // renders on its first request and is then cached for `revalidate` seconds.

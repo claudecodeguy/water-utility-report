@@ -17,7 +17,7 @@ import DataLimitationsNote from "@/components/data-limitations-note";
 import JsonLd from "@/components/json-ld";
 import type { Metadata } from "next";
 
-export const revalidate = 86400;
+export const revalidate = 604800; // 7 days: fewer ISR writes from crawler re-renders (Vercel cost)
 // Render each page on its first request, then cache it (ISR) instead of
 // hitting the database on every visit. Empty list = nothing pre-built at deploy.
 export async function generateStaticParams() {

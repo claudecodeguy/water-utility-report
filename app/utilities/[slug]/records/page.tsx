@@ -26,7 +26,7 @@ import type { FAQ } from "@/lib/types";
 export async function generateStaticParams() {
   return [];
 }
-export const revalidate = 86400;
+export const revalidate = 604800; // 7 days: fewer ISR writes from crawler re-renders (Vercel cost)
 
 const CONTAMINANT_CODE_NAMES: Record<string, string> = {
   "1005": "Total Coliform",

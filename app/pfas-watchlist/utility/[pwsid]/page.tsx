@@ -27,7 +27,7 @@ import type { Metadata } from "next";
 export async function generateStaticParams() {
   return [];
 }
-export const revalidate = 86400; // daily (was hourly) to cut Supabase egress
+export const revalidate = 604800; // 7 days: fewer ISR writes from crawler re-renders (Vercel cost)
 
 export async function generateMetadata({
   params,
